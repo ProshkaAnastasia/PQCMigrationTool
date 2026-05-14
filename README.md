@@ -27,6 +27,7 @@ cmake --build build --parallel $(nproc)
 ```bash
 brew install cmake openssl@3 llvm
 cmake -B build -DCMAKE_BUILD_TYPE=Release \
+      -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
       -DOPENSSL_ROOT_DIR=$(brew --prefix openssl@3) \
       -DLLVM_DIR=$(brew --prefix llvm)/lib/cmake/llvm
 cmake --build build --parallel $(sysctl -n hw.ncpu)
