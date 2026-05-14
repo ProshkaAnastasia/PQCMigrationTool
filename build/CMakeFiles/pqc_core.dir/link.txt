@@ -1,0 +1,2 @@
+/usr/bin/ar qc libpqc_core.a CMakeFiles/pqc_core.dir/src/config.cpp.o CMakeFiles/pqc_core.dir/src/project_scanner.cpp.o CMakeFiles/pqc_core.dir/src/cbom.cpp.o CMakeFiles/pqc_core.dir/src/vuln_database.cpp.o CMakeFiles/pqc_core.dir/src/regex_analyzer.cpp.o CMakeFiles/pqc_core.dir/src/token_analyzer.cpp.o CMakeFiles/pqc_core.dir/src/ast_analyzer.cpp.o CMakeFiles/pqc_core.dir/src/cert_analyzer.cpp.o CMakeFiles/pqc_core.dir/src/risk_assessor.cpp.o CMakeFiles/pqc_core.dir/src/report_generator.cpp.o CMakeFiles/pqc_core.dir/src/metrics.cpp.o
+/usr/bin/ranlib libpqc_core.a

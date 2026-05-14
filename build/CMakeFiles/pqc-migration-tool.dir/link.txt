@@ -1,0 +1,1 @@
+/usr/bin/c++ -O3 -DNDEBUG -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names "CMakeFiles/pqc-migration-tool.dir/src/main.cpp.o" -o pqc-migration-tool  libpqc_core.a /opt/homebrew/opt/openssl@3/lib/libssl.dylib /opt/homebrew/opt/openssl@3/lib/libcrypto.dylib /opt/homebrew/Cellar/llvm/22.1.5/lib/libclang.dylib

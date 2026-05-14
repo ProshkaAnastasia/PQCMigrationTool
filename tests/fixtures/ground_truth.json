@@ -1,0 +1,62 @@
+[
+  {
+    "function_name": "RSA_generate_key_ex",
+    "file_path": "sample_vulnerable.cpp",
+    "line_number": 29,
+    "line_tolerance": 5
+  },
+  {
+    "function_name": "EC_KEY_generate_key",
+    "file_path": "sample_vulnerable.cpp",
+    "line_number": 38,
+    "line_tolerance": 5
+  },
+  {
+    "function_name": "ECDH_compute_key",
+    "file_path": "sample_vulnerable.cpp",
+    "line_number": 39,
+    "line_tolerance": 5
+  },
+  {
+    "function_name": "ECDSA_sign",
+    "file_path": "sample_vulnerable.cpp",
+    "line_number": 47,
+    "line_tolerance": 5
+  },
+  {
+    "function_name": "RSA_public_encrypt",
+    "file_path": "sample_vulnerable.cpp",
+    "line_number": 56,
+    "line_tolerance": 5
+  },
+  {
+    "function_name": "RSA_sign",
+    "file_path": "sample_vulnerable.cpp",
+    "line_number": 63,
+    "line_tolerance": 5
+  },
+  {
+    "function_name": "SHA1",
+    "file_path": "sample_vulnerable.cpp",
+    "line_number": 70,
+    "line_tolerance": 5
+  },
+  {
+    "function_name": "DH_new",
+    "file_path": "sample_vulnerable.cpp",
+    "line_number": 79,
+    "line_tolerance": 5
+  },
+  {
+    "function_name": "DH_generate_parameters_ex",
+    "file_path": "sample_vulnerable.cpp",
+    "line_number": 80,
+    "line_tolerance": 5
+  },
+  {
+    "function_name": "MD5",
+    "file_path": "sample_vulnerable.cpp",
+    "line_number": 86,
+    "line_tolerance": 5
+  }
+]

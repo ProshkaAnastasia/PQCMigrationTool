@@ -1,0 +1,680 @@
+{
+  "version": "2.0",
+  "last_updated": "2026-05-05",
+  "description": "PQC Migration Tool — Quantum-Vulnerable Cryptographic Function Database. Libraries: openssl, cryptopp, gost_openssl.",
+  "libraries": {
+    "openssl": {
+      "display_name": "OpenSSL",
+      "version_tested": "3.x",
+      "functions": [
+        {
+          "id": "ossl-rsa-keygen",
+          "name": "RSA_generate_key_ex",
+          "aliases": [
+            "RSA_generate_key"
+          ],
+          "category": "asymmetric_key_generation",
+          "algorithm": "RSA",
+          "quantum_vulnerability": "high",
+          "risk_score": 9.5,
+          "description": "RSA key pair generation. RSA is broken by Shor's quantum algorithm (solves IFP in poly time). Key size irrelevant once CRQC exists.",
+          "nist_reference": "NIST SP 800-131A Rev.2 §2; NIST IR 8547",
+          "tc26_reference": "ТК 26: RSA не включён в ГОСТ-профили PQC; замена через ML-KEM или ГОСТ-PQC (в разработке)",
+          "deprecation_url": "https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar2.pdf",
+          "patterns": [
+            "RSA_generate_key_ex\\s*\\(",
+            "RSA_generate_key\\s*\\("
+          ],
+          "context_keywords": [
+            "key",
+            "rsa"
+          ],
+          "replacements": [
+            {
+              "function_name": "OQS_KEM_new",
+              "library": "liboqs",
+              "standard": "FIPS 203",
+              "algorithm": "ML-KEM-1024",
+              "type": "kem",
+              "migration_notes": "Replace RSA key generation with ML-KEM key pair generation. Use OQS_KEM_alg_ml_kem_1024 for highest security level.",
+              "example_code": "OQS_KEM *kem = OQS_KEM_new(OQS_KEM_alg_ml_kem_1024);\nuint8_t *pk = malloc(kem->length_public_key);\nuint8_t *sk = malloc(kem->length_secret_key);\nOQS_KEM_keypair(kem, pk, sk);",
+              "tc26_note": "ТК 26: гибридная схема VKO ГОСТ Р 34.10-2012 + ML-KEM-1024 в переходный период"
+            }
+          ]
+        },
+        {
+          "id": "ossl-rsa-enc",
+          "name": "RSA_public_encrypt",
+          "aliases": [
+            "RSA_private_decrypt"
+          ],
+          "category": "asymmetric_encryption",
+          "algorithm": "RSA",
+          "quantum_vulnerability": "high",
+          "risk_score": 9.8,
+          "description": "RSA encryption/decryption. Encrypted data captured now can be decrypted once CRQC is available (Harvest Now Decrypt Later — HNDL). Immediate risk for long-lived data.",
+          "nist_reference": "NIST SP 800-131A Rev.2 §3; NIST IR 8547 §4",
+          "tc26_reference": "ТК 26: критичный риск HNDL для долгосрочных данных; переход на ML-KEM обязателен",
+          "deprecation_url": "https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar2.pdf",
+          "patterns": [
+            "RSA_public_encrypt\\s*\\(",
+            "RSA_private_decrypt\\s*\\("
+          ],
+          "context_keywords": [
+            "encrypt",
+            "decrypt",
+            "cipher"
+          ],
+          "replacements": [
+            {
+              "function_name": "OQS_KEM_encaps",
+              "library": "liboqs",
+              "standard": "FIPS 203",
+              "algorithm": "ML-KEM-768",
+              "type": "kem",
+              "migration_notes": "Replace RSA encryption with ML-KEM encapsulation. Shared secret replaces RSA-encrypted session key.",
+              "example_code": "OQS_KEM *kem = OQS_KEM_new(OQS_KEM_alg_ml_kem_768);\nOQS_KEM_encaps(kem, ciphertext, shared_secret, public_key);\n// Use shared_secret as AES-256 key",
+              "tc26_note": "ТК 26: HNDL-угроза — приоритет миграции критический"
+            }
+          ]
+        },
+        {
+          "id": "ossl-rsa-sign",
+          "name": "RSA_sign",
+          "aliases": [
+            "RSA_verify"
+          ],
+          "category": "digital_signature",
+          "algorithm": "RSA",
+          "quantum_vulnerability": "high",
+          "risk_score": 9.0,
+          "description": "RSA digital signatures. Signature forgery possible with Shor's algorithm on a CRQC.",
+          "nist_reference": "NIST SP 800-131A Rev.2 §9; NIST IR 8547",
+          "tc26_reference": "ТК 26: замена на ML-DSA-65 или SLH-DSA",
+          "deprecation_url": "https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar2.pdf",
+          "patterns": [
+            "RSA_sign\\s*\\(",
+            "RSA_verify\\s*\\("
+          ],
+          "context_keywords": [
+            "sign",
+            "verify",
+            "signature"
+          ],
+          "replacements": [
+            {
+              "function_name": "OQS_SIG_sign",
+              "library": "liboqs",
+              "standard": "FIPS 204",
+              "algorithm": "ML-DSA-65",
+              "type": "signature",
+              "migration_notes": "Replace RSA signatures with ML-DSA (CRYSTALS-Dilithium). For extreme security, use SLH-DSA.",
+              "example_code": "OQS_SIG *sig = OQS_SIG_new(OQS_SIG_alg_ml_dsa_65);\nOQS_SIG_sign(sig, signature, &sig_len, message, msg_len, secret_key);",
+              "tc26_note": "ТК 26: гибридная подпись ГОСТ Р 34.10-2012 + ML-DSA-65 на переходный период"
+            }
+          ]
+        },
+        {
+          "id": "ossl-ec-keygen",
+          "name": "EC_KEY_generate_key",
+          "aliases": [
+            "EC_KEY_new_by_curve_name"
+          ],
+          "category": "asymmetric_key_generation",
+          "algorithm": "ECDSA/ECDH",
+          "quantum_vulnerability": "high",
+          "risk_score": 9.3,
+          "description": "EC key generation. ECC is broken by Shor's via ECDLP reduction to Discrete Log on group.",
+          "nist_reference": "NIST SP 800-131A Rev.2 §6",
+          "tc26_reference": "ТК 26: эллиптические кривые ГОСТ Р 34.10-2012 также уязвимы (задача ЗЭДЛП)",
+          "deprecation_url": "https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar2.pdf",
+          "patterns": [
+            "EC_KEY_generate_key\\s*\\(",
+            "EC_KEY_new_by_curve_name\\s*\\("
+          ],
+          "context_keywords": [
+            "key",
+            "ec"
+          ],
+          "replacements": [
+            {
+              "function_name": "OQS_KEM_keypair",
+              "library": "liboqs",
+              "standard": "FIPS 203",
+              "algorithm": "ML-KEM-768",
+              "type": "kem",
+              "migration_notes": "Replace ECDH key generation with ML-KEM keypair.",
+              "example_code": "OQS_KEM *kem = OQS_KEM_new(OQS_KEM_alg_ml_kem_768);\nOQS_KEM_keypair(kem, public_key, secret_key);",
+              "tc26_note": "ТК 26: задача ЗЭДЛП решается алгоритмом Шора; переход на ML-KEM-768"
+            }
+          ]
+        },
+        {
+          "id": "ossl-ecdh",
+          "name": "ECDH_compute_key",
+          "aliases": [],
+          "category": "key_exchange",
+          "algorithm": "ECDH",
+          "quantum_vulnerability": "high",
+          "risk_score": 9.5,
+          "description": "ECDH key agreement. Broken by Shor's. HNDL attack: passive adversary can decrypt TLS now after CRQC.",
+          "nist_reference": "NIST SP 800-131A Rev.2 §6; NIST IR 8547 §2",
+          "tc26_reference": "ТК 26: протокол VKO (выработка общего ключа) по ГОСТ Р 34.10-2012 имеет аналогичную уязвимость",
+          "deprecation_url": "https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar2.pdf",
+          "patterns": [
+            "ECDH_compute_key\\s*\\("
+          ],
+          "context_keywords": [
+            "key_exchange",
+            "ecdh",
+            "dh"
+          ],
+          "replacements": [
+            {
+              "function_name": "OQS_KEM_encaps",
+              "library": "liboqs",
+              "standard": "FIPS 203",
+              "algorithm": "ML-KEM-768",
+              "type": "kem",
+              "migration_notes": "Replace ECDH with ML-KEM encapsulation/decapsulation. Use hybrid X25519+ML-KEM for TLS.",
+              "example_code": "// Hybrid KEM: X25519 + ML-KEM-768\nOQS_KEM *kem = OQS_KEM_new(OQS_KEM_alg_ml_kem_768);\nOQS_KEM_encaps(kem, ct, ss, pk);\n// Combine: HKDF(X25519_secret || ML_KEM_secret)",
+              "tc26_note": "ТК 26: гибридный KEM VKO ГОСТ + ML-KEM-768 через КРФ (HKDF)"
+            }
+          ]
+        },
+        {
+          "id": "ossl-ecdsa-sign",
+          "name": "ECDSA_sign",
+          "aliases": [
+            "ECDSA_verify",
+            "ECDSA_do_sign"
+          ],
+          "category": "digital_signature",
+          "algorithm": "ECDSA",
+          "quantum_vulnerability": "high",
+          "risk_score": 9.2,
+          "description": "ECDSA digital signature. Shor's algorithm solves ECDLP enabling signature forgery.",
+          "nist_reference": "NIST SP 800-131A Rev.2 §6; NIST FIPS 204",
+          "tc26_reference": "ТК 26: ГОСТ Р 34.10-2012 (ЭЦП на ЭК) аналогично уязвим",
+          "deprecation_url": "https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar2.pdf",
+          "patterns": [
+            "ECDSA_sign\\s*\\(",
+            "ECDSA_verify\\s*\\(",
+            "ECDSA_do_sign\\s*\\("
+          ],
+          "context_keywords": [
+            "sign",
+            "ecdsa"
+          ],
+          "replacements": [
+            {
+              "function_name": "OQS_SIG_sign",
+              "library": "liboqs",
+              "standard": "FIPS 204",
+              "algorithm": "ML-DSA-65",
+              "type": "signature",
+              "migration_notes": "Replace ECDSA with ML-DSA-65 (CRYSTALS-Dilithium). Hybrid: ECDSA+ML-DSA for transitional compatibility.",
+              "example_code": "OQS_SIG *sig = OQS_SIG_new(OQS_SIG_alg_ml_dsa_65);\nuint8_t *pk = malloc(sig->length_public_key);\nuint8_t *sk = malloc(sig->length_secret_key);\nOQS_SIG_keypair(sig, pk, sk);",
+              "tc26_note": "ТК 26: гибридная подпись ГОСТ Р 34.10-2012 + ML-DSA-65"
+            }
+          ]
+        },
+        {
+          "id": "ossl-dh-new",
+          "name": "DH_new",
+          "aliases": [
+            "DH_generate_parameters",
+            "DH_generate_parameters_ex"
+          ],
+          "category": "key_exchange",
+          "algorithm": "DH",
+          "quantum_vulnerability": "high",
+          "risk_score": 9.0,
+          "description": "Diffie-Hellman key exchange. Shor's solves DLP in Zp*. Even 4096-bit DH offers zero post-quantum security.",
+          "nist_reference": "NIST SP 800-131A Rev.2 §7; NIST IR 8547",
+          "tc26_reference": "ТК 26: DH не применяется в ГОСТ-профилях, замена — ML-KEM",
+          "deprecation_url": "https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar2.pdf",
+          "patterns": [
+            "DH_new\\s*\\(",
+            "DH_generate_parameters_ex\\s*\\(",
+            "DH_generate_key\\s*\\("
+          ],
+          "context_keywords": [
+            "dh",
+            "key_exchange"
+          ],
+          "replacements": [
+            {
+              "function_name": "OQS_KEM_new",
+              "library": "liboqs",
+              "standard": "FIPS 203",
+              "algorithm": "ML-KEM-1024",
+              "type": "kem",
+              "migration_notes": "Replace DH with ML-KEM. For highest security level use ML-KEM-1024.",
+              "example_code": "OQS_KEM *kem = OQS_KEM_new(OQS_KEM_alg_ml_kem_1024);\nOQS_KEM_keypair(kem, pk, sk);",
+              "tc26_note": ""
+            }
+          ]
+        },
+        {
+          "id": "ossl-dsa-sign",
+          "name": "DSA_sign",
+          "aliases": [
+            "DSA_verify",
+            "DSA_generate_key",
+            "DSA_generate_parameters"
+          ],
+          "category": "digital_signature",
+          "algorithm": "DSA",
+          "quantum_vulnerability": "high",
+          "risk_score": 8.8,
+          "description": "DSA digital signature. Shor's solves DLP in Zp* enabling key recovery and signature forgery.",
+          "nist_reference": "NIST SP 800-131A Rev.2 §9",
+          "tc26_reference": "ТК 26: DSA не применяется в РФ; см. ГОСТ Р 34.10-2012",
+          "deprecation_url": "https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar2.pdf",
+          "patterns": [
+            "DSA_sign\\s*\\(",
+            "DSA_verify\\s*\\(",
+            "DSA_generate_key\\s*\\("
+          ],
+          "context_keywords": [
+            "dsa",
+            "sign"
+          ],
+          "replacements": [
+            {
+              "function_name": "OQS_SIG_sign",
+              "library": "liboqs",
+              "standard": "FIPS 205",
+              "algorithm": "SLH-DSA-SHAKE-128s",
+              "type": "signature",
+              "migration_notes": "Replace DSA with SLH-DSA (SPHINCS+) for stateless hash-based signatures.",
+              "example_code": "OQS_SIG *sig = OQS_SIG_new(OQS_SIG_alg_sphincs_shake_128s);\nOQS_SIG_sign(sig, signature, &sig_len, msg, msg_len, sk);",
+              "tc26_note": ""
+            }
+          ]
+        },
+        {
+          "id": "ossl-sha1",
+          "name": "SHA1",
+          "aliases": [
+            "SHA_CTX",
+            "SHA1_Init",
+            "SHA1_Update",
+            "SHA1_Final"
+          ],
+          "category": "hash_function",
+          "algorithm": "SHA-1",
+          "quantum_vulnerability": "medium",
+          "risk_score": 7.5,
+          "description": "SHA-1 hash function. Classically broken (collision attacks). Grover's further reduces preimage resistance to 80 bits quantum. NIST deprecated since 2011.",
+          "nist_reference": "NIST SP 800-131A Rev.2 §9",
+          "tc26_reference": "ТК 26: SHA-1 не допускается; использовать Стрибог-256 (ГОСТ Р 34.11-2012)",
+          "deprecation_url": "https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar2.pdf",
+          "patterns": [
+            "\\bSHA1\\s*\\(",
+            "SHA1_Init\\s*\\(",
+            "SHA1_Update\\s*\\("
+          ],
+          "context_keywords": [
+            "hash",
+            "digest"
+          ],
+          "replacements": [
+            {
+              "function_name": "EVP_sha256",
+              "library": "openssl",
+              "standard": "SP 800-107",
+              "algorithm": "SHA-256",
+              "type": "hash",
+              "migration_notes": "Replace SHA-1 with SHA-256 minimum (SHA-384 preferred for PQC). SHA-3/256 for new designs.",
+              "example_code": "EVP_MD_CTX *ctx = EVP_MD_CTX_new();\nEVP_DigestInit_ex(ctx, EVP_sha256(), NULL);\nEVP_DigestUpdate(ctx, data, data_len);\nEVP_DigestFinal_ex(ctx, hash, &hash_len);",
+              "tc26_note": "ТК 26: рекомендован Стрибог-256 (ГОСТ Р 34.11-2012) для отечественных систем"
+            }
+          ]
+        },
+        {
+          "id": "ossl-md5",
+          "name": "MD5",
+          "aliases": [
+            "MD5_Init",
+            "MD5_Update",
+            "MD5_Final"
+          ],
+          "category": "hash_function",
+          "algorithm": "MD5",
+          "quantum_vulnerability": "high",
+          "risk_score": 8.5,
+          "description": "MD5 completely broken classically (collision in seconds). No post-quantum relevance — simply insecure.",
+          "nist_reference": "NIST SP 800-131A Rev.2; CVE database",
+          "tc26_reference": "ТК 26: MD5 категорически не допускается",
+          "deprecation_url": "https://www.rfc-editor.org/rfc/rfc6151",
+          "patterns": [
+            "\\bMD5\\s*\\(",
+            "MD5_Init\\s*\\("
+          ],
+          "context_keywords": [
+            "hash",
+            "digest"
+          ],
+          "replacements": [
+            {
+              "function_name": "EVP_sha3_256",
+              "library": "openssl",
+              "standard": "FIPS 202",
+              "algorithm": "SHA3-256",
+              "type": "hash",
+              "migration_notes": "Replace MD5 immediately with SHA-256 minimum; prefer SHA3-256 for new code.",
+              "example_code": "EVP_MD_CTX *ctx = EVP_MD_CTX_new();\nEVP_DigestInit_ex(ctx, EVP_sha3_256(), NULL);\nEVP_DigestUpdate(ctx, data, len);\nEVP_DigestFinal_ex(ctx, hash, NULL);",
+              "tc26_note": ""
+            }
+          ]
+        },
+        {
+          "id": "ossl-evp-pkey",
+          "name": "EVP_PKEY_CTX_new",
+          "aliases": [
+            "EVP_PKEY_encrypt",
+            "EVP_PKEY_decrypt",
+            "EVP_PKEY_keygen",
+            "EVP_DigestSignInit"
+          ],
+          "category": "asymmetric_encryption",
+          "algorithm": "RSA/EC (EVP)",
+          "quantum_vulnerability": "high",
+          "risk_score": 8.5,
+          "description": "EVP high-level API for RSA/EC operations. Quantum-vulnerable when using RSA/EC key types.",
+          "nist_reference": "NIST IR 8547",
+          "tc26_reference": "ТК 26: проверить тип ключа EVP; при RSA/EC — заменить на ML-KEM/ML-DSA через oqsprovider",
+          "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/EVP_PKEY_CTX_new.html",
+          "patterns": [
+            "EVP_PKEY_CTX_new\\s*\\(",
+            "EVP_PKEY_keygen\\s*\\(",
+            "EVP_DigestSignInit\\s*\\("
+          ],
+          "context_keywords": [
+            "evp",
+            "pkey"
+          ],
+          "replacements": [
+            {
+              "function_name": "EVP_PKEY_CTX_new (oqsprovider)",
+              "library": "oqsprovider + openssl",
+              "standard": "FIPS 203/204",
+              "algorithm": "ML-KEM-768 / ML-DSA-65",
+              "type": "provider",
+              "migration_notes": "Use OpenSSL oqsprovider to enable PQC algorithms via the same EVP API.",
+              "example_code": "OSSL_PROVIDER *oqsprov = OSSL_PROVIDER_load(NULL, \"oqsprovider\");\nEVP_PKEY_CTX *ctx = EVP_PKEY_CTX_new_from_name(NULL, \"ml-kem-768\", NULL);\nEVP_PKEY_keygen_init(ctx);",
+              "tc26_note": "ТК 26: использовать oqsprovider с профилем ML-KEM-768"
+            }
+          ]
+        }
+      ]
+    },
+    "cryptopp": {
+      "display_name": "Crypto++",
+      "version_tested": "8.x",
+      "functions": [
+        {
+          "id": "cpp-rsa-private",
+          "name": "RSA::PrivateKey",
+          "aliases": [
+            "RSA::PublicKey",
+            "InvertibleRSAFunction"
+          ],
+          "category": "asymmetric_key_generation",
+          "algorithm": "RSA",
+          "quantum_vulnerability": "high",
+          "risk_score": 9.5,
+          "description": "Crypto++ RSA key classes. RSA broken by Shor's algorithm.",
+          "nist_reference": "NIST SP 800-131A Rev.2",
+          "tc26_reference": "ТК 26: RSA не в ГОСТ-профилях",
+          "deprecation_url": "https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar2.pdf",
+          "patterns": [
+            "RSA::PrivateKey",
+            "RSA::PublicKey",
+            "InvertibleRSAFunction"
+          ],
+          "context_keywords": [
+            "rsa",
+            "key"
+          ],
+          "replacements": [
+            {
+              "function_name": "OQS_KEM_new",
+              "library": "liboqs",
+              "standard": "FIPS 203",
+              "algorithm": "ML-KEM-768",
+              "type": "kem",
+              "migration_notes": "Replace Crypto++ RSA with liboqs ML-KEM.",
+              "example_code": "OQS_KEM *kem = OQS_KEM_new(OQS_KEM_alg_ml_kem_768);",
+              "tc26_note": ""
+            }
+          ]
+        },
+        {
+          "id": "cpp-rsaes-oaep",
+          "name": "RSAES_OAEP_SHA_Encryptor",
+          "aliases": [
+            "RSAES_PKCS1v15_Encryptor",
+            "RSAES_OAEP_SHA_Decryptor"
+          ],
+          "category": "asymmetric_encryption",
+          "algorithm": "RSA-OAEP",
+          "quantum_vulnerability": "high",
+          "risk_score": 9.8,
+          "description": "Crypto++ RSA-OAEP encryption. Vulnerable to Shor's (HNDL risk).",
+          "nist_reference": "NIST SP 800-131A Rev.2",
+          "tc26_reference": "ТК 26: HNDL-угроза критична для долгосрочных данных",
+          "deprecation_url": "https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar2.pdf",
+          "patterns": [
+            "RSAES_OAEP_SHA_Encryptor",
+            "RSAES_PKCS1v15_Encryptor"
+          ],
+          "context_keywords": [
+            "encrypt"
+          ],
+          "replacements": [
+            {
+              "function_name": "OQS_KEM_encaps",
+              "library": "liboqs",
+              "standard": "FIPS 203",
+              "algorithm": "ML-KEM-768",
+              "type": "kem",
+              "migration_notes": "Replace RSAES-OAEP with ML-KEM encapsulation.",
+              "example_code": "OQS_KEM_encaps(kem, ct, ss, pk); // use ss as symmetric key",
+              "tc26_note": "ТК 26: приоритет максимальный — HNDL"
+            }
+          ]
+        },
+        {
+          "id": "cpp-ecdh",
+          "name": "ECDH",
+          "aliases": [
+            "ECMQV"
+          ],
+          "category": "key_exchange",
+          "algorithm": "ECDH",
+          "quantum_vulnerability": "high",
+          "risk_score": 9.5,
+          "description": "Crypto++ ECDH. ECDLP broken by Shor's.",
+          "nist_reference": "NIST SP 800-131A Rev.2",
+          "tc26_reference": "ТК 26: см. VKO ГОСТ Р 34.10-2012",
+          "deprecation_url": "https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar2.pdf",
+          "patterns": [
+            "\\bECDH\\s*<",
+            "\\bECDH\\s*\\("
+          ],
+          "context_keywords": [
+            "ecdh"
+          ],
+          "replacements": [
+            {
+              "function_name": "OQS_KEM_encaps",
+              "library": "liboqs",
+              "standard": "FIPS 203",
+              "algorithm": "ML-KEM-768",
+              "type": "kem",
+              "migration_notes": "Replace Crypto++ ECDH with ML-KEM.",
+              "example_code": "OQS_KEM *kem = OQS_KEM_new(OQS_KEM_alg_ml_kem_768);\nOQS_KEM_encaps(kem, ct, ss, pk);",
+              "tc26_note": ""
+            }
+          ]
+        },
+        {
+          "id": "cpp-ecdsa",
+          "name": "ECDSA",
+          "aliases": [
+            "ECGDSA",
+            "ECNR"
+          ],
+          "category": "digital_signature",
+          "algorithm": "ECDSA",
+          "quantum_vulnerability": "high",
+          "risk_score": 9.2,
+          "description": "Crypto++ ECDSA signatures. ECDLP → Shor's.",
+          "nist_reference": "NIST SP 800-131A Rev.2",
+          "tc26_reference": "ТК 26: аналог — ГОСТ Р 34.10-2012, тоже уязвим",
+          "deprecation_url": "https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar2.pdf",
+          "patterns": [
+            "\\bECDSA\\s*<",
+            "ECDSA::Signer",
+            "ECDSA::Verifier"
+          ],
+          "context_keywords": [
+            "sign",
+            "ecdsa"
+          ],
+          "replacements": [
+            {
+              "function_name": "OQS_SIG_sign",
+              "library": "liboqs",
+              "standard": "FIPS 204",
+              "algorithm": "ML-DSA-65",
+              "type": "signature",
+              "migration_notes": "Replace Crypto++ ECDSA with ML-DSA.",
+              "example_code": "OQS_SIG *sig = OQS_SIG_new(OQS_SIG_alg_ml_dsa_65);",
+              "tc26_note": "ТК 26: гибрид ГОСТ Р 34.10-2012 + ML-DSA-65"
+            }
+          ]
+        },
+        {
+          "id": "cpp-dh",
+          "name": "DH2",
+          "aliases": [
+            "DH",
+            "MQV"
+          ],
+          "category": "key_exchange",
+          "algorithm": "DH",
+          "quantum_vulnerability": "high",
+          "risk_score": 9.0,
+          "description": "Crypto++ Diffie-Hellman. DLP in Zp* → Shor's.",
+          "nist_reference": "NIST SP 800-131A Rev.2",
+          "tc26_reference": "",
+          "deprecation_url": "https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar2.pdf",
+          "patterns": [
+            "\\bDH2?\\s*\\(",
+            "\\bMQV\\s*\\("
+          ],
+          "context_keywords": [
+            "dh",
+            "key_exchange"
+          ],
+          "replacements": [
+            {
+              "function_name": "OQS_KEM_new",
+              "library": "liboqs",
+              "standard": "FIPS 203",
+              "algorithm": "ML-KEM-1024",
+              "type": "kem",
+              "migration_notes": "Replace DH with ML-KEM-1024.",
+              "example_code": "OQS_KEM *kem = OQS_KEM_new(OQS_KEM_alg_ml_kem_1024);",
+              "tc26_note": ""
+            }
+          ]
+        }
+      ]
+    },
+    "gost_openssl": {
+      "display_name": "ГОСТ OpenSSL Engine / CryptoPro",
+      "version_tested": "gost-engine 3.x",
+      "functions": [
+        {
+          "id": "gost-ec-sign",
+          "name": "gost_ec_sign",
+          "aliases": [
+            "gost_ec_verify",
+            "GOST_R3410_keypair"
+          ],
+          "category": "digital_signature",
+          "algorithm": "ГОСТ Р 34.10-2012 (ЭЦП на ЭК)",
+          "quantum_vulnerability": "high",
+          "risk_score": 9.2,
+          "description": "ГОСТ Р 34.10-2012 ЭЦП на эллиптических кривых (256/512 бит). Задача дискретного логарифмирования на ЭК решается алгоритмом Шора за полиномиальное время.",
+          "nist_reference": "NIST IR 8547 §2 (ECDLP analogy)",
+          "tc26_reference": "ТК 26: ГОСТ Р 34.10-2012 квантово-уязвим через ЗАДЛП; в переходный период — гибрид ГОСТ + ML-DSA-65",
+          "deprecation_url": "https://tc26.ru/post-quantum",
+          "patterns": [
+            "gost_ec_sign\\s*\\(",
+            "gost_ec_verify\\s*\\(",
+            "GOST_R3410_keypair\\s*\\("
+          ],
+          "context_keywords": [
+            "gost",
+            "sign"
+          ],
+          "replacements": [
+            {
+              "function_name": "OQS_SIG_sign",
+              "library": "liboqs",
+              "standard": "FIPS 204",
+              "algorithm": "ML-DSA-65",
+              "type": "signature",
+              "migration_notes": "Гибридная схема: ГОСТ Р 34.10-2012 + ML-DSA-65. Объединять подписи через конкатенацию и раздельную верификацию.",
+              "example_code": "// Hybrid: sign with GOST AND ML-DSA\n// GOST signature: existing code\n// ML-DSA signature:\nOQS_SIG *sig = OQS_SIG_new(OQS_SIG_alg_ml_dsa_65);\nOQS_SIG_sign(sig, mlDsa_sig, &sig_len, msg, msg_len, sk);",
+              "tc26_note": "ТК 26: гибридная подпись ГОСТ Р 34.10-2012 + ML-DSA-65 обязательна в переходный период"
+            }
+          ]
+        },
+        {
+          "id": "gost-vko",
+          "name": "VKO_cryptopro_2001",
+          "aliases": [
+            "VKO_cryptopro_2012",
+            "gost_vko_compute"
+          ],
+          "category": "key_exchange",
+          "algorithm": "VKO ГОСТ Р 34.10-2012",
+          "quantum_vulnerability": "high",
+          "risk_score": 9.5,
+          "description": "Протокол выработки общего ключа (VKO) на основе ГОСТ Р 34.10-2012. Основан на ЗАДЛП на ЭК — уязвим к алгоритму Шора.",
+          "nist_reference": "NIST IR 8547 (ECDH analogy)",
+          "tc26_reference": "ТК 26: протокол VKO подлежит замене; гибридный KEM: VKO + ML-KEM-768 через КРФ (HKDF)",
+          "deprecation_url": "https://tc26.ru/post-quantum",
+          "patterns": [
+            "VKO_cryptopro_2001\\s*\\(",
+            "VKO_cryptopro_2012\\s*\\(",
+            "gost_vko_compute\\s*\\("
+          ],
+          "context_keywords": [
+            "vko",
+            "key_exchange"
+          ],
+          "replacements": [
+            {
+              "function_name": "OQS_KEM_encaps",
+              "library": "liboqs",
+              "standard": "FIPS 203",
+              "algorithm": "ML-KEM-768",
+              "type": "kem",
+              "migration_notes": "Гибридный KEM: вычислить VKO (классический), вычислить ML-KEM shared_secret, объединить через HKDF.",
+              "example_code": "// Classical VKO (existing)\n// PQ part:\nOQS_KEM *kem = OQS_KEM_new(OQS_KEM_alg_ml_kem_768);\nOQS_KEM_encaps(kem, ct, pq_ss, pk);\n// Combine: HKDF(vko_secret || pq_ss)",
+              "tc26_note": "ТК 26: гибридный KEM обязателен в переходный период 2025–2030"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

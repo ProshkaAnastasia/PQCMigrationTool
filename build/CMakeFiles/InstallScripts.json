@@ -1,0 +1,9 @@
+{
+	"InstallScripts" : 
+	[
+		"/Users/anastasiapronina/Downloads/pqc-migration-tool-v2/build/cmake_install.cmake",
+		"/Users/anastasiapronina/Downloads/pqc-migration-tool-v2/build/_deps/nlohmann_json-build/cmake_install.cmake",
+		"/Users/anastasiapronina/Downloads/pqc-migration-tool-v2/build/tests/cmake_install.cmake"
+	],
+	"Parallel" : false
+}
