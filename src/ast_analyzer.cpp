@@ -25,6 +25,9 @@ ASTAnalyzer::~ASTAnalyzer() = default;
 
 void ASTAnalyzer::set_include_dirs(const std::vector<std::string>& dirs) {
     include_dirs_ = dirs;
+#ifdef PQC_OPENSSL_INCLUDE_DIR
+    include_dirs_.push_back(PQC_OPENSSL_INCLUDE_DIR);
+#endif
 }
 
 std::vector<Finding> ASTAnalyzer::analyze(const ProjectInventory& inv) const {
@@ -46,6 +49,7 @@ std::vector<Finding> ASTAnalyzer::analyze_file(const std::filesystem::path& p) c
 #ifdef PQC_HAS_LIBCLANG
     if (has_libclang_) {
         if (!try_libclang(p, out)) {
+            // parse failed — fall back silently
             out = fallback_->analyze_file(p);
         }
         return out;
@@ -158,17 +162,14 @@ static std::string resolve_arg_value(CXCursor arg_cursor, CXTranslationUnit tu) 
 
     if (kind == CXCursor_DeclRefExpr) {
         std::string resolved = resolve_decl_ref(arg_cursor, tu);
+        CXString sp = clang_getCursorSpelling(arg_cursor);
+        std::string name = clang_getCString(sp);
+        clang_disposeString(sp);
         if (!resolved.empty()) {
-            CXString sp = clang_getCursorSpelling(arg_cursor);
-            std::string name = clang_getCString(sp);
-            clang_disposeString(sp);
             if (!name.empty() && resolved != name)
                 return name + "=" + resolved;
             return resolved;
         }
-        CXString sp = clang_getCursorSpelling(arg_cursor);
-        std::string name = clang_getCString(sp);
-        clang_disposeString(sp);
         return name;
     }
 
@@ -247,22 +248,37 @@ CXChildVisitResult ast_visitor(CXCursor cursor, CXCursor /*parent*/, CXClientDat
     }
 
     if (kind == CXCursor_CallExpr) {
-        std::string fname;
+        // Базовый spelling CallExpr
+        CXString cs0 = clang_getCursorSpelling(cursor);
+        std::string call_spelling = clang_getCString(cs0);
+        clang_disposeString(cs0);
+
+        // Попытка взять declaration
         CXCursor ref = clang_getCursorReferenced(cursor);
+        std::string ref_spelling;
         if (!clang_Cursor_isNull(ref) && !clang_equalCursors(ref, cursor)) {
             CXString rs = clang_getCursorSpelling(ref);
-            fname = clang_getCString(rs);
+            ref_spelling = clang_getCString(rs);
             clang_disposeString(rs);
         }
-        if (fname.empty()) {
-            CXString cs = clang_getCursorSpelling(cursor);
-            fname = clang_getCString(cs);
-            clang_disposeString(cs);
-        }
+
+        std::string fname = ref_spelling.empty() ? call_spelling : ref_spelling;
+
+        std::cerr
+            << "[CALLDBG] line=" << line
+            << " col=" << col
+            << " call_spelling='" << call_spelling << "'"
+            << " ref_spelling='" << ref_spelling << "'"
+            << " final_name='" << fname << "'\n";
 
         if (!fname.empty()) {
             auto opt = vd->db.find_by_name(fname);
-            if (opt) {
+            if (!opt) {
+                std::cerr << "  [CALLDBG] NO DB MATCH for '" << fname << "'\n";
+            } else {
+                std::cerr << "  [CALLDBG] DB MATCH id='" << opt->id
+                          << "' name='" << opt->name << "'\n";
+
                 Finding f;
                 f.function_name         = opt->name;
                 f.file_path             = vd->file_path;
@@ -280,6 +296,7 @@ CXChildVisitResult ast_visitor(CXCursor cursor, CXCursor /*parent*/, CXClientDat
                 f.context_function      = vd->cur_fn.empty() ? "<global>" : vd->cur_fn;
                 f.context_class         = vd->cur_cls;
                 f.context_namespace     = vd->cur_ns;
+
                 if (line > 0 && line <= (unsigned)vd->lines.size())
                     f.raw_line = vd->lines[line - 1];
 
@@ -299,6 +316,8 @@ CXChildVisitResult ast_visitor(CXCursor cursor, CXCursor /*parent*/, CXClientDat
 
                 vd->findings.push_back(std::move(f));
             }
+        } else {
+            std::cerr << "  [CALLDBG] EMPTY FUNCTION NAME at line " << line << "\n";
         }
     }
 
@@ -313,12 +332,12 @@ CXChildVisitResult ast_visitor(CXCursor cursor, CXCursor /*parent*/, CXClientDat
     return CXChildVisit_Continue;
 }
 
-}
+} // anonymous namespace
 
 bool ASTAnalyzer::try_libclang(const std::filesystem::path& path,
                                std::vector<Finding>& out) const
 {
-    constexpr bool kAstDebug = true; // потом можно сделать через cfg.verbose / env
+    constexpr bool kAstDebug = true;
 
     auto dbg = [&](const std::string& msg) {
         if (kAstDebug) std::cerr << "[ASTDBG] " << msg << "\n";
@@ -352,6 +371,12 @@ bool ASTAnalyzer::try_libclang(const std::filesystem::path& path,
         "-w",
         "-ferror-limit=0",
     };
+
+#ifdef PQC_MACOS_SDKROOT
+    dbg(std::string("using macOS SDK = ") + PQC_MACOS_SDKROOT);
+    args_str.push_back("-isysroot");
+    args_str.push_back(PQC_MACOS_SDKROOT);
+#endif
 
     for (const auto& d : include_dirs_) {
         args_str.push_back("-I");
@@ -422,6 +447,14 @@ bool ASTAnalyzer::try_libclang(const std::filesystem::path& path,
     dbg("errors           = " + std::to_string(err_count));
     dbg("fatal errors     = " + std::to_string(fatal_count));
 
+    for (const char* probe : {"SHA1", "MD5", "DH_generate_parameters_ex"}) {
+        auto hit = db_.find_by_name(probe);
+        std::cerr << "[DBDBG] lookup '" << probe << "' => "
+                  << (hit ? ("FOUND id=" + hit->id + " name=" + hit->name)
+                          : "NOT FOUND")
+                  << "\n";
+    }
+
     const std::size_t before = out.size();
 
     VisitData vd{db_, out, real_path.string(), lines, tu, "", "", ""};
@@ -442,6 +475,6 @@ bool ASTAnalyzer::try_libclang(const std::filesystem::path& path,
     return true;
 }
 
-#endif 
+#endif
 
 } 

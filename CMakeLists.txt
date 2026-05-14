@@ -50,6 +50,22 @@ if(PQC_LIBCLANG_AVAILABLE)
     target_include_directories(pqc_core PUBLIC ${LibClang_INCLUDE_DIRS})
     target_link_libraries(pqc_core PUBLIC ${LibClang_LIBRARIES})
 endif()
+target_compile_definitions(pqc_core PUBLIC
+    PQC_OPENSSL_INCLUDE_DIR="${OPENSSL_INCLUDE_DIR}"
+)
+
+if(APPLE)
+  execute_process(
+    COMMAND xcrun --sdk macosx --show-sdk-path
+    OUTPUT_VARIABLE PQC_MACOS_SDKROOT
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+  )
+  if(PQC_MACOS_SDKROOT)
+    target_compile_definitions(pqc_core PUBLIC
+      PQC_MACOS_SDKROOT="${PQC_MACOS_SDKROOT}"
+    )
+  endif()
+endif()
 
 add_executable(pqc-migration-tool src/main.cpp)
 target_link_libraries(pqc-migration-tool PRIVATE pqc_core)
