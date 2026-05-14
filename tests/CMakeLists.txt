@@ -15,7 +15,8 @@ target_include_directories(pqc_unit_tests PRIVATE
 target_link_libraries(pqc_unit_tests PRIVATE pqc_core)
 target_compile_definitions(pqc_unit_tests PRIVATE
     PQC_TEST_FIXTURES_DIR="${CMAKE_SOURCE_DIR}/tests/fixtures"
-    PQC_TEST_DATA_DIR="${CMAKE_SOURCE_DIR}/data")
+    PQC_TEST_DATA_DIR="${CMAKE_SOURCE_DIR}/data"
+    PQC_TEST_OPENSSL_INCLUDE_DIR="${OPENSSL_INCLUDE_DIR}")
 add_test(NAME unit_tests COMMAND pqc_unit_tests
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 

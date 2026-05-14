@@ -1,12 +1,33 @@
 {
   "version": "0.2.0",
   "configurations": [
-    { "name": "Debug: pqc_scanner", "type": "cppdbg", "request": "launch",
-      "program": "${workspaceFolder}/build/bin/pqc_migration_tool",
-      "args": ["--path","${workspaceFolder}/data/samples","--verbose"],
-      "cwd": "${workspaceFolder}", "MIMode": "lldb", "preLaunchTask": "CMake: Build All" },
-    { "name": "Debug: pqc_tests", "type": "cppdbg", "request": "launch",
-      "program": "${workspaceFolder}/build/bin/pqc_tests",
-      "cwd": "${workspaceFolder}", "MIMode": "lldb", "preLaunchTask": "CMake: Build All" }
+    {
+      "name": "Debug: pqc-migration-tool",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/pqc-migration-tool",
+      "args": ["--path", "${workspaceFolder}/data/samples", "--verbose"],
+      "cwd": "${workspaceFolder}",
+      "MIMode": "lldb",
+      "preLaunchTask": "CMake: Build All"
+    },
+    {
+      "name": "Debug: pqc_unit_tests",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/tests/pqc_unit_tests",
+      "cwd": "${workspaceFolder}",
+      "MIMode": "lldb",
+      "preLaunchTask": "CMake: Build All"
+    },
+    {
+      "name": "Debug: pqc_integration_tests",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/tests/pqc_integration_tests",
+      "cwd": "${workspaceFolder}",
+      "MIMode": "lldb",
+      "preLaunchTask": "CMake: Build All"
+    }
   ]
 }

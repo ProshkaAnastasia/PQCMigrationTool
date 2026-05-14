@@ -22,13 +22,46 @@ bool CppLanguagePlugin::matches(const std::filesystem::path& p) const {
     static const std::set<std::string> ext={".cpp",".cxx",".cc",".c",".hpp",".hxx",".hh",".h",".ipp",".inl"};
     return ext.count(p.extension().string())>0;
 }
+
 FileCategory CppLanguagePlugin::categorize(const std::filesystem::path& p) const {
-    std::string s=p.string(); std::transform(s.begin(),s.end(),s.begin(),::tolower);
-    static const std::vector<std::string> thead={".hpp",".hxx",".hh",".h",".ipp",".inl"};
-    for(auto& e:thead) if(p.extension().string()==e) return FileCategory::HEADER;
-    if(s.find("/test")!=std::string::npos||s.find("_test.")!=std::string::npos||s.find("test_")!=std::string::npos) return FileCategory::TEST;
+    static const std::set<std::string> header_ext = {
+        ".hpp", ".hxx", ".hh", ".h", ".ipp", ".inl"
+    };
+
+    std::string ext = p.extension().string();
+    std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
+    if (header_ext.count(ext)) return FileCategory::HEADER;
+
+    std::vector<std::string> parts;
+    for (const auto& part : p) {
+        std::string s = part.string();
+        std::transform(s.begin(), s.end(), s.begin(), ::tolower);
+        parts.push_back(s);
+    }
+
+    std::string filename = p.filename().string();
+    std::transform(filename.begin(), filename.end(), filename.begin(), ::tolower);
+
+    bool in_tests = false;
+    bool in_fixtures = false;
+
+    for (const auto& part : parts) {
+        if (part == "test" || part == "tests") 
+            in_tests = true;
+        if (part == "fixture" || part == "fixtures" || part == "samples") 
+            in_fixtures = true;
+    }
+
+    if (in_tests && in_fixtures) 
+        return FileCategory::SOURCE;
+    if (filename.find("_test.") != std::string::npos || filename.rfind("test_", 0) == 0)
+        return FileCategory::TEST;
+    if (in_tests) 
+        return FileCategory::TEST;
+
     return FileCategory::SOURCE;
 }
+
 bool CMakeLanguagePlugin::matches(const std::filesystem::path& p) const {
     std::string fn=p.filename().string(); std::string ext=p.extension().string();
     return fn=="CMakeLists.txt"||ext==".cmake";
