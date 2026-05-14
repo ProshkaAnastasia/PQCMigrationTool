@@ -1,10 +1,10 @@
 #pragma once
-// Minimal test runner — no external dependencies required.
 #include <iostream>
 #include <vector>
 #include <functional>
 #include <stdexcept>
 #include <string>
+#include <sstream> 
 
 struct TestCase { std::string name; std::function<void()> fn; };
 
@@ -30,18 +30,78 @@ private:
     std::vector<TestCase> cases_;
 };
 
-// Assertions
+template<typename T>
+inline std::string test_to_string(const T& value) {
+    std::ostringstream oss;
+    oss << value;
+    return oss.str();
+}
+
+inline std::string test_to_string(const std::string& value) {
+    return value;
+}
+
+inline std::string test_to_string(const char* value) {
+    return value ? std::string(value) : std::string("(null)");
+}
+
 #define ASSERT_TRUE(cond) \
-    do { if(!(cond)) throw std::runtime_error("ASSERT_TRUE failed: " #cond " at line " + std::to_string(__LINE__)); } while(0)
+    do { \
+        if(!(cond)) \
+            throw std::runtime_error(std::string("ASSERT_TRUE failed: ") + #cond + \
+                                     " at line " + std::to_string(__LINE__)); \
+    } while(0)
+
 #define ASSERT_FALSE(cond) \
-    do { if(cond) throw std::runtime_error("ASSERT_FALSE failed: " #cond " at line " + std::to_string(__LINE__)); } while(0)
+    do { \
+        if(cond) \
+            throw std::runtime_error(std::string("ASSERT_FALSE failed: ") + #cond + \
+                                     " at line " + std::to_string(__LINE__)); \
+    } while(0)
+
 #define ASSERT_EQ(a,b) \
-    do { if((a)!=(b)) throw std::runtime_error(std::string("ASSERT_EQ: ") + std::to_string(a) + " != " + std::to_string(b) + " at line " + std::to_string(__LINE__)); } while(0)
+    do { \
+        auto _a = (a); \
+        auto _b = (b); \
+        if(!(_a == _b)) \
+            throw std::runtime_error(std::string("ASSERT_EQ: ") + \
+                                     test_to_string(_a) + " != " + test_to_string(_b) + \
+                                     " at line " + std::to_string(__LINE__)); \
+    } while(0)
+
 #define ASSERT_GT(a,b) \
-    do { if(!((a)>(b))) throw std::runtime_error(std::string("ASSERT_GT: ") + std::to_string(a) + " <= " + std::to_string(b) + " at line " + std::to_string(__LINE__)); } while(0)
+    do { \
+        auto _a = (a); \
+        auto _b = (b); \
+        if(!(_a > _b)) \
+            throw std::runtime_error(std::string("ASSERT_GT: ") + \
+                                     test_to_string(_a) + " <= " + test_to_string(_b) + \
+                                     " at line " + std::to_string(__LINE__)); \
+    } while(0)
+
 #define ASSERT_GE(a,b) \
-    do { if(!((a)>=(b))) throw std::runtime_error(std::string("ASSERT_GE: ") + std::to_string(a) + " < " + std::to_string(b) + " at line " + std::to_string(__LINE__)); } while(0)
+    do { \
+        auto _a = (a); \
+        auto _b = (b); \
+        if(!(_a >= _b)) \
+            throw std::runtime_error(std::string("ASSERT_GE: ") + \
+                                     test_to_string(_a) + " < " + test_to_string(_b) + \
+                                     " at line " + std::to_string(__LINE__)); \
+    } while(0)
+
 #define ASSERT_NOT_EMPTY(v) \
-    do { if((v).empty()) throw std::runtime_error("ASSERT_NOT_EMPTY: " #v " is empty at line " + std::to_string(__LINE__)); } while(0)
+    do { \
+        if((v).empty()) \
+            throw std::runtime_error(std::string("ASSERT_NOT_EMPTY: ") + #v + \
+                                     " is empty at line " + std::to_string(__LINE__)); \
+    } while(0)
+
 #define ASSERT_CONTAINS(str, sub) \
-    do { if(std::string(str).find(sub)==std::string::npos) throw std::runtime_error(std::string("ASSERT_CONTAINS: '") + (sub) + "' not in '" + std::string(str).substr(0,80) + "' at line " + std::to_string(__LINE__)); } while(0)
+    do { \
+        auto _s = std::string(str); \
+        auto _sub = std::string(sub); \
+        if(_s.find(_sub) == std::string::npos) \
+            throw std::runtime_error(std::string("ASSERT_CONTAINS: '") + _sub + \
+                                     "' not in '" + _s.substr(0,80) + \
+                                     "' at line " + std::to_string(__LINE__)); \
+    } while(0)
