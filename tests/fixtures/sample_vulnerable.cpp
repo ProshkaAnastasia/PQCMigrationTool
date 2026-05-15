@@ -22,7 +22,7 @@ namespace tls {
 class TLSHandshake {
 public:
     /// Generates RSA server key — FINDING #1
-    RSA* generate_server_key(int key_bits) {
+    RSA* generate_server_key(int key_bits) {    
         RSA* rsa = RSA_new();
         BIGNUM* e = BN_new();
         BN_set_word(e, RSA_F4);
