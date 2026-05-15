@@ -3,409 +3,771 @@
   "last_updated": "2026-05-05",
   "description": "PQC Migration Tool — Quantum-Vulnerable Cryptographic Function Database. Libraries: openssl, cryptopp, gost_openssl.",
   "libraries": {
-    "openssl": {
-      "display_name": "OpenSSL",
-      "version_tested": "3.x",
+    "openssl": { 
+      "version_range": ">=0.9.8",
+      "description": "OpenSSL cryptographic library",
       "functions": [
         {
-          "id": "ossl-rsa-keygen",
-          "name": "RSA_generate_key_ex",
-          "aliases": [
-            "RSA_generate_key"
-          ],
+          "id": "ossl-rsa-generate-key",
+          "name": "RSA_generate_key",
+          "aliases": ["RSA_generate_key_ex"],
           "category": "asymmetric_key_generation",
           "algorithm": "RSA",
           "quantum_vulnerability": "high",
-          "risk_score": 9.5,
-          "description": "RSA key pair generation. RSA is broken by Shor's quantum algorithm (solves IFP in poly time). Key size irrelevant once CRQC exists.",
-          "nist_reference": "NIST SP 800-131A Rev.2 §2; NIST IR 8547",
-          "tc26_reference": "ТК 26: RSA не включён в ГОСТ-профили PQC; замена через ML-KEM или ГОСТ-PQC (в разработке)",
-          "deprecation_url": "https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar2.pdf",
-          "patterns": [
-            "RSA_generate_key_ex\\s*\\(",
-            "RSA_generate_key\\s*\\("
-          ],
-          "context_keywords": [
-            "key",
-            "rsa"
-          ],
+          "risk_score": 10.0,
+          "description": "Generates an RSA key pair. RSA is fully broken by Shor's algorithm on a cryptographically relevant quantum computer. Any key generated with this function provides no post-quantum security.",
+          "nist_reference": "NIST SP 800-131A Rev.2; NIST IR 8413 (NISTIR 8413)",
+          "tc26_reference": "Рекомендации ТК 26 по переходу на постквантовые алгоритмы: RSA подлежит замене. См. методические рекомендации по применению ГОСТ Р 34.12.",
+          "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/RSA_generate_key_ex.html",
+          "patterns": ["RSA_generate_key\\s*\\(", "RSA_generate_key_ex\\s*\\("],
+          "context_keywords": ["rsa", "key", "generate", "pkey"],
           "replacements": [
             {
-              "function_name": "OQS_KEM_new",
-              "library": "liboqs",
-              "standard": "FIPS 203",
-              "algorithm": "ML-KEM-1024",
-              "type": "kem",
-              "migration_notes": "Replace RSA key generation with ML-KEM key pair generation. Use OQS_KEM_alg_ml_kem_1024 for highest security level.",
-              "example_code": "OQS_KEM *kem = OQS_KEM_new(OQS_KEM_alg_ml_kem_1024);\nuint8_t *pk = malloc(kem->length_public_key);\nuint8_t *sk = malloc(kem->length_secret_key);\nOQS_KEM_keypair(kem, pk, sk);",
-              "tc26_note": "ТК 26: гибридная схема VKO ГОСТ Р 34.10-2012 + ML-KEM-1024 в переходный период"
+              "library": "liboqs / oqsprovider",
+              "function": "OQS_KEM_new / EVP_PKEY_keygen (ML-KEM)",
+              "notes": "Use NIST PQC ML-KEM (CRYSTALS-Kyber) for key encapsulation, or ML-DSA for signing."
             }
           ]
         },
         {
-          "id": "ossl-rsa-enc",
+          "id": "ossl-rsa-public-encrypt",
           "name": "RSA_public_encrypt",
-          "aliases": [
-            "RSA_private_decrypt"
-          ],
+          "aliases": ["RSA_private_decrypt", "RSA_public_decrypt", "RSA_private_encrypt"],
           "category": "asymmetric_encryption",
           "algorithm": "RSA",
           "quantum_vulnerability": "high",
-          "risk_score": 9.8,
-          "description": "RSA encryption/decryption. Encrypted data captured now can be decrypted once CRQC is available (Harvest Now Decrypt Later — HNDL). Immediate risk for long-lived data.",
-          "nist_reference": "NIST SP 800-131A Rev.2 §3; NIST IR 8547 §4",
-          "tc26_reference": "ТК 26: критичный риск HNDL для долгосрочных данных; переход на ML-KEM обязателен",
-          "deprecation_url": "https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar2.pdf",
-          "patterns": [
-            "RSA_public_encrypt\\s*\\(",
-            "RSA_private_decrypt\\s*\\("
-          ],
-          "context_keywords": [
-            "encrypt",
-            "decrypt",
-            "cipher"
-          ],
+          "risk_score": 10.0,
+          "description": "Performs raw RSA public-key encryption or decryption. Directly vulnerable to Shor's algorithm. These low-level RSA functions bypass the EVP abstraction layer and should be considered deprecated.",
+          "nist_reference": "NIST SP 800-131A Rev.2",
+          "tc26_reference": "Согласно рекомендациям ТК 26, использование RSA для шифрования данных не соответствует требованиям постквантовой стойкости.",
+          "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/RSA_public_encrypt.html",
+          "patterns": ["RSA_public_encrypt\\s*\\(", "RSA_private_decrypt\\s*\\(", "RSA_public_decrypt\\s*\\(", "RSA_private_encrypt\\s*\\("],
+          "context_keywords": ["rsa", "encrypt", "decrypt", "padding"],
           "replacements": [
             {
-              "function_name": "OQS_KEM_encaps",
-              "library": "liboqs",
-              "standard": "FIPS 203",
-              "algorithm": "ML-KEM-768",
-              "type": "kem",
-              "migration_notes": "Replace RSA encryption with ML-KEM encapsulation. Shared secret replaces RSA-encrypted session key.",
-              "example_code": "OQS_KEM *kem = OQS_KEM_new(OQS_KEM_alg_ml_kem_768);\nOQS_KEM_encaps(kem, ciphertext, shared_secret, public_key);\n// Use shared_secret as AES-256 key",
-              "tc26_note": "ТК 26: HNDL-угроза — приоритет миграции критический"
+              "library": "liboqs / oqsprovider",
+              "function": "EVP_PKEY_encapsulate / EVP_PKEY_decapsulate (ML-KEM)",
+              "notes": "Switch to NIST-standardised ML-KEM (FIPS 203) for key encapsulation."
             }
           ]
         },
         {
           "id": "ossl-rsa-sign",
           "name": "RSA_sign",
-          "aliases": [
-            "RSA_verify"
-          ],
+          "aliases": ["RSA_verify"],
           "category": "digital_signature",
           "algorithm": "RSA",
           "quantum_vulnerability": "high",
-          "risk_score": 9.0,
-          "description": "RSA digital signatures. Signature forgery possible with Shor's algorithm on a CRQC.",
-          "nist_reference": "NIST SP 800-131A Rev.2 §9; NIST IR 8547",
-          "tc26_reference": "ТК 26: замена на ML-DSA-65 или SLH-DSA",
-          "deprecation_url": "https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar2.pdf",
-          "patterns": [
-            "RSA_sign\\s*\\(",
-            "RSA_verify\\s*\\("
-          ],
-          "context_keywords": [
-            "sign",
-            "verify",
-            "signature"
-          ],
+          "risk_score": 10.0,
+          "description": "Low-level RSA signing and verification. Vulnerable to Shor's algorithm. Both RSA-PKCS1 and RSA-PSS schemes built on RSA arithmetic are quantum-insecure.",
+          "nist_reference": "NIST FIPS 186-5 (deprecated RSA for post-quantum context); NISTIR 8413",
+          "tc26_reference": "ТК 26 рекомендует замену RSA-подписи на ГОСТ Р 34.10-2012 (краткосрочно) и постквантовые схемы подписи (ML-DSA, SLH-DSA) в долгосрочной перспективе.",
+          "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/RSA_sign.html",
+          "patterns": ["RSA_sign\\s*\\(", "RSA_verify\\s*\\("],
+          "context_keywords": ["rsa", "sign", "verify", "signature"],
           "replacements": [
             {
-              "function_name": "OQS_SIG_sign",
-              "library": "liboqs",
-              "standard": "FIPS 204",
-              "algorithm": "ML-DSA-65",
-              "type": "signature",
-              "migration_notes": "Replace RSA signatures with ML-DSA (CRYSTALS-Dilithium). For extreme security, use SLH-DSA.",
-              "example_code": "OQS_SIG *sig = OQS_SIG_new(OQS_SIG_alg_ml_dsa_65);\nOQS_SIG_sign(sig, signature, &sig_len, message, msg_len, secret_key);",
-              "tc26_note": "ТК 26: гибридная подпись ГОСТ Р 34.10-2012 + ML-DSA-65 на переходный период"
-            }
-          ]
-        },
-        {
-          "id": "ossl-ec-keygen",
-          "name": "EC_KEY_generate_key",
-          "aliases": [
-            "EC_KEY_new_by_curve_name"
-          ],
-          "category": "asymmetric_key_generation",
-          "algorithm": "ECDSA/ECDH",
-          "quantum_vulnerability": "high",
-          "risk_score": 9.3,
-          "description": "EC key generation. ECC is broken by Shor's via ECDLP reduction to Discrete Log on group.",
-          "nist_reference": "NIST SP 800-131A Rev.2 §6",
-          "tc26_reference": "ТК 26: эллиптические кривые ГОСТ Р 34.10-2012 также уязвимы (задача ЗЭДЛП)",
-          "deprecation_url": "https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar2.pdf",
-          "patterns": [
-            "EC_KEY_generate_key\\s*\\(",
-            "EC_KEY_new_by_curve_name\\s*\\("
-          ],
-          "context_keywords": [
-            "key",
-            "ec"
-          ],
-          "replacements": [
-            {
-              "function_name": "OQS_KEM_keypair",
-              "library": "liboqs",
-              "standard": "FIPS 203",
-              "algorithm": "ML-KEM-768",
-              "type": "kem",
-              "migration_notes": "Replace ECDH key generation with ML-KEM keypair.",
-              "example_code": "OQS_KEM *kem = OQS_KEM_new(OQS_KEM_alg_ml_kem_768);\nOQS_KEM_keypair(kem, public_key, secret_key);",
-              "tc26_note": "ТК 26: задача ЗЭДЛП решается алгоритмом Шора; переход на ML-KEM-768"
-            }
-          ]
-        },
-        {
-          "id": "ossl-ecdh",
-          "name": "ECDH_compute_key",
-          "aliases": [],
-          "category": "key_exchange",
-          "algorithm": "ECDH",
-          "quantum_vulnerability": "high",
-          "risk_score": 9.5,
-          "description": "ECDH key agreement. Broken by Shor's. HNDL attack: passive adversary can decrypt TLS now after CRQC.",
-          "nist_reference": "NIST SP 800-131A Rev.2 §6; NIST IR 8547 §2",
-          "tc26_reference": "ТК 26: протокол VKO (выработка общего ключа) по ГОСТ Р 34.10-2012 имеет аналогичную уязвимость",
-          "deprecation_url": "https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar2.pdf",
-          "patterns": [
-            "ECDH_compute_key\\s*\\("
-          ],
-          "context_keywords": [
-            "key_exchange",
-            "ecdh",
-            "dh"
-          ],
-          "replacements": [
-            {
-              "function_name": "OQS_KEM_encaps",
-              "library": "liboqs",
-              "standard": "FIPS 203",
-              "algorithm": "ML-KEM-768",
-              "type": "kem",
-              "migration_notes": "Replace ECDH with ML-KEM encapsulation/decapsulation. Use hybrid X25519+ML-KEM for TLS.",
-              "example_code": "// Hybrid KEM: X25519 + ML-KEM-768\nOQS_KEM *kem = OQS_KEM_new(OQS_KEM_alg_ml_kem_768);\nOQS_KEM_encaps(kem, ct, ss, pk);\n// Combine: HKDF(X25519_secret || ML_KEM_secret)",
-              "tc26_note": "ТК 26: гибридный KEM VKO ГОСТ + ML-KEM-768 через КРФ (HKDF)"
-            }
-          ]
-        },
-        {
-          "id": "ossl-ecdsa-sign",
-          "name": "ECDSA_sign",
-          "aliases": [
-            "ECDSA_verify",
-            "ECDSA_do_sign"
-          ],
-          "category": "digital_signature",
-          "algorithm": "ECDSA",
-          "quantum_vulnerability": "high",
-          "risk_score": 9.2,
-          "description": "ECDSA digital signature. Shor's algorithm solves ECDLP enabling signature forgery.",
-          "nist_reference": "NIST SP 800-131A Rev.2 §6; NIST FIPS 204",
-          "tc26_reference": "ТК 26: ГОСТ Р 34.10-2012 (ЭЦП на ЭК) аналогично уязвим",
-          "deprecation_url": "https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar2.pdf",
-          "patterns": [
-            "ECDSA_sign\\s*\\(",
-            "ECDSA_verify\\s*\\(",
-            "ECDSA_do_sign\\s*\\("
-          ],
-          "context_keywords": [
-            "sign",
-            "ecdsa"
-          ],
-          "replacements": [
-            {
-              "function_name": "OQS_SIG_sign",
-              "library": "liboqs",
-              "standard": "FIPS 204",
-              "algorithm": "ML-DSA-65",
-              "type": "signature",
-              "migration_notes": "Replace ECDSA with ML-DSA-65 (CRYSTALS-Dilithium). Hybrid: ECDSA+ML-DSA for transitional compatibility.",
-              "example_code": "OQS_SIG *sig = OQS_SIG_new(OQS_SIG_alg_ml_dsa_65);\nuint8_t *pk = malloc(sig->length_public_key);\nuint8_t *sk = malloc(sig->length_secret_key);\nOQS_SIG_keypair(sig, pk, sk);",
-              "tc26_note": "ТК 26: гибридная подпись ГОСТ Р 34.10-2012 + ML-DSA-65"
-            }
-          ]
-        },
-        {
-          "id": "ossl-dh-new",
-          "name": "DH_new",
-          "aliases": [
-            "DH_generate_parameters",
-            "DH_generate_parameters_ex"
-          ],
-          "category": "key_exchange",
-          "algorithm": "DH",
-          "quantum_vulnerability": "high",
-          "risk_score": 9.0,
-          "description": "Diffie-Hellman key exchange. Shor's solves DLP in Zp*. Even 4096-bit DH offers zero post-quantum security.",
-          "nist_reference": "NIST SP 800-131A Rev.2 §7; NIST IR 8547",
-          "tc26_reference": "ТК 26: DH не применяется в ГОСТ-профилях, замена — ML-KEM",
-          "deprecation_url": "https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar2.pdf",
-          "patterns": [
-            "DH_new\\s*\\(",
-            "DH_generate_parameters_ex\\s*\\(",
-            "DH_generate_key\\s*\\("
-          ],
-          "context_keywords": [
-            "dh",
-            "key_exchange"
-          ],
-          "replacements": [
-            {
-              "function_name": "OQS_KEM_new",
-              "library": "liboqs",
-              "standard": "FIPS 203",
-              "algorithm": "ML-KEM-1024",
-              "type": "kem",
-              "migration_notes": "Replace DH with ML-KEM. For highest security level use ML-KEM-1024.",
-              "example_code": "OQS_KEM *kem = OQS_KEM_new(OQS_KEM_alg_ml_kem_1024);\nOQS_KEM_keypair(kem, pk, sk);",
-              "tc26_note": ""
+              "library": "liboqs / oqsprovider",
+              "function": "EVP_DigestSignInit / EVP_DigestSign (ML-DSA or SLH-DSA key)",
+              "notes": "Use ML-DSA (FIPS 204) or SLH-DSA (FIPS 205) via oqsprovider."
             }
           ]
         },
         {
           "id": "ossl-dsa-sign",
           "name": "DSA_sign",
-          "aliases": [
-            "DSA_verify",
-            "DSA_generate_key",
-            "DSA_generate_parameters"
-          ],
+          "aliases": ["DSA_verify", "DSA_do_sign", "DSA_do_verify"],
           "category": "digital_signature",
           "algorithm": "DSA",
           "quantum_vulnerability": "high",
-          "risk_score": 8.8,
-          "description": "DSA digital signature. Shor's solves DLP in Zp* enabling key recovery and signature forgery.",
-          "nist_reference": "NIST SP 800-131A Rev.2 §9",
-          "tc26_reference": "ТК 26: DSA не применяется в РФ; см. ГОСТ Р 34.10-2012",
-          "deprecation_url": "https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar2.pdf",
-          "patterns": [
-            "DSA_sign\\s*\\(",
-            "DSA_verify\\s*\\(",
-            "DSA_generate_key\\s*\\("
-          ],
-          "context_keywords": [
-            "dsa",
-            "sign"
-          ],
+          "risk_score": 10.0,
+          "description": "Low-level DSA signing and verification using the Digital Signature Algorithm. DSA security relies on the discrete logarithm problem, which is efficiently solved by Shor's algorithm on a quantum computer.",
+          "nist_reference": "NIST FIPS 186-5 (DSA withdrawn); NISTIR 8413",
+          "tc26_reference": "Алгоритм DSA не включён в перечень алгоритмов, рекомендованных ТК 26 для долгосрочного использования в условиях квантовых угроз.",
+          "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/DSA_sign.html",
+          "patterns": ["DSA_sign\\s*\\(", "DSA_verify\\s*\\(", "DSA_do_sign\\s*\\(", "DSA_do_verify\\s*\\("],
+          "context_keywords": ["dsa", "sign", "verify"],
           "replacements": [
             {
-              "function_name": "OQS_SIG_sign",
-              "library": "liboqs",
-              "standard": "FIPS 205",
-              "algorithm": "SLH-DSA-SHAKE-128s",
-              "type": "signature",
-              "migration_notes": "Replace DSA with SLH-DSA (SPHINCS+) for stateless hash-based signatures.",
-              "example_code": "OQS_SIG *sig = OQS_SIG_new(OQS_SIG_alg_sphincs_shake_128s);\nOQS_SIG_sign(sig, signature, &sig_len, msg, msg_len, sk);",
-              "tc26_note": ""
+              "library": "liboqs / oqsprovider",
+              "function": "EVP_DigestSign (ML-DSA key)",
+              "notes": "Migrate to ML-DSA (CRYSTALS-Dilithium, FIPS 204) via oqsprovider."
             }
           ]
         },
         {
-          "id": "ossl-sha1",
-          "name": "SHA1",
-          "aliases": [
-            "SHA_CTX",
-            "SHA1_Init",
-            "SHA1_Update",
-            "SHA1_Final"
-          ],
-          "category": "hash_function",
-          "algorithm": "SHA-1",
-          "quantum_vulnerability": "medium",
-          "risk_score": 7.5,
-          "description": "SHA-1 hash function. Classically broken (collision attacks). Grover's further reduces preimage resistance to 80 bits quantum. NIST deprecated since 2011.",
-          "nist_reference": "NIST SP 800-131A Rev.2 §9",
-          "tc26_reference": "ТК 26: SHA-1 не допускается; использовать Стрибог-256 (ГОСТ Р 34.11-2012)",
-          "deprecation_url": "https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar2.pdf",
-          "patterns": [
-            "\\bSHA1\\s*\\(",
-            "SHA1_Init\\s*\\(",
-            "SHA1_Update\\s*\\("
-          ],
-          "context_keywords": [
-            "hash",
-            "digest"
-          ],
-          "replacements": [
-            {
-              "function_name": "EVP_sha256",
-              "library": "openssl",
-              "standard": "SP 800-107",
-              "algorithm": "SHA-256",
-              "type": "hash",
-              "migration_notes": "Replace SHA-1 with SHA-256 minimum (SHA-384 preferred for PQC). SHA-3/256 for new designs.",
-              "example_code": "EVP_MD_CTX *ctx = EVP_MD_CTX_new();\nEVP_DigestInit_ex(ctx, EVP_sha256(), NULL);\nEVP_DigestUpdate(ctx, data, data_len);\nEVP_DigestFinal_ex(ctx, hash, &hash_len);",
-              "tc26_note": "ТК 26: рекомендован Стрибог-256 (ГОСТ Р 34.11-2012) для отечественных систем"
-            }
-          ]
-        },
-        {
-          "id": "ossl-md5",
-          "name": "MD5",
-          "aliases": [
-            "MD5_Init",
-            "MD5_Update",
-            "MD5_Final"
-          ],
-          "category": "hash_function",
-          "algorithm": "MD5",
+          "id": "ossl-dh-generate-key",
+          "name": "DH_generate_key",
+          "aliases": ["DH_compute_key", "DH_compute_key_padded"],
+          "category": "key_exchange",
+          "algorithm": "DH",
           "quantum_vulnerability": "high",
-          "risk_score": 8.5,
-          "description": "MD5 completely broken classically (collision in seconds). No post-quantum relevance — simply insecure.",
-          "nist_reference": "NIST SP 800-131A Rev.2; CVE database",
-          "tc26_reference": "ТК 26: MD5 категорически не допускается",
-          "deprecation_url": "https://www.rfc-editor.org/rfc/rfc6151",
-          "patterns": [
-            "\\bMD5\\s*\\(",
-            "MD5_Init\\s*\\("
-          ],
-          "context_keywords": [
-            "hash",
-            "digest"
-          ],
+          "risk_score": 9.5,
+          "description": "Performs finite-field Diffie-Hellman key generation and shared-secret computation. The discrete logarithm problem underlying DH is solved in polynomial time by Shor's algorithm on a sufficiently powerful quantum computer.",
+          "nist_reference": "NIST SP 800-56A Rev.3; NIST SP 800-131A Rev.2",
+          "tc26_reference": "ТК 26: протокол Диффи-Хеллмана на конечных полях уязвим к квантовым атакам; рекомендуется переход на механизмы инкапсуляции ключей (КЕМ) на постквантовых схемах.",
+          "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/DH_generate_key.html",
+          "patterns": ["DH_generate_key\\s*\\(", "DH_compute_key\\s*\\(", "DH_compute_key_padded\\s*\\("],
+          "context_keywords": ["dh", "diffie", "hellman", "key", "exchange"],
           "replacements": [
             {
-              "function_name": "EVP_sha3_256",
-              "library": "openssl",
-              "standard": "FIPS 202",
-              "algorithm": "SHA3-256",
-              "type": "hash",
-              "migration_notes": "Replace MD5 immediately with SHA-256 minimum; prefer SHA3-256 for new code.",
-              "example_code": "EVP_MD_CTX *ctx = EVP_MD_CTX_new();\nEVP_DigestInit_ex(ctx, EVP_sha3_256(), NULL);\nEVP_DigestUpdate(ctx, data, len);\nEVP_DigestFinal_ex(ctx, hash, NULL);",
-              "tc26_note": ""
+              "library": "liboqs / oqsprovider",
+              "function": "EVP_PKEY_encapsulate / EVP_PKEY_decapsulate (ML-KEM)",
+              "notes": "Replace DH key exchange with ML-KEM (FIPS 203) key encapsulation."
             }
           ]
         },
         {
-          "id": "ossl-evp-pkey",
-          "name": "EVP_PKEY_CTX_new",
-          "aliases": [
-            "EVP_PKEY_encrypt",
-            "EVP_PKEY_decrypt",
-            "EVP_PKEY_keygen",
-            "EVP_DigestSignInit"
-          ],
-          "category": "asymmetric_encryption",
+          "id": "ossl-ecdh-compute-key",
+          "name": "ECDH_compute_key",
+          "aliases": [],
+          "category": "key_exchange",
+          "algorithm": "ECDH",
+          "quantum_vulnerability": "high",
+          "risk_score": 9.5,
+          "description": "Computes a shared ECDH secret directly. The elliptic curve discrete logarithm problem (ECDLP) on which ECDH relies is solved in polynomial time by Shor's algorithm on a quantum computer.",
+          "nist_reference": "NIST SP 800-56A Rev.3; NISTIR 8413",
+          "tc26_reference": "ТК 26: ECDH и аналогичные протоколы на эллиптических кривых теряют стойкость при наличии квантового компьютера; замена на постквантовые КЕМ обязательна.",
+          "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/ECDH_compute_key.html",
+          "patterns": ["ECDH_compute_key\\s*\\("],
+          "context_keywords": ["ecdh", "elliptic", "curve", "key", "exchange"],
+          "replacements": [
+            {
+              "library": "liboqs / oqsprovider",
+              "function": "EVP_PKEY_derive (ML-KEM key) or EVP_PKEY_encapsulate",
+              "notes": "Use ML-KEM (CRYSTALS-Kyber, FIPS 203) instead of ECDH."
+            }
+          ]
+        },
+        {
+          "id": "ossl-ecdsa-sign",
+          "name": "ECDSA_sign",
+          "aliases": ["ECDSA_verify", "ECDSA_do_sign", "ECDSA_do_verify"],
+          "category": "digital_signature",
+          "algorithm": "ECDSA",
+          "quantum_vulnerability": "high",
+          "risk_score": 10.0,
+          "description": "Low-level ECDSA signing and verification. ECDSA security is based on the elliptic curve discrete logarithm problem, which is broken by Shor's algorithm on a quantum computer.",
+          "nist_reference": "NIST FIPS 186-5 (ECDSA retained for now but not quantum-safe); NISTIR 8413",
+          "tc26_reference": "ТК 26: ECDSA (и аналог — ГОСТ Р 34.10-2012) не обеспечивает постквантовую стойкость; необходим переход на ML-DSA или SLH-DSA.",
+          "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/ECDSA_sign.html",
+          "patterns": ["ECDSA_sign\\s*\\(", "ECDSA_verify\\s*\\(", "ECDSA_do_sign\\s*\\(", "ECDSA_do_verify\\s*\\("],
+          "context_keywords": ["ecdsa", "elliptic", "curve", "sign", "verify"],
+          "replacements": [
+            {
+              "library": "liboqs / oqsprovider",
+              "function": "EVP_DigestSign (ML-DSA key)",
+              "notes": "Use ML-DSA (FIPS 204) via oqsprovider for post-quantum signatures."
+            }
+          ]
+        },
+        {
+          "id": "ossl-evp-pkey-keygen",
+          "name": "EVP_PKEY_keygen",
+          "aliases": [],
+          "category": "asymmetric_key_generation",
+          "algorithm": "RSA/EC/DH (EVP)",
+          "quantum_vulnerability": "high",
+          "risk_score": 9.0,
+          "description": "High-level EVP key generation function. When the associated EVP_PKEY_CTX was initialised with a quantum-vulnerable algorithm (RSA, EC, DH, DSA), the resulting key is quantum-insecure. Vulnerability depends on the algorithm configured in the context.",
+          "nist_reference": "NISTIR 8413",
+          "tc26_reference": "ТК 26: генерация ключей через EVP_PKEY_keygen для RSA/EC/DH не обеспечивает постквантовую стойкость; необходима замена на постквантовые алгоритмы через oqsprovider.",
+          "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/EVP_PKEY_keygen.html",
+          "patterns": ["EVP_PKEY_keygen\\s*\\("],
+          "context_keywords": ["evp", "pkey", "keygen", "generate"],
+          "replacements": [
+            {
+              "library": "liboqs / oqsprovider",
+              "function": "EVP_PKEY_keygen with ML-KEM or ML-DSA context",
+              "notes": "Load oqsprovider and initialise EVP_PKEY_CTX with 'ML-KEM-768', 'ML-DSA-65', or similar PQC algorithm names."
+            }
+          ]
+        },
+        {
+          "id": "ossl-evp-digest-sign-init",
+          "name": "EVP_DigestSignInit",
+          "aliases": ["EVP_DigestSignInit_ex"],
+          "category": "digital_signature",
           "algorithm": "RSA/EC (EVP)",
           "quantum_vulnerability": "high",
           "risk_score": 8.5,
-          "description": "EVP high-level API for RSA/EC operations. Quantum-vulnerable when using RSA/EC key types.",
-          "nist_reference": "NIST IR 8547",
-          "tc26_reference": "ТК 26: проверить тип ключа EVP; при RSA/EC — заменить на ML-KEM/ML-DSA через oqsprovider",
-          "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/EVP_PKEY_CTX_new.html",
-          "patterns": [
-            "EVP_PKEY_CTX_new\\s*\\(",
-            "EVP_PKEY_keygen\\s*\\(",
-            "EVP_DigestSignInit\\s*\\("
-          ],
-          "context_keywords": [
-            "evp",
-            "pkey"
-          ],
+          "description": "Initialises a digest-sign operation. When used with an RSA, ECDSA, or DSA private key, the resulting signature scheme is quantum-insecure. Vulnerability is conditional on the key type loaded into the EVP_MD_CTX.",
+          "nist_reference": "NISTIR 8413",
+          "tc26_reference": "ТК 26: инициализация подписи через EVP_DigestSignInit с ключами RSA/EC/DSA не обеспечивает постквантовую стойкость.",
+          "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/EVP_DigestSignInit.html",
+          "patterns": ["EVP_DigestSignInit\\s*\\(", "EVP_DigestSignInit_ex\\s*\\("],
+          "context_keywords": ["evp", "digest", "sign", "init"],
           "replacements": [
             {
-              "function_name": "EVP_PKEY_CTX_new (oqsprovider)",
-              "library": "oqsprovider + openssl",
-              "standard": "FIPS 203/204",
-              "algorithm": "ML-KEM-768 / ML-DSA-65",
-              "type": "provider",
-              "migration_notes": "Use OpenSSL oqsprovider to enable PQC algorithms via the same EVP API.",
-              "example_code": "OSSL_PROVIDER *oqsprov = OSSL_PROVIDER_load(NULL, \"oqsprovider\");\nEVP_PKEY_CTX *ctx = EVP_PKEY_CTX_new_from_name(NULL, \"ml-kem-768\", NULL);\nEVP_PKEY_keygen_init(ctx);",
-              "tc26_note": "ТК 26: использовать oqsprovider с профилем ML-KEM-768"
+              "library": "liboqs / oqsprovider",
+              "function": "EVP_DigestSignInit with ML-DSA or SLH-DSA key",
+              "notes": "Load oqsprovider, generate an ML-DSA key, and pass it to EVP_DigestSignInit."
+            }
+          ]
+        },
+        {
+          "id": "ossl-evp-pkey-ctx-new",
+          "name": "EVP_PKEY_CTX_new",
+          "aliases": [],
+          "category": "asymmetric_key_generation",
+          "algorithm": "RSA/EC/DH (EVP)",
+          "quantum_vulnerability": "high",
+          "risk_score": 9.0,
+          "description": "Creates a new EVP_PKEY_CTX from an existing EVP_PKEY object. If the key is RSA, EC, DH, or DSA, all subsequent operations using this context are quantum-insecure.",
+          "nist_reference": "NISTIR 8413",
+          "tc26_reference": "ТК 26: создание контекста для квантово-уязвимых ключей (RSA/EC/DH/DSA) не соответствует требованиям постквантовой стойкости.",
+          "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/EVP_PKEY_CTX_new.html",
+          "patterns": ["EVP_PKEY_CTX_new\\s*\\("],
+          "context_keywords": ["evp", "pkey", "ctx", "new"],
+          "replacements": [
+            {
+              "library": "liboqs / oqsprovider",
+              "function": "EVP_PKEY_CTX_new with a PQC key (ML-KEM, ML-DSA)",
+              "notes": "Ensure the EVP_PKEY passed to EVP_PKEY_CTX_new is a post-quantum key generated via oqsprovider."
+            }
+          ]
+        },
+        {
+          "id": "ossl-dh-new",
+          "name": "DH_new",
+          "aliases": ["DH_free", "DH_new_by_nid"],
+          "category": "asymmetric_key_generation",
+          "algorithm": "DH",
+          "quantum_vulnerability": "high",
+          "risk_score": 9.0,
+          "description": "Allocates a new DH structure used for finite-field Diffie-Hellman operations. Merely allocating this structure signals intent to use a quantum-vulnerable key-exchange algorithm.",
+          "nist_reference": "NIST SP 800-56A Rev.3; NISTIR 8413",
+          "tc26_reference": "ТК 26: структуры DH относятся к квантово-уязвимым примитивам; необходима замена на постквантовые КЕМ.",
+          "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/DH_new.html",
+          "patterns": ["DH_new\\s*\\(", "DH_new_by_nid\\s*\\("],
+          "context_keywords": ["dh", "diffie", "hellman"],
+          "replacements": [
+            {
+              "library": "liboqs / oqsprovider",
+              "function": "EVP_PKEY_keygen (ML-KEM context)",
+              "notes": "Replace DH structures with ML-KEM key pairs via oqsprovider."
+            }
+          ]
+        },
+
+        {
+          "id": "ossl-evp-pkey-ctx-new-id",
+          "name": "EVP_PKEY_CTX_new_id",
+          "aliases": [],
+          "category": "asymmetric_key_generation",
+          "algorithm": "RSA/EC/DH (EVP)",
+          "quantum_vulnerability": "high",
+          "risk_score": 9.0,
+          "description": "Creates a new EVP_PKEY_CTX by numeric algorithm NID. The first argument identifies the algorithm type: EVP_PKEY_RSA (NID=6), EVP_PKEY_DSA (NID=116), EVP_PKEY_DH (NID=28), and EVP_PKEY_EC (NID=408) are all quantum-vulnerable. Any context created with these NIDs will produce keys or perform operations that are broken by Shor's algorithm on a cryptographically relevant quantum computer. Detection should flag all call sites where the NID argument resolves to one of the above values.",
+          "nist_reference": "NISTIR 8413; NIST SP 800-131A Rev.2",
+          "tc26_reference": "ТК 26: вызов EVP_PKEY_CTX_new_id с идентификаторами алгоритмов RSA, DSA, DH или EC (NID 6, 116, 28, 408 соответственно) создаёт контекст для квантово-уязвимого примитива; рекомендуется переход на постквантовые алгоритмы через oqsprovider.",
+          "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/EVP_PKEY_CTX_new_id.html",
+          "patterns": [
+            "EVP_PKEY_CTX_new_id\\s*\\(",
+            "EVP_PKEY_CTX_new_id\\s*\\(\\s*EVP_PKEY_RSA",
+            "EVP_PKEY_CTX_new_id\\s*\\(\\s*EVP_PKEY_DSA",
+            "EVP_PKEY_CTX_new_id\\s*\\(\\s*EVP_PKEY_DH",
+            "EVP_PKEY_CTX_new_id\\s*\\(\\s*EVP_PKEY_EC"
+          ],
+          "context_keywords": ["evp", "pkey", "ctx", "nid", "rsa", "ec", "dh", "dsa"],
+          "replacements": [
+            {
+              "library": "liboqs / oqsprovider",
+              "function": "EVP_PKEY_CTX_new_from_name(NULL, \"ML-KEM-768\", NULL) or EVP_PKEY_CTX_new_from_name(NULL, \"ML-DSA-65\", NULL)",
+              "notes": "In OpenSSL 3.x with oqsprovider loaded, use EVP_PKEY_CTX_new_from_name with PQC algorithm names such as 'ML-KEM-768', 'ML-DSA-65', 'SLH-DSA-SHA2-128s' instead of numeric NIDs."
+            }
+          ]
+        },
+
+        {
+          "id": "ossl-evp-pkey-ctx-new-from-name",
+          "name": "EVP_PKEY_CTX_new_from_name",
+          "aliases": [],
+          "category": "asymmetric_key_generation",
+          "algorithm": "RSA/EC/DH (EVP)",
+          "quantum_vulnerability": "conditional",
+          "risk_score": 7.5,
+          "description": "OpenSSL 3.x API that creates an EVP_PKEY_CTX from a string algorithm name. Vulnerability is conditional on the name argument: the function is quantum-vulnerable when called with classical algorithm names 'RSA', 'EC', 'DSA', 'DH', 'X25519', 'X448', 'ED25519', or 'ED448'. It is NOT vulnerable when called with post-quantum algorithm names such as 'ML-KEM-512', 'ML-KEM-768', 'ML-KEM-1024', 'ML-DSA-44', 'ML-DSA-65', 'ML-DSA-87', 'SLH-DSA-SHA2-128s', or any other NIST PQC standardised algorithm supported by oqsprovider. Static analysis tools should warn on classical names and suppress warnings on PQC names.",
+          "nist_reference": "NISTIR 8413; NIST FIPS 203/204/205",
+          "tc26_reference": "ТК 26: EVP_PKEY_CTX_new_from_name с именами RSA/EC/DSA/DH/X25519/X448 является квантово-уязвимым; при использовании имён ML-KEM-*/ML-DSA-*/SLH-DSA-* уязвимость отсутствует.",
+          "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/EVP_PKEY_CTX_new_from_name.html",
+          "patterns": [
+            "EVP_PKEY_CTX_new_from_name\\s*\\(",
+            "EVP_PKEY_CTX_new_from_name\\s*\\([^,]+,\\s*\"RSA\"",
+            "EVP_PKEY_CTX_new_from_name\\s*\\([^,]+,\\s*\"EC\"",
+            "EVP_PKEY_CTX_new_from_name\\s*\\([^,]+,\\s*\"DSA\"",
+            "EVP_PKEY_CTX_new_from_name\\s*\\([^,]+,\\s*\"DH\"",
+            "EVP_PKEY_CTX_new_from_name\\s*\\([^,]+,\\s*\"X25519\"",
+            "EVP_PKEY_CTX_new_from_name\\s*\\([^,]+,\\s*\"X448\"",
+            "EVP_PKEY_CTX_new_from_name\\s*\\([^,]+,\\s*\"ED25519\"",
+            "EVP_PKEY_CTX_new_from_name\\s*\\([^,]+,\\s*\"ED448\""
+          ],
+          "context_keywords": ["evp", "pkey", "ctx", "name", "rsa", "ec", "dh", "dsa", "x25519"],
+          "replacements": [
+            {
+              "library": "liboqs / oqsprovider",
+              "function": "EVP_PKEY_CTX_new_from_name(NULL, \"ML-KEM-768\", NULL)",
+              "notes": "When using OpenSSL 3.x with oqsprovider, replace classical algorithm name strings with PQC equivalents: 'ML-KEM-768' (key encapsulation), 'ML-DSA-65' (signatures), 'SLH-DSA-SHA2-128s' (stateless hash-based signatures)."
+            }
+          ]
+        },
+
+        {
+          "id": "ossl-evp-digest-sign-update",
+          "name": "EVP_DigestSignUpdate",
+          "aliases": [],
+          "category": "digital_signature",
+          "algorithm": "RSA/EC (EVP)",
+          "quantum_vulnerability": "high",
+          "risk_score": 8.5,
+          "description": "Feeds data into a streaming digest-sign operation. Used in conjunction with EVP_DigestSignInit and EVP_DigestSignFinal to produce a digital signature. When the underlying key is RSA, ECDSA, or DSA (configured via EVP_DigestSignInit), the signature is quantum-insecure. Vulnerability is inherited from the key type set in the EVP_MD_CTX.",
+          "nist_reference": "NISTIR 8413",
+          "tc26_reference": "ТК 26: EVP_DigestSignUpdate используется в составе механизма подписи; при использовании ключей RSA/EC/DSA операция является квантово-уязвимой.",
+          "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/EVP_DigestSign.html",
+          "patterns": ["EVP_DigestSignUpdate\\s*\\("],
+          "context_keywords": ["evp", "digest", "sign", "update"],
+          "replacements": [
+            {
+              "library": "liboqs / oqsprovider",
+              "function": "EVP_DigestSignUpdate with ML-DSA or SLH-DSA key context",
+              "notes": "No API change required; replace the underlying key with a PQC key (ML-DSA / SLH-DSA) initialised via oqsprovider."
+            }
+          ]
+        },
+
+        {
+          "id": "ossl-evp-digest-sign-final",
+          "name": "EVP_DigestSignFinal",
+          "aliases": ["EVP_DigestSign"],
+          "category": "digital_signature",
+          "algorithm": "RSA/EC (EVP)",
+          "quantum_vulnerability": "high",
+          "risk_score": 8.5,
+          "description": "Finalises a streaming digest-sign operation, producing the signature bytes. Used after EVP_DigestSignInit and EVP_DigestSignUpdate. Quantum vulnerability is inherited from the key type: RSA, ECDSA, and DSA contexts produce quantum-insecure signatures. EVP_DigestSign is the one-shot variant and carries the same risk.",
+          "nist_reference": "NISTIR 8413",
+          "tc26_reference": "ТК 26: EVP_DigestSignFinal завершает формирование подписи; при ключах RSA/EC/DSA результат является квантово-уязвимым.",
+          "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/EVP_DigestSign.html",
+          "patterns": ["EVP_DigestSignFinal\\s*\\(", "EVP_DigestSign\\b\\s*\\("],
+          "context_keywords": ["evp", "digest", "sign", "final"],
+          "replacements": [
+            {
+              "library": "liboqs / oqsprovider",
+              "function": "EVP_DigestSignFinal / EVP_DigestSign with ML-DSA or SLH-DSA key",
+              "notes": "Replace key material with a post-quantum key; the EVP API itself remains unchanged."
+            }
+          ]
+        },
+
+        {
+          "id": "ossl-evp-digest-verify-init",
+          "name": "EVP_DigestVerifyInit",
+          "aliases": ["EVP_DigestVerifyInit_ex"],
+          "category": "digital_signature",
+          "algorithm": "RSA/EC (EVP)",
+          "quantum_vulnerability": "high",
+          "risk_score": 8.5,
+          "description": "Initialises a digest-verify operation using an EVP_PKEY public key. When the public key is RSA, ECDSA, or DSA, the verification accepts signatures that are quantum-insecure. An attacker with a quantum computer could forge valid signatures for these key types.",
+          "nist_reference": "NISTIR 8413",
+          "tc26_reference": "ТК 26: инициализация проверки подписи EVP_DigestVerifyInit с ключами RSA/EC/DSA не обеспечивает постквантовую стойкость проверки.",
+          "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/EVP_DigestVerifyInit.html",
+          "patterns": ["EVP_DigestVerifyInit\\s*\\(", "EVP_DigestVerifyInit_ex\\s*\\("],
+          "context_keywords": ["evp", "digest", "verify", "init"],
+          "replacements": [
+            {
+              "library": "liboqs / oqsprovider",
+              "function": "EVP_DigestVerifyInit with ML-DSA or SLH-DSA public key",
+              "notes": "Use a PQC public key (ML-DSA, SLH-DSA) from oqsprovider; the EVP API call pattern remains identical."
+            }
+          ]
+        },
+
+        {
+          "id": "ossl-evp-digest-verify-update",
+          "name": "EVP_DigestVerifyUpdate",
+          "aliases": [],
+          "category": "digital_signature",
+          "algorithm": "RSA/EC (EVP)",
+          "quantum_vulnerability": "high",
+          "risk_score": 8.5,
+          "description": "Feeds data into a streaming digest-verify operation. Used together with EVP_DigestVerifyInit and EVP_DigestVerifyFinal. Quantum vulnerability is inherited from the key type configured in the EVP_MD_CTX via EVP_DigestVerifyInit.",
+          "nist_reference": "NISTIR 8413",
+          "tc26_reference": "ТК 26: EVP_DigestVerifyUpdate используется в составе процедуры верификации подписи; при ключах RSA/EC/DSA операция является квантово-уязвимой.",
+          "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/EVP_DigestVerify.html",
+          "patterns": ["EVP_DigestVerifyUpdate\\s*\\("],
+          "context_keywords": ["evp", "digest", "verify", "update"],
+          "replacements": [
+            {
+              "library": "liboqs / oqsprovider",
+              "function": "EVP_DigestVerifyUpdate with ML-DSA or SLH-DSA key context",
+              "notes": "No API change required; replace underlying public key with a PQC key."
+            }
+          ]
+        },
+
+        {
+          "id": "ossl-evp-digest-verify-final",
+          "name": "EVP_DigestVerifyFinal",
+          "aliases": ["EVP_DigestVerify"],
+          "category": "digital_signature",
+          "algorithm": "RSA/EC (EVP)",
+          "quantum_vulnerability": "high",
+          "risk_score": 8.5,
+          "description": "Finalises a streaming digest-verify operation. Used after EVP_DigestVerifyInit and EVP_DigestVerifyUpdate to verify a digital signature. EVP_DigestVerify is the one-shot equivalent. Both are quantum-insecure when the public key is RSA, ECDSA, or DSA, as Shor's algorithm allows forgery of signatures for these key types.",
+          "nist_reference": "NISTIR 8413",
+          "tc26_reference": "ТК 26: EVP_DigestVerifyFinal завершает проверку подписи; при ключах RSA/EC/DSA результат является квантово-уязвимым.",
+          "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/EVP_DigestVerify.html",
+          "patterns": ["EVP_DigestVerifyFinal\\s*\\(", "EVP_DigestVerify\\b\\s*\\("],
+          "context_keywords": ["evp", "digest", "verify", "final"],
+          "replacements": [
+            {
+              "library": "liboqs / oqsprovider",
+              "function": "EVP_DigestVerifyFinal / EVP_DigestVerify with ML-DSA or SLH-DSA public key",
+              "notes": "Replace key material with a post-quantum public key; the EVP call pattern remains unchanged."
+            }
+          ]
+        },
+
+        {
+          "id": "ossl-evp-pkey-derive-init",
+          "name": "EVP_PKEY_derive_init",
+          "aliases": [],
+          "category": "key_exchange",
+          "algorithm": "ECDH/DH (EVP)",
+          "quantum_vulnerability": "high",
+          "risk_score": 9.0,
+          "description": "Initialises a key derivation operation in an EVP_PKEY_CTX. Typically used to set up ECDH or finite-field DH shared-secret derivation. When the context was created from an EC or DH key, the derivation is quantum-insecure because Shor's algorithm solves the underlying discrete logarithm / elliptic-curve discrete logarithm problem.",
+          "nist_reference": "NIST SP 800-56A Rev.3; NISTIR 8413",
+          "tc26_reference": "ТК 26: EVP_PKEY_derive_init для ECDH/DH контекстов является квантово-уязвимой операцией; рекомендуется переход на ML-KEM.",
+          "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/EVP_PKEY_derive.html",
+          "patterns": ["EVP_PKEY_derive_init\\s*\\("],
+          "context_keywords": ["evp", "pkey", "derive", "init", "ecdh", "dh"],
+          "replacements": [
+            {
+              "library": "liboqs / oqsprovider",
+              "function": "EVP_PKEY_encapsulate / EVP_PKEY_decapsulate (ML-KEM)",
+              "notes": "Replace ECDH/DH key derivation with ML-KEM (FIPS 203) key encapsulation mechanism via oqsprovider."
+            }
+          ]
+        },
+
+        {
+          "id": "ossl-evp-pkey-derive-set-peer",
+          "name": "EVP_PKEY_derive_set_peer",
+          "aliases": [],
+          "category": "key_exchange",
+          "algorithm": "ECDH/DH (EVP)",
+          "quantum_vulnerability": "high",
+          "risk_score": 9.0,
+          "description": "Sets the peer public key in an EVP_PKEY_CTX for ECDH or DH key derivation. This is a required step in the ECDH/DH shared-secret protocol, which is fully broken by Shor's algorithm on a quantum computer. The presence of this call reliably indicates quantum-vulnerable key exchange is being performed.",
+          "nist_reference": "NIST SP 800-56A Rev.3; NISTIR 8413",
+          "tc26_reference": "ТК 26: установка ключа партнёра через EVP_PKEY_derive_set_peer для ECDH/DH является квантово-уязвимой операцией.",
+          "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/EVP_PKEY_derive.html",
+          "patterns": ["EVP_PKEY_derive_set_peer\\s*\\("],
+          "context_keywords": ["evp", "pkey", "derive", "peer", "ecdh", "dh"],
+          "replacements": [
+            {
+              "library": "liboqs / oqsprovider",
+              "function": "EVP_PKEY_encapsulate (sender) / EVP_PKEY_decapsulate (recipient) with ML-KEM key",
+              "notes": "In ML-KEM there is no peer-key concept; use encapsulate/decapsulate instead of derive."
+            }
+          ]
+        },
+
+        {
+          "id": "ossl-evp-pkey-derive",
+          "name": "EVP_PKEY_derive",
+          "aliases": [],
+          "category": "key_exchange",
+          "algorithm": "ECDH/DH (EVP)",
+          "quantum_vulnerability": "high",
+          "risk_score": 9.0,
+          "description": "Performs the final step of EVP-level ECDH or DH key derivation, computing the shared secret. This function is the culmination of a quantum-insecure key-agreement operation. An attacker with a cryptographically relevant quantum computer can reproduce the shared secret using Shor's algorithm applied to the exchanged public keys.",
+          "nist_reference": "NIST SP 800-56A Rev.3; NISTIR 8413",
+          "tc26_reference": "ТК 26: вычисление общего секрета через EVP_PKEY_derive для ECDH/DH является квантово-уязвимой операцией; замена на ML-KEM обязательна при долгосрочной защите данных.",
+          "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/EVP_PKEY_derive.html",
+          "patterns": ["EVP_PKEY_derive\\s*\\("],
+          "context_keywords": ["evp", "pkey", "derive", "shared", "secret", "ecdh", "dh"],
+          "replacements": [
+            {
+              "library": "liboqs / oqsprovider",
+              "function": "EVP_PKEY_decapsulate (ML-KEM) for shared secret extraction",
+              "notes": "Replace the derive-based ECDH/DH pattern (derive_init → derive_set_peer → derive) with ML-KEM encapsulate/decapsulate."
+            }
+          ]
+        },
+
+        {
+          "id": "ossl-evp-pkey-paramgen-init",
+          "name": "EVP_PKEY_paramgen_init",
+          "aliases": [],
+          "category": "asymmetric_key_generation",
+          "algorithm": "RSA/EC/DH (EVP)",
+          "quantum_vulnerability": "high",
+          "risk_score": 9.0,
+          "description": "Initialises domain-parameter generation in an EVP_PKEY_CTX. Used to generate DH or DSA domain parameters before key generation. Parameter generation for quantum-vulnerable algorithms (DH, DSA, EC) produces parameters that will result in quantum-insecure keys.",
+          "nist_reference": "NISTIR 8413; NIST SP 800-131A Rev.2",
+          "tc26_reference": "ТК 26: генерация параметров через EVP_PKEY_paramgen_init для DH/DSA/EC является квантово-уязвимой операцией.",
+          "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/EVP_PKEY_paramgen.html",
+          "patterns": ["EVP_PKEY_paramgen_init\\s*\\("],
+          "context_keywords": ["evp", "pkey", "paramgen", "init", "dh", "dsa", "ec"],
+          "replacements": [
+            {
+              "library": "liboqs / oqsprovider",
+              "function": "EVP_PKEY_keygen (ML-KEM or ML-DSA, no separate paramgen step needed)",
+              "notes": "PQC algorithms in oqsprovider do not require separate domain-parameter generation; use EVP_PKEY_CTX_new_from_name + EVP_PKEY_keygen directly."
+            }
+          ]
+        },
+
+        {
+          "id": "ossl-evp-pkey-paramgen",
+          "name": "EVP_PKEY_paramgen",
+          "aliases": [],
+          "category": "asymmetric_key_generation",
+          "algorithm": "RSA/EC/DH (EVP)",
+          "quantum_vulnerability": "high",
+          "risk_score": 9.0,
+          "description": "Generates domain parameters (e.g., DH group or DSA parameters) using a previously initialised EVP_PKEY_CTX. Parameters generated for DH, DSA, or EC algorithms are quantum-insecure; any keys subsequently generated from these parameters will be vulnerable to Shor's algorithm.",
+          "nist_reference": "NISTIR 8413; NIST SP 800-56A Rev.3",
+          "tc26_reference": "ТК 26: параметры, сгенерированные EVP_PKEY_paramgen для DH/DSA/EC, используются для квантово-уязвимых алгоритмов.",
+          "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/EVP_PKEY_paramgen.html",
+          "patterns": ["EVP_PKEY_paramgen\\s*\\("],
+          "context_keywords": ["evp", "pkey", "paramgen", "dh", "dsa", "ec", "params"],
+          "replacements": [
+            {
+              "library": "liboqs / oqsprovider",
+              "function": "EVP_PKEY_keygen (ML-KEM or ML-DSA)",
+              "notes": "Post-quantum algorithms do not use domain parameters in the classical sense; call EVP_PKEY_keygen directly with a PQC context."
+            }
+          ]
+        },
+
+        {
+          "id": "ossl-evp-pkey-keygen-init",
+          "name": "EVP_PKEY_keygen_init",
+          "aliases": [],
+          "category": "asymmetric_key_generation",
+          "algorithm": "RSA/EC/DH (EVP)",
+          "quantum_vulnerability": "high",
+          "risk_score": 9.0,
+          "description": "Initialises a key-generation operation in an EVP_PKEY_CTX. If the context was created for RSA, EC, DH, or DSA, the key that will be generated is quantum-insecure. The vulnerability of the subsequent EVP_PKEY_keygen call is determined at this init step.",
+          "nist_reference": "NISTIR 8413",
+          "tc26_reference": "ТК 26: инициализация генерации ключа EVP_PKEY_keygen_init для RSA/EC/DH/DSA является квантово-уязвимой операцией.",
+          "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/EVP_PKEY_keygen.html",
+          "patterns": ["EVP_PKEY_keygen_init\\s*\\("],
+          "context_keywords": ["evp", "pkey", "keygen", "init"],
+          "replacements": [
+            {
+              "library": "liboqs / oqsprovider",
+              "function": "EVP_PKEY_keygen_init with ML-KEM or ML-DSA context from EVP_PKEY_CTX_new_from_name",
+              "notes": "Create the context with a PQC algorithm name (e.g. 'ML-KEM-768') before calling EVP_PKEY_keygen_init."
+            }
+          ]
+        },
+
+        {
+          "id": "ossl-bn-new",
+          "name": "BN_new",
+          "aliases": ["BN_secure_new", "BN_free", "BN_clear_free"],
+          "category": "asymmetric_primitive",
+          "algorithm": "BIGNUM (manual RSA/DH/DSA)",
+          "quantum_vulnerability": "medium",
+          "risk_score": 6.5,
+          "description": "Allocates a new BIGNUM structure. The presence of BN_new is a red flag for manual large-integer arithmetic, which almost universally indicates a hand-rolled implementation of RSA, DH, or DSA. These custom implementations are quantum-insecure for the same reasons as their OpenSSL high-level counterparts: Shor's algorithm breaks the underlying integer factorisation and discrete logarithm problems. While BN_new itself is not intrinsically tied to a specific algorithm, it should trigger review of the surrounding code for quantum-vulnerable cryptographic constructs.",
+          "nist_reference": "NISTIR 8413",
+          "tc26_reference": "ТК 26: использование структур BIGNUM является индикатором ручной реализации криптографических примитивов (RSA/DH/DSA), которые уязвимы к квантовым атакам.",
+          "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/BN_new.html",
+          "patterns": ["BN_new\\s*\\(", "BN_secure_new\\s*\\("],
+          "context_keywords": ["bignum", "bn", "rsa", "dh", "dsa", "modular"],
+          "replacements": [
+            {
+              "library": "liboqs / oqsprovider",
+              "function": "Use high-level EVP API with PQC keys; avoid manual BIGNUM arithmetic",
+              "notes": "If BN_* usage implements RSA/DH/DSA, migrate the entire subsystem to oqsprovider. There is no BIGNUM-level equivalent for PQC algorithms."
+            }
+          ]
+        },
+
+        {
+          "id": "ossl-bn-generate-prime-ex",
+          "name": "BN_generate_prime_ex",
+          "aliases": ["BN_generate_prime_ex2", "BN_is_prime_ex", "BN_is_prime_fasttest_ex"],
+          "category": "asymmetric_primitive",
+          "algorithm": "BIGNUM (manual RSA/DH/DSA)",
+          "quantum_vulnerability": "medium",
+          "risk_score": 6.5,
+          "description": "Generates a large prime number using BIGNUM arithmetic. Prime generation is a foundational step in RSA key generation (p and q primes) and DSA/DH parameter generation. Its presence strongly indicates manual implementation of RSA or DSA, both of which are quantum-insecure. Shor's algorithm factors the resulting RSA modulus or solves the DSA discrete logarithm in polynomial time on a quantum computer.",
+          "nist_reference": "NISTIR 8413; NIST SP 800-131A Rev.2",
+          "tc26_reference": "ТК 26: генерация простых чисел через BN_generate_prime_ex характерна для ручной реализации RSA/DSA — алгоритмов, уязвимых к квантовым атакам.",
+          "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/BN_generate_prime_ex.html",
+          "patterns": ["BN_generate_prime_ex\\s*\\(", "BN_generate_prime_ex2\\s*\\(", "BN_is_prime_ex\\s*\\(", "BN_is_prime_fasttest_ex\\s*\\("],
+          "context_keywords": ["bignum", "prime", "rsa", "dsa", "modular"],
+          "replacements": [
+            {
+              "library": "liboqs / oqsprovider",
+              "function": "Replace manual RSA/DSA key generation with EVP_PKEY_keygen using ML-KEM or ML-DSA context",
+              "notes": "PQC algorithms do not require prime generation; eliminate this code path entirely."
+            }
+          ]
+        },
+
+        {
+          "id": "ossl-bn-mod-exp",
+          "name": "BN_mod_exp",
+          "aliases": ["BN_mod_exp_mont", "BN_mod_exp_mont_consttime", "BN_mod_exp_simple"],
+          "category": "asymmetric_primitive",
+          "algorithm": "BIGNUM (manual RSA/DH/DSA)",
+          "quantum_vulnerability": "medium",
+          "risk_score": 6.5,
+          "description": "Computes modular exponentiation (a^p mod m) using BIGNUM arithmetic. Modular exponentiation is the core operation in RSA encryption/decryption, RSA signing, Diffie-Hellman key exchange, and DSA. Its presence is a strong indicator of quantum-vulnerable asymmetric cryptography. Shor's algorithm exploits the mathematical properties of modular exponentiation to factor RSA moduli and solve discrete logarithm problems in polynomial time.",
+          "nist_reference": "NISTIR 8413",
+          "tc26_reference": "ТК 26: модульное возведение в степень через BN_mod_exp является ключевой операцией RSA/DH/DSA — алгоритмов, уязвимых к атаке алгоритмом Шора.",
+          "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/BN_mod_exp.html",
+          "patterns": ["BN_mod_exp\\s*\\(", "BN_mod_exp_mont\\s*\\(", "BN_mod_exp_mont_consttime\\s*\\(", "BN_mod_exp_simple\\s*\\("],
+          "context_keywords": ["bignum", "modexp", "rsa", "dh", "dsa", "modular", "exponentiation"],
+          "replacements": [
+            {
+              "library": "liboqs / oqsprovider",
+              "function": "Eliminate modular exponentiation; use PQC algorithms (ML-KEM, ML-DSA) that do not rely on this operation",
+              "notes": "If modular exponentiation is part of a custom RSA/DH implementation, the entire cryptographic subsystem should be replaced with oqsprovider-backed PQC primitives."
+            }
+          ]
+        },
+
+        {
+          "id": "ossl-bn-mod-inverse",
+          "name": "BN_mod_inverse",
+          "aliases": [],
+          "category": "asymmetric_primitive",
+          "algorithm": "BIGNUM (manual RSA/DH/DSA)",
+          "quantum_vulnerability": "medium",
+          "risk_score": 6.5,
+          "description": "Computes the modular multiplicative inverse. Used in RSA key generation (computing private exponent d = e^-1 mod λ(n)) and in DSA/ECDSA signature generation. The presence of BN_mod_inverse is a reliable indicator of manual RSA or DSA implementation, both of which are quantum-insecure.",
+          "nist_reference": "NISTIR 8413",
+          "tc26_reference": "ТК 26: вычисление обратного элемента по модулю через BN_mod_inverse используется в ручных реализациях RSA/DSA — квантово-уязвимых алгоритмов.",
+          "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/BN_mod_inverse.html",
+          "patterns": ["BN_mod_inverse\\s*\\("],
+          "context_keywords": ["bignum", "inverse", "rsa", "dsa", "modular"],
+          "replacements": [
+            {
+              "library": "liboqs / oqsprovider",
+              "function": "Eliminate manual RSA/DSA key arithmetic; use EVP_PKEY_keygen with ML-KEM or ML-DSA",
+              "notes": "BN_mod_inverse in a key-generation context is a sign of hand-rolled RSA; migrate the entire component to oqsprovider."
+            }
+          ]
+        },
+
+        {
+          "id": "ossl-bn-gencb",
+          "name": "BN_GENCB",
+          "aliases": ["BN_GENCB_new", "BN_GENCB_free", "BN_GENCB_call", "BN_GENCB_set"],
+          "category": "asymmetric_primitive",
+          "algorithm": "BIGNUM (manual RSA/DH/DSA)",
+          "quantum_vulnerability": "medium",
+          "risk_score": 6.5,
+          "description": "BN_GENCB is a callback structure used to monitor progress during large-prime or parameter generation (typically RSA or DSA key generation). Its presence in code strongly indicates a manual or low-level implementation of RSA or DSA key generation, both of which produce quantum-insecure keys. The associated functions BN_GENCB_new, BN_GENCB_set, and BN_GENCB_call are all indicators of this pattern.",
+          "nist_reference": "NISTIR 8413",
+          "tc26_reference": "ТК 26: использование BN_GENCB характерно для ручной генерации ключей RSA/DSA — квантово-уязвимых алгоритмов.",
+          "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/BN_generate_prime_ex.html",
+          "patterns": ["BN_GENCB\\b", "BN_GENCB_new\\s*\\(", "BN_GENCB_free\\s*\\(", "BN_GENCB_call\\s*\\(", "BN_GENCB_set\\s*\\("],
+          "context_keywords": ["bignum", "gencb", "callback", "rsa", "dsa", "prime", "keygen"],
+          "replacements": [
+            {
+              "library": "liboqs / oqsprovider",
+              "function": "EVP_PKEY_keygen with ML-KEM or ML-DSA context (no progress callback needed)",
+              "notes": "PQC key generation is fast and does not require progress callbacks; eliminate BN_GENCB usage by migrating to oqsprovider."
+            }
+          ]
+        },
+
+        {
+          "id": "ossl-rsa-new",
+          "name": "RSA_new",
+          "aliases": ["RSA_free", "RSA_up_ref"],
+          "category": "asymmetric_key_generation",
+          "algorithm": "RSA",
+          "quantum_vulnerability": "high",
+          "risk_score": 9.5,
+          "description": "Allocates a new RSA structure for low-level RSA operations. The RSA structure is the foundation for quantum-vulnerable RSA cryptography. Any code using RSA_new is performing or preparing to perform RSA operations that are broken by Shor's algorithm.",
+          "nist_reference": "NIST SP 800-131A Rev.2; NISTIR 8413",
+          "tc26_reference": "ТК 26: выделение структуры RSA через RSA_new является индикатором использования квантово-уязвимого алгоритма RSA.",
+          "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/RSA_new.html",
+          "patterns": ["RSA_new\\s*\\("],
+          "context_keywords": ["rsa", "new", "key"],
+          "replacements": [
+            {
+              "library": "liboqs / oqsprovider",
+              "function": "EVP_PKEY_keygen with ML-KEM or ML-DSA context",
+              "notes": "Eliminate low-level RSA_* usage entirely; use the EVP layer with oqsprovider PQC keys."
+            }
+          ]
+        },
+
+        {
+          "id": "ossl-dsa-new",
+          "name": "DSA_new",
+          "aliases": ["DSA_free", "DSA_up_ref"],
+          "category": "asymmetric_key_generation",
+          "algorithm": "DSA",
+          "quantum_vulnerability": "high",
+          "risk_score": 9.5,
+          "description": "Allocates a new DSA structure for low-level Digital Signature Algorithm operations. DSA security relies on the discrete logarithm problem, which is solved in polynomial time by Shor's algorithm. Any code allocating a DSA structure is preparing to use a quantum-insecure signature scheme.",
+          "nist_reference": "NIST FIPS 186-5 (DSA withdrawn); NISTIR 8413",
+          "tc26_reference": "ТК 26: структура DSA, создаваемая через DSA_new, относится к квантово-уязвимым примитивам; рекомендуется переход на ML-DSA.",
+          "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/DSA_new.html",
+          "patterns": ["DSA_new\\s*\\("],
+          "context_keywords": ["dsa", "new", "key", "sign"],
+          "replacements": [
+            {
+              "library": "liboqs / oqsprovider",
+              "function": "EVP_PKEY_keygen with ML-DSA context (e.g. 'ML-DSA-65')",
+              "notes": "Replace DSA_new and all associated DSA_* low-level calls with the EVP layer backed by oqsprovider ML-DSA."
+            }
+          ]
+        },
+
+        {
+          "id": "ossl-ec-key-new",
+          "name": "EC_KEY_new",
+          "aliases": ["EC_KEY_free", "EC_KEY_new_by_curve_name", "EC_KEY_up_ref"],
+          "category": "asymmetric_key_generation",
+          "algorithm": "ECDSA/ECDH",
+          "quantum_vulnerability": "high",
+          "risk_score": 9.5,
+          "description": "Allocates a new EC_KEY structure for low-level elliptic curve cryptography operations (ECDSA, ECDH). The elliptic curve discrete logarithm problem (ECDLP) is solved in polynomial time by Shor's algorithm on a quantum computer, rendering all EC-based keys quantum-insecure. EC_KEY_new_by_curve_name additionally specifies the curve at allocation time.",
+          "nist_reference": "NISTIR 8413; NIST SP 800-131A Rev.2",
+          "tc26_reference": "ТК 26: структуры EC_KEY используются для ECDSA и ECDH — алгоритмов, уязвимых к квантовым атакам (задача ECDLP решается алгоритмом Шора).",
+          "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/EC_KEY_new.html",
+          "patterns": ["EC_KEY_new\\s*\\(", "EC_KEY_new_by_curve_name\\s*\\("],
+          "context_keywords": ["ec", "key", "elliptic", "curve", "ecdsa", "ecdh"],
+          "replacements": [
+            {
+              "library": "liboqs / oqsprovider",
+              "function": "EVP_PKEY_keygen with ML-DSA context (signatures) or ML-KEM context (key exchange)",
+              "notes": "Eliminate low-level EC_KEY_* usage; use the EVP layer with oqsprovider for PQC operations."
+            }
+          ]
+        },
+
+        {
+          "id": "ossl-ec-group-new-by-curve-name",
+          "name": "EC_GROUP_new_by_curve_name",
+          "aliases": ["EC_GROUP_new", "EC_GROUP_free", "EC_GROUP_new_curve_GFp"],
+          "category": "asymmetric_key_generation",
+          "algorithm": "ECDSA/ECDH",
+          "quantum_vulnerability": "high",
+          "risk_score": 9.0,
+          "description": "Creates a new elliptic curve group from a named curve NID (e.g., NID_X9_62_prime256v1, NID_secp384r1, NID_secp521r1). All named NIST curves are quantum-insecure: their security depends on the ECDLP, which Shor's algorithm solves efficiently. This function is typically the first step in constructing an EC_KEY for ECDSA signing or ECDH key exchange.",
+          "nist_reference": "NISTIR 8413; NIST SP 800-186 (elliptic curves for pre-quantum use only)",
+          "tc26_reference": "ТК 26: создание группы эллиптической кривой через EC_GROUP_new_by_curve_name — индикатор использования ECDSA/ECDH; все именованные кривые уязвимы к квантовым атакам.",
+          "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/EC_GROUP_new.html",
+          "patterns": ["EC_GROUP_new_by_curve_name\\s*\\(", "EC_GROUP_new\\s*\\(", "EC_GROUP_new_curve_GFp\\s*\\("],
+          "context_keywords": ["ec", "group", "curve", "nid", "elliptic", "ecdsa", "ecdh"],
+          "replacements": [
+            {
+              "library": "liboqs / oqsprovider",
+              "function": "EVP_PKEY_keygen with ML-KEM or ML-DSA context (no EC group needed)",
+              "notes": "PQC algorithms do not use elliptic curve groups; eliminate EC_GROUP_* usage by migrating to oqsprovider."
             }
           ]
         }
