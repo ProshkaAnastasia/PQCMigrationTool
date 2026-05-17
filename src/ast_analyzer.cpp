@@ -1,3 +1,4 @@
+// src/ast_analyzer.cpp
 #include "pqc/ast_analyzer.hpp"
 
 #include <algorithm>
@@ -755,6 +756,44 @@ struct FieldInfo {
 using ClassFieldMap = std::unordered_map<std::string /*field name*/, FieldInfo>;
 using ClassFieldRegistry = std::unordered_map<std::string /*class qualified*/, ClassFieldMap>;
 
+// A single mutation of a class field discovered statically inside one method.
+// Used by the inter-procedural field-state engine.
+struct FieldEffect {
+    enum class Kind {
+        DirectAssign,   // this->field = expr;   (or field = expr;)
+        AddressOfArg,   // some_call(…, &field, …)
+    };
+    Kind        kind        = Kind::DirectAssign;
+    std::string field_name;            // mutated field
+    std::string class_qualified;       // class that owns the field
+    unsigned    line        = 0;       // location inside the method
+    std::string assigned_value;        // resolved RHS (for DirectAssign) or call render (for AddressOfArg)
+};
+
+// One "event" in a method's body that the inter-procedural engine cares about:
+// either a mutation of the enclosing class's field, or a call into another
+// method of the same class. We keep them ordered by source line so the engine
+// can replay them sequentially.
+struct MethodEvent {
+    enum class Kind { Mutation, IntraClassCall };
+    Kind        kind         = Kind::Mutation;
+    unsigned    line         = 0;
+    FieldEffect mutation{};            // valid when kind == Mutation
+    std::string call_qualified;        // valid when kind == IntraClassCall
+};
+
+struct MethodEffects {
+    std::string class_qualified;
+    std::vector<MethodEvent> events;   // ordered by source line
+};
+
+using MethodEffectsMap = std::unordered_map<std::string /*method qualified*/, MethodEffects>;
+
+// Mapping field_name -> current resolved value, scoped to the current class
+// and "point in time" during a call-graph walk. The walker mutates this map
+// as it replays method events in source order.
+using FieldStateMap = std::unordered_map<std::string, std::string>;
+
 struct ResolutionContext {
     FunctionFrame* frame = nullptr;
     const std::unordered_map<std::string, FunctionSummary>* summaries = nullptr;
@@ -770,6 +809,12 @@ struct ResolutionContext {
     const ClassFieldRegistry* field_registry = nullptr;
     std::string current_class_qualified;   // qualified name of the enclosing class, if any
     std::string current_class_simple;      // simple name, used for rendering Class::field
+
+    // Inter-procedural field state: for the currently-walked method, this maps
+    // field name -> latest-known resolved value at the current point in the
+    // method's body. Looked up by resolve_member_ref / resolve_decl_ref
+    // BEFORE falling back to the static field registry (inline / ctor init).
+    const FieldStateMap* dynamic_field_state = nullptr;
 };
 
 // =============================================================================
@@ -897,6 +942,14 @@ static std::string resolve_decl_ref(CXCursor ref_cursor,
         if (!cls.empty()) qualified_field = cls + "::" + name;
         else              qualified_field = name;
 
+        // 1) Dynamic field state (last-seen value at current source position).
+        if (rc.dynamic_field_state) {
+            auto dit = rc.dynamic_field_state->find(name);
+            if (dit != rc.dynamic_field_state->end() && !dit->second.empty()) {
+                return clip_text(dit->second);
+            }
+        }
+        // 2) Static field registry (inline / ctor init).
         if (rc.field_registry) {
             std::string cls_qual = get_qualified_cursor_name(
                 clang_getCursorSemanticParent(decl));
@@ -1027,7 +1080,15 @@ static std::string resolve_member_ref(CXCursor cursor,
     if (cls_simple.empty()) cls_simple = rc.current_class_simple;
     if (cls_qualified.empty()) cls_qualified = rc.current_class_qualified;
 
-    // Try the field registry first.
+    // 1) Dynamic field state — latest-known value for this field inside the
+    //    currently-walked method.
+    if (rc.dynamic_field_state) {
+        auto dit = rc.dynamic_field_state->find(field_name);
+        if (dit != rc.dynamic_field_state->end() && !dit->second.empty()) {
+            return clip_text(dit->second);
+        }
+    }
+    // 2) Static field registry (inline / ctor init).
     if (rc.field_registry && !cls_qualified.empty()) {
         auto cit = rc.field_registry->find(cls_qualified);
         if (cit != rc.field_registry->end()) {
@@ -1493,6 +1554,10 @@ struct VisitData {
     // Built during phase 2.5 (after bodies, before reachability):
     ClassFieldRegistry class_fields;
 
+    // Built during phase 2.6 (after class_fields):
+    //   method_qualified -> ordered list of field-mutations and intra-class calls
+    MethodEffectsMap method_effects;
+
     // Built during phase 3 (call-graph reachability):
     std::unordered_set<std::string> reachable;
 };
@@ -1581,9 +1646,27 @@ struct CallSiteVisitState {
     std::set<std::tuple<std::string, unsigned, unsigned,
                         std::string, std::string>>* seen;
     CXCursor outer_fn;
+    // Mutable field-state for the current method body. After each intra-class
+    // call we replay its effects so subsequent sibling expressions see the
+    // up-to-date field values.
+    FieldStateMap* mutable_field_state;
+    // Qualified name of the enclosing class (empty if free function). Used to
+    // recognise intra-class call targets and gate replay.
+    const std::string* enclosing_class_qualified;
 };
 
 static void walk_calls_in_function(CXCursor cursor, CallSiteVisitState* st);
+
+// Forward declarations — these functions are defined later (phase 2.6) but the
+// call-graph walker (phase 4) uses them to keep field state up-to-date as it
+// visits each CallExpr in source order.
+static FieldStateMap initial_field_state(const VisitData* vd,
+                                         const std::string& cls_qual);
+static void replay_method_effects(const VisitData* vd,
+                                  const std::string& method_qual,
+                                  FieldStateMap& state,
+                                  std::unordered_set<std::string>& active,
+                                  int depth_left);
 
 static CXChildVisitResult walk_calls_visitor(CXCursor child, CXCursor, CXClientData data) {
     auto* st = static_cast<CallSiteVisitState*>(data);
@@ -1663,8 +1746,27 @@ static void walk_calls_in_function(CXCursor cursor, CallSiteVisitState* st) {
         // outer driver decides what to do with callees.
         st->outgoing->emplace_back(
             callee_qualified.empty() ? callee_simple : callee_qualified,
-            std::move(actuals)
+            actuals
         );
+
+        // Inter-procedural field-state replay: if this CallExpr resolves to a
+        // method of the same enclosing class (and we have collected its
+        // effects), apply those effects to the mutable field state so the
+        // *next* CallExpr in this body sees the updated field values.
+        if (st->mutable_field_state && st->enclosing_class_qualified &&
+            !st->enclosing_class_qualified->empty() &&
+            !callee_qualified.empty())
+        {
+            auto mit = vd->method_effects.find(callee_qualified);
+            if (mit != vd->method_effects.end() &&
+                mit->second.class_qualified == *st->enclosing_class_qualified)
+            {
+                std::unordered_set<std::string> active;
+                replay_method_effects(vd, callee_qualified,
+                                      *st->mutable_field_state,
+                                      active, kMaxCallGraphDepth);
+            }
+        }
     }
 
     clang_visitChildren(cursor, walk_calls_visitor, st);
@@ -1773,6 +1875,15 @@ static void walk_call_graph(const FunctionSummary& fn,
         }
     }
 
+    // Inter-procedural field state for *this* invocation of the method. Seed
+    // from the class's static initializers (inline + ctor); subsequent
+    // intra-class calls in the body mutate it via replay_method_effects.
+    FieldStateMap current_state;
+    if (!rc.current_class_qualified.empty()) {
+        current_state = initial_field_state(vd, rc.current_class_qualified);
+    }
+    rc.dynamic_field_state = &current_state;
+
     std::vector<std::pair<std::string, std::vector<std::string>>> outgoing;
     CallSiteVisitState st;
     st.vd = vd;
@@ -1789,6 +1900,8 @@ static void walk_call_graph(const FunctionSummary& fn,
     st.outgoing = &outgoing;
     st.seen = &seen;
     st.outer_fn = fn.cursor;
+    st.mutable_field_state = &current_state;
+    st.enclosing_class_qualified = &rc.current_class_qualified;
 
     clang_visitChildren(fn.cursor, walk_calls_visitor, &st);
 
@@ -1964,6 +2077,319 @@ static void collect_class_fields(VisitData* vd) {
     };
 
     walk_decl(tu_cursor);
+}
+
+// =============================================================================
+// Phase 2.6 — inter-procedural field-effect collection.
+//
+// For every method definition that belongs to a class, walk its body and emit
+// an ordered list of "events":
+//   • Mutation     — the method assigns to a field of its own class
+//                    (this->field = expr;  or  field = expr;
+//                     or  some_call(…, &field, …)).
+//   • IntraClassCall — the method calls another method of the same class on
+//                      the implicit `this` (e.g. this->foo() or just foo()).
+//
+// The walk_call_graph phase later replays these events in source order to
+// maintain a dynamic field-state map that drives field resolution.
+// =============================================================================
+
+// Helper: is `cursor` a reference to a field that belongs to class `cls_qual`?
+// If yes, fill out `field_name`. Accepts both DeclRefExpr to a FieldDecl and
+// MemberRefExpr whose canonical referenced decl is a FieldDecl in the class.
+static bool cursor_is_own_field_ref(CXCursor cursor,
+                                    const std::string& cls_qual,
+                                    std::string& out_field_name)
+{
+    CXCursor ref = clang_getCursorReferenced(cursor);
+    if (clang_Cursor_isNull(ref)) return false;
+    if (clang_getCursorKind(ref) != CXCursor_FieldDecl) return false;
+    CXCursor parent = clang_getCursorSemanticParent(ref);
+    if (clang_Cursor_isNull(parent)) return false;
+    CXCursorKind pk = clang_getCursorKind(parent);
+    if (pk != CXCursor_ClassDecl && pk != CXCursor_StructDecl &&
+        pk != CXCursor_ClassTemplate) return false;
+    std::string parent_qual = get_qualified_cursor_name(parent);
+    if (parent_qual != cls_qual) return false;
+    out_field_name = to_string_and_dispose(clang_getCursorSpelling(ref));
+    return !out_field_name.empty();
+}
+
+// Helper: is `cursor` a CXXMethod whose semantic parent is class `cls_qual`?
+static bool cursor_is_own_method_call(CXCursor call_cursor,
+                                      const std::string& cls_qual,
+                                      std::string& out_method_qualified)
+{
+    CXCursor ref = clang_getCursorReferenced(call_cursor);
+    if (clang_Cursor_isNull(ref)) return false;
+    CXCursorKind rk = clang_getCursorKind(ref);
+    if (rk != CXCursor_CXXMethod && rk != CXCursor_Constructor &&
+        rk != CXCursor_Destructor) return false;
+    CXCursor parent = clang_getCursorSemanticParent(ref);
+    if (clang_Cursor_isNull(parent)) return false;
+    CXCursorKind pk = clang_getCursorKind(parent);
+    if (pk != CXCursor_ClassDecl && pk != CXCursor_StructDecl &&
+        pk != CXCursor_ClassTemplate) return false;
+    if (get_qualified_cursor_name(parent) != cls_qual) return false;
+    out_method_qualified = get_qualified_cursor_name(ref);
+    return !out_method_qualified.empty();
+}
+
+// Helper: render a call-expression as text by re-resolving its callee + args
+// in a neutral context (no caller frame, no dynamic state, just static
+// summaries + field registry). Used to label AddressOfArg effects.
+static std::string render_call_for_effect(CXCursor call_cursor,
+                                          VisitData* vd)
+{
+    ResolutionContext rc;
+    rc.summaries = &vd->function_summaries;
+    rc.field_registry = &vd->class_fields;
+    std::string out = resolve_expr(call_cursor, vd->tu, rc, UINT_MAX, kMaxInlineExpansionDepth);
+    return clip_text(out);
+}
+
+static CXChildVisitResult method_event_visitor(CXCursor cursor, CXCursor /*parent*/, CXClientData data);
+
+struct MethodEventCtx {
+    VisitData* vd;
+    MethodEffects* out;
+    CXCursor outer_method;
+    std::string cls_qual;
+};
+
+static CXChildVisitResult method_event_visitor(CXCursor cursor, CXCursor /*parent*/, CXClientData data) {
+    auto* ctx = static_cast<MethodEventCtx*>(data);
+    VisitData* vd = ctx->vd;
+
+    if (!cursor_is_from_file_or_header(cursor, vd->file_path)) {
+        return CXChildVisit_Continue;
+    }
+
+    CXCursorKind kind = clang_getCursorKind(cursor);
+    // Don't descend into nested functions / lambdas / classes.
+    if (is_scope_boundary(kind) && !clang_equalCursors(cursor, ctx->outer_method)) {
+        return CXChildVisit_Continue;
+    }
+
+    auto get_line = [&](CXCursor c) -> unsigned {
+        CXSourceLocation loc = clang_getCursorLocation(c);
+        unsigned ln = 0;
+        clang_getExpansionLocation(loc, nullptr, &ln, nullptr, nullptr);
+        return ln;
+    };
+
+    // ----- 1) Direct field assignment: BinaryOperator '=' with LHS being
+    //          a reference to one of our class's fields.
+    if (kind == CXCursor_BinaryOperator) {
+        auto children = get_children(cursor);
+        if (children.size() >= 2) {
+            CXCursor lhs = children.front();
+            CXCursor rhs = children.back();
+            AssignKind ak = detect_assignment_between(cursor, lhs, rhs, vd->tu);
+            if (ak == AssignKind::Pure) {
+                std::string field_name;
+                if (cursor_is_own_field_ref(lhs, ctx->cls_qual, field_name)) {
+                    // Resolve RHS in a neutral-ish context (with current field
+                    // registry as fallback; but the engine then replays this
+                    // event so we don't need dynamic state here).
+                    ResolutionContext rc;
+                    rc.summaries = &vd->function_summaries;
+                    rc.field_registry = &vd->class_fields;
+                    rc.current_class_qualified = ctx->cls_qual;
+                    std::string rhs_value = resolve_expr(rhs, vd->tu, rc, UINT_MAX, kMaxResolveDepth);
+                    if (rhs_value.empty()) {
+                        rhs_value = format_type_placeholder(clang_getCursorType(rhs));
+                    }
+                    MethodEvent ev;
+                    ev.kind = MethodEvent::Kind::Mutation;
+                    ev.line = get_line(cursor);
+                    ev.mutation.kind = FieldEffect::Kind::DirectAssign;
+                    ev.mutation.field_name = field_name;
+                    ev.mutation.class_qualified = ctx->cls_qual;
+                    ev.mutation.line = ev.line;
+                    ev.mutation.assigned_value = clip_text(rhs_value);
+                    ctx->out->events.push_back(std::move(ev));
+                }
+            }
+        }
+    }
+
+    // ----- 2) CallExpr handling:
+    //          (a) any &field argument — register AddressOfArg mutation;
+    //          (b) intra-class call — register IntraClassCall event.
+    if (kind == CXCursor_CallExpr) {
+        // (a) AddressOfArg
+        int na = clang_Cursor_getNumArguments(cursor);
+        for (int i = 0; i < na; ++i) {
+            CXCursor arg = clang_Cursor_getArgument(cursor, i);
+            CXCursorKind ak = clang_getCursorKind(arg);
+            CXCursor inner = arg;
+            // Peel UnexposedExpr / ParenExpr.
+            for (int peel = 0; peel < 3; ++peel) {
+                if (clang_getCursorKind(inner) != CXCursor_UnexposedExpr &&
+                    clang_getCursorKind(inner) != CXCursor_ParenExpr) break;
+                auto ch = get_children(inner);
+                if (ch.empty()) break;
+                inner = ch.front();
+            }
+            (void)ak;
+            if (clang_getCursorKind(inner) == CXCursor_UnaryOperator) {
+                // Tokenize first token to confirm it's '&'.
+                CXSourceRange ext = clang_getCursorExtent(inner);
+                CXToken* toks = nullptr;
+                unsigned ntok = 0;
+                clang_tokenize(vd->tu, ext, &toks, &ntok);
+                bool is_addr_of = false;
+                if (ntok > 0) {
+                    std::string t = to_string_and_dispose(clang_getTokenSpelling(vd->tu, toks[0]));
+                    if (t == "&") is_addr_of = true;
+                }
+                if (toks) clang_disposeTokens(vd->tu, toks, ntok);
+
+                if (is_addr_of) {
+                    auto uch = get_children(inner);
+                    if (!uch.empty()) {
+                        CXCursor target = uch.front();
+                        // Look through casts/unexposed.
+                        for (int peel = 0; peel < 3; ++peel) {
+                            if (clang_getCursorKind(target) != CXCursor_UnexposedExpr &&
+                                clang_getCursorKind(target) != CXCursor_ParenExpr) break;
+                            auto tch = get_children(target);
+                            if (tch.empty()) break;
+                            target = tch.front();
+                        }
+                        std::string field_name;
+                        if (cursor_is_own_field_ref(target, ctx->cls_qual, field_name)) {
+                            MethodEvent ev;
+                            ev.kind = MethodEvent::Kind::Mutation;
+                            ev.line = get_line(cursor);
+                            ev.mutation.kind = FieldEffect::Kind::AddressOfArg;
+                            ev.mutation.field_name = field_name;
+                            ev.mutation.class_qualified = ctx->cls_qual;
+                            ev.mutation.line = ev.line;
+                            ev.mutation.assigned_value = render_call_for_effect(cursor, vd);
+                            ctx->out->events.push_back(std::move(ev));
+                        }
+                    }
+                }
+            }
+        }
+
+        // (b) IntraClassCall — only register if the receiver is implicit-this
+        //     (we don't track other objects' state).
+        std::string method_qual;
+        if (cursor_is_own_method_call(cursor, ctx->cls_qual, method_qual)) {
+            // Check whether the call is on implicit `this` (no explicit base
+            // among children that resolves to anything other than `this`).
+            bool implicit_this = true;
+            for (const auto& c : get_children(cursor)) {
+                CXCursorKind ck = clang_getCursorKind(c);
+                if (ck == CXCursor_MemberRefExpr || ck == CXCursor_MemberRef) {
+                    for (const auto& mc : get_children(c)) {
+                        CXCursorKind mck = clang_getCursorKind(mc);
+                        if (mck == CXCursor_TypeRef || mck == CXCursor_NamespaceRef ||
+                            mck == CXCursor_TemplateRef) continue;
+                        // Any non-trivial base disqualifies.
+                        implicit_this = false;
+                        break;
+                    }
+                    break;
+                }
+            }
+            if (implicit_this) {
+                MethodEvent ev;
+                ev.kind = MethodEvent::Kind::IntraClassCall;
+                ev.line = get_line(cursor);
+                ev.call_qualified = method_qual;
+                ctx->out->events.push_back(std::move(ev));
+            }
+        }
+    }
+
+    return CXChildVisit_Recurse;
+}
+
+static void collect_method_effects(VisitData* vd) {
+    for (auto& kv : vd->function_summaries) {
+        FunctionSummary& s = kv.second;
+        if (!s.has_cursor) continue;
+        CXCursorKind ck = clang_getCursorKind(s.cursor);
+        if (ck != CXCursor_CXXMethod && ck != CXCursor_Constructor &&
+            ck != CXCursor_Destructor) continue;
+
+        // Find the enclosing class.
+        std::string cls_qual;
+        {
+            CXCursor parent = clang_getCursorSemanticParent(s.cursor);
+            if (!clang_Cursor_isNull(parent)) {
+                CXCursorKind pk = clang_getCursorKind(parent);
+                if (pk == CXCursor_ClassDecl || pk == CXCursor_StructDecl ||
+                    pk == CXCursor_ClassTemplate) {
+                    cls_qual = get_qualified_cursor_name(parent);
+                }
+            }
+        }
+        if (cls_qual.empty()) continue;
+
+        MethodEffects me;
+        me.class_qualified = cls_qual;
+
+        MethodEventCtx ctx{vd, &me, s.cursor, cls_qual};
+        clang_visitChildren(s.cursor, method_event_visitor, &ctx);
+
+        // Sort events by line just in case AST visitation order isn't strictly
+        // source-order (it usually is, but defensive).
+        std::sort(me.events.begin(), me.events.end(),
+                  [](const MethodEvent& a, const MethodEvent& b) {
+                      return a.line < b.line;
+                  });
+
+        if (!me.events.empty()) {
+            vd->method_effects[s.qualified_name] = std::move(me);
+        }
+    }
+}
+
+// Apply the static (inline / ctor) field initializers as the starting field
+// state for a class.
+static FieldStateMap initial_field_state(const VisitData* vd,
+                                         const std::string& cls_qual)
+{
+    FieldStateMap out;
+    auto it = vd->class_fields.find(cls_qual);
+    if (it == vd->class_fields.end()) return out;
+    for (const auto& kv : it->second) {
+        if (kv.second.has_value && !kv.second.resolved_value.empty()) {
+            out[kv.first] = kv.second.resolved_value;
+        }
+    }
+    return out;
+}
+
+// Recursively replay the effects of `method_qual` on `state`. `active` guards
+// against direct/indirect recursion through the call graph.
+static void replay_method_effects(const VisitData* vd,
+                                  const std::string& method_qual,
+                                  FieldStateMap& state,
+                                  std::unordered_set<std::string>& active,
+                                  int depth_left)
+{
+    if (depth_left <= 0) return;
+    auto mit = vd->method_effects.find(method_qual);
+    if (mit == vd->method_effects.end()) return;
+    if (!active.insert(method_qual).second) return;
+
+    for (const auto& ev : mit->second.events) {
+        if (ev.kind == MethodEvent::Kind::Mutation) {
+            if (!ev.mutation.field_name.empty() && !ev.mutation.assigned_value.empty()) {
+                state[ev.mutation.field_name] = ev.mutation.assigned_value;
+            }
+        } else if (ev.kind == MethodEvent::Kind::IntraClassCall) {
+            replay_method_effects(vd, ev.call_qualified, state, active, depth_left - 1);
+        }
+    }
+
+    active.erase(method_qual);
 }
 
 // =============================================================================
@@ -2240,7 +2666,7 @@ bool ASTAnalyzer::try_libclang(const std::filesystem::path& path,
               << n_warnings << " warnings\n";
 #endif
 
-    VisitData vd{db_, out, real_path.string(), lines, tu, {}, {}, {}};
+    VisitData vd{db_, out, real_path.string(), lines, tu, {}, {}, {}, {}};
 
     // Phase 1: precollect signatures of every defined function.
     clang_visitChildren(clang_getTranslationUnitCursor(tu), precollect_visitor, &vd);
@@ -2250,6 +2676,10 @@ bool ASTAnalyzer::try_libclang(const std::filesystem::path& path,
 
     // Phase 2.5: collect class fields with inline / ctor initializer values.
     collect_class_fields(&vd);
+
+    // Phase 2.6: collect per-method field effects (mutations + intra-class
+    // calls) for inter-procedural field-state propagation in phase 4.
+    collect_method_effects(&vd);
 
     // Phase 3: compute reachability from main + external-linkage roots.
     compute_reachability(&vd);
