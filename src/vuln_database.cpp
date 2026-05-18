@@ -47,14 +47,17 @@ void VulnDatabase::merge_json(const nlohmann::json& j){
             if(fn.contains("replacements")){
                 for(auto& rep:fn["replacements"]){
                     ReplacementInfo ri;
-                    ri.function_name=rep.value("function_name","");
-                    ri.library=rep.value("library","");
-                    ri.standard=rep.value("standard","");
-                    ri.algorithm=rep.value("algorithm","");
-                    ri.type=rep.value("type","");
-                    ri.migration_notes=rep.value("migration_notes","");
-                    ri.example_code=rep.value("example_code","");
-                    ri.tc26_note=rep.value("tc26_note","");
+                    // Accept both new canonical field names and legacy aliases.
+                    ri.function_name = rep.contains("function_name") ? rep.value("function_name","")
+                                                                      : rep.value("function","");
+                    ri.library       = rep.value("library","");
+                    ri.standard      = rep.value("standard","");
+                    ri.algorithm     = rep.value("algorithm","");
+                    ri.type          = rep.value("type","");
+                    ri.migration_notes = rep.contains("migration_notes") ? rep.value("migration_notes","")
+                                                                         : rep.value("notes","");
+                    ri.example_code  = rep.value("example_code","");
+                    ri.tc26_note     = rep.value("tc26_note","");
                     vf.replacements.push_back(ri);
                 }
             }

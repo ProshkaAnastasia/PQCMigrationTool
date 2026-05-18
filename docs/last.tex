@@ -1,0 +1,836 @@
+% ============================================================
+% ГЛАВА: ТЕСТИРОВАНИЕ И ОЦЕНКА
+% ============================================================
+
+\section{Тестирование и оценка}
+
+\subsection{Общий подход к тестированию}
+
+Тестирование инструмента выполнялось на двух уровнях: модульном
+и интеграционном.
+Модульные тесты изолированно проверяют каждый из шести компонентов
+системы: загрузку базы данных уязвимых функций, инвентаризацию проекта,
+regex"=анализатор, AST"=анализатор, оценщик риска и модуль метрик.
+Интеграционные тесты запускают полный конвейер обработки на реальном
+тестовом файле и сверяют итоговый план миграции с эталонной разметкой.
+
+Разделение на два уровня обусловлено архитектурой системы: каждый
+модуль находится на критическом пути вывода, поэтому ошибка в
+отчёте может быть вызвана разными причинами~--- неправильной загрузкой
+базы, ошибкой анализатора, ошибкой расчёта риска или ошибкой сериализации
+JSON.
+Модульные тесты позволяют локализовать источник проблемы, а
+интеграционные~--- убедиться, что все части работают совместно и
+дают воспроизводимый результат.
+
+Все тесты реализованы на C++ с использованием собственного минималистичного
+фреймворка \texttt{TestSuite / TestRunner}, не требующего сторонних
+зависимостей.
+Итого выполняется 47 тестов: 41 модульный и 6 интеграционных.
+Классификация приведена в таблице~\ref{tab:testing_levels}.
+
+\begin{longtable}{|p{4.2cm}|p{4.8cm}|p{6.0cm}|}
+  \caption{Классификация тестов системы анализа}
+  \label{tab:testing_levels} \\
+  \hline
+  Уровень & Что проверяется & Примеры тест"=кейсов \\ \hline
+  \endfirsthead
+  \multicolumn{3}{r}{\textit{Продолжение таблицы \thetable}} \\ \hline
+  Уровень & Что проверяется & Примеры тест"=кейсов \\ \hline
+  \endhead \hline \endlastfoot
+
+  Модульные тесты базы данных (9)
+    & Загрузка JSON, поиск по имени, псевдониму и регистру; слияние с дополнительной базой; наличие ссылок FIPS и ТК\,26
+    & \texttt{find\_alias}, \texttt{replacements\_present}, \texttt{merge\_extra\_db} \\ \hline
+
+  Модульные тесты инвентаризации (5)
+    & Обход файловой системы, классификация файлов, статистика языков, формирование метаданных CBOM
+    & \texttt{cpp\_files\_detected}, \texttt{language\_stats\_cpp}, \texttt{cbom\_metadata\_json} \\ \hline
+
+  Модульные тесты regex"=анализатора (8)
+    & Обнаружение функций в тестовом файле, корректность номера строки, отсутствие ложных срабатываний на AES
+    & \texttt{finds\_rsa\_in\_fixture}, \texttt{no\_false\_positives\_for\_safe\_code} \\ \hline
+
+  Модульные тесты AST"=анализатора (7)
+    & Наличие находок, извлечение контекстной функции и класса, исключение системных заголовков
+    & \texttt{context\_function\_extracted}, \texttt{no\_system\_header\_findings} \\ \hline
+
+  Модульные тесты оценщика риска (7)
+    & Влияние контекста на итоговую оценку, сортировка плана миграции, наличие рекомендаций и ссылок
+    & \texttt{network\_file\_increases\_risk}, \texttt{replacement\_info\_present} \\ \hline
+
+  Модульные тесты метрик (5)
+    & Вычисление TP, FP, FN с допуском строки; precision, recall, F1; сериализация в JSON
+    & \texttt{perfect\_match}, \texttt{line\_tolerance}, \texttt{json\_serialization} \\ \hline
+
+  Интеграционные тесты (6)
+    & Полный конвейер в режимах regex и AST; precision/recall\,$\geq$\,50\,\%; наличие ссылок ТК\,26 и FIPS; сериализация отчёта
+    & \texttt{regex\_pipeline\_end\_to\_end}, \texttt{ast\_pipeline\_end\_to\_end}, \texttt{regex\_precision\_recall\_gt50pct} \\
+
+\end{longtable}
+
+% -----------------------------------------------------------
+\subsection{Тестовые данные}
+
+Основным тестовым файлом является \texttt{tests/fixtures/sample\_vulnerable.cpp}.
+Файл содержит восемь тематических секций (A--H) с заранее известным набором
+уязвимых вызовов и отдельный блок \texttt{SAFE}, который не должен давать
+срабатываний.
+Такой файл выполняет роль контролируемой среды: каждая строка в нём
+либо заведомо уязвима, либо заведомо безопасна, что позволяет точно
+измерять precision и recall.
+
+Структура тестового файла по секциям представлена в
+таблице~\ref{tab:fixture_sections}.
+
+\begin{longtable}{|p{2.2cm}|p{4.5cm}|p{8.3cm}|}
+  \caption{Секции тестового файла \texttt{sample\_vulnerable.cpp}}
+  \label{tab:fixture_sections} \\
+  \hline
+  Секция & Класс/контекст & Описание \\ \hline
+  \endfirsthead
+  \multicolumn{3}{r}{\textit{Продолжение таблицы \thetable}} \\ \hline
+  Секция & Класс/контекст & Описание \\ \hline
+  \endhead \hline \endlastfoot
+
+  A. \texttt{crypto::tls}   & \texttt{TLSHandshake}    & RSA"=ключ сервера (\texttt{RSA\_new}, \texttt{RSA\_generate\_key\_ex}), ECDH (\texttt{EC\_KEY\_generate\_key}, \texttt{ECDH\_compute\_key}), подпись ECDSA \\ \hline
+  B. \texttt{crypto::storage} & \texttt{SecureStorage}  & RSA"=шифрование (\texttt{RSA\_public\_encrypt}), подпись RSA, хеширование SHA"=1 \\ \hline
+  C. DH params              & функция \texttt{setup\_dh} & Параметры Диффи"=Хеллмана: \texttt{DH\_new}, \texttt{DH\_generate\_parameters\_ex} \\ \hline
+  D. MD5                    & функция \texttt{md5sum}  & Устаревшая хеш"=функция MD5 \\ \hline
+  E. \texttt{crypto::evp}   & \texttt{EvpOperations}   & EVP высокого уровня: контекст с классическим алгоритмом, подпись и верификация через EVP, ключевое согласование ECDH через EVP \\ \hline
+  F. \texttt{crypto::dsa\_legacy} & \texttt{DsaOps}    & Явные вызовы DSA (\texttt{DSA\_new}, \texttt{DSA\_sign}); проверяет, что анализатор не смешивает DSA и ECDSA \\ \hline
+  G. \texttt{crypto::ec\_ops} & \texttt{ECOperations}  & Низкоуровневые EC"=операции: создание группы, \texttt{EC\_KEY\_new}, \texttt{EC\_KEY\_generate\_key} \\ \hline
+  H. \texttt{crypto::bn\_ops} & \texttt{BNOperations}  & Ручные BN"=операции как индикатор ручной реализации RSA: \texttt{BN\_generate\_prime\_ex}, \texttt{BN\_mod\_exp} \\ \hline
+  SAFE (нет срабатываний)   & функции \texttt{safe\_*} & AES"=256"=GCM (симметричный, допустим); \texttt{EVP\_PKEY\_CTX\_new\_from\_name} с аргументом \texttt{"ML-KEM-768"} (постквантовый) \\
+
+\end{longtable}
+
+Полный набор ожидаемых находок из 32 записей хранится в файле
+\texttt{ground\_truth.json}.
+Каждая запись содержит имя функции, номер строки и допуск
+(\texttt{line\_tolerance}~--- обычно 3--5 строк), позволяющий
+корректно засчитывать совпадение при незначительных расхождениях
+номеров строк между AST и regex"=режимами.
+Перечень ожидаемых функций, сгруппированных по категориям, приведён в
+таблице~\ref{tab:expected_functions}.
+
+\begin{longtable}{|p{1.2cm}|p{5.8cm}|p{7.9cm}|}
+  \caption{Ожидаемые находки в тестовом файле (ground truth, 32 записи)}
+  \label{tab:expected_functions} \\
+  \hline
+  Стр. & Функция & Обоснование обнаружения \\ \hline
+  \endfirsthead
+  \multicolumn{3}{r}{\textit{Продолжение таблицы \thetable}} \\ \hline
+  Стр. & Функция & Обоснование обнаружения \\ \hline
+  \endhead \hline \endlastfoot
+
+  49  & \texttt{RSA\_new}                   & Создание RSA-структуры; индикатор использования квантово-уязвимого RSA \\ \hline
+  52  & \texttt{RSA\_generate\_key\_ex}      & Генерация RSA-ключа; алгоритм полностью сломан алгоритмом Шора \\ \hline
+  60  & \texttt{EC\_KEY\_generate\_key}      & Генерация EC-ключа; ECDLP решается за полиномиальное время \\ \hline
+  61  & \texttt{ECDH\_compute\_key}          & Согласование ключа на эллиптических кривых \\ \hline
+  69  & \texttt{ECDSA\_sign}                 & Подпись ECDSA; основана на ECDLP \\ \hline
+  83  & \texttt{RSA\_public\_encrypt}        & RSA-шифрование; уязвимо к атаке Шора \\ \hline
+  89  & \texttt{RSA\_sign}                   & RSA-подпись; уязвима к атаке Шора \\ \hline
+  94  & \texttt{SHA1}                        & SHA-1: коллизии найдены классически; Гровер снижает стойкость до~\(\approx80\)\,бит \\ \hline
+  103 & \texttt{DH\_new}                     & Создание DH-параметров; задача дискретного логарифма решается алгоритмом Шора \\ \hline
+  104 & \texttt{DH\_generate\_parameters\_ex}& Генерация DH-параметров; псевдоним в базе для группы \texttt{DH\_generate\_key} \\ \hline
+  110 & \texttt{MD5}                         & MD5: коллизии полностью сломаны; Гровер даёт~\(\approx64\)\,бит прообраза \\ \hline
+  121 & \texttt{EVP\_PKEY\_CTX\_new\_from\_name} & Аргумент \texttt{"RSA"} --- классический алгоритм; условно уязвим \\ \hline
+  124 & \texttt{EVP\_PKEY\_keygen\_init}     & Контекст инициализирован для RSA-ключа; уязвим \\ \hline
+  125 & \texttt{EVP\_PKEY\_keygen}           & Генерация ключа в RSA-контексте \\ \hline
+  143 & \texttt{EVP\_PKEY\_CTX\_new}         & Создание контекста из существующего EC/RSA-ключа; безусловно уязвим \\ \hline
+  150 & \texttt{EVP\_DigestSignInit}         & Инициализация операции подписи; уязвима при RSA/ECDSA-ключе \\ \hline
+  152 & \texttt{EVP\_DigestSignUpdate}       & Передача данных в операцию подписи \\ \hline
+  154 & \texttt{EVP\_DigestSignFinal}        & Завершение подписи; финальная операция \\ \hline
+  162 & \texttt{EVP\_DigestVerifyInit}       & Инициализация верификации; уязвима при RSA/ECDSA-ключе \\ \hline
+  164 & \texttt{EVP\_DigestVerifyUpdate}     & Передача данных в операцию верификации \\ \hline
+  165 & \texttt{EVP\_DigestVerifyFinal}      & Завершение верификации \\ \hline
+  171 & \texttt{EVP\_PKEY\_CTX\_new}         & Второй экземпляр: ECDH-контекст через существующий ключ \\ \hline
+  172 & \texttt{EVP\_PKEY\_derive\_init}     & Инициализация ECDH-согласования через EVP \\ \hline
+  173 & \texttt{EVP\_PKEY\_derive\_set\_peer}& Установка открытого ключа партнёра \\ \hline
+  175 & \texttt{EVP\_PKEY\_derive}           & Выработка общего секрета ECDH \\ \hline
+  186 & \texttt{DSA\_new}                    & Создание DSA-структуры; DSA основан на задаче дискретного логарифма \\ \hline
+  191 & \texttt{DSA\_sign}                   & DSA-подпись; уязвима к алгоритму Шора \\ \hline
+  201 & \texttt{EC\_GROUP\_new\_by\_curve\_name} & Выбор эллиптической кривой; все именованные кривые NIST квантово-уязвимы \\ \hline
+  203 & \texttt{EC\_KEY\_new}                & Выделение EC-структуры \\ \hline
+  205 & \texttt{EC\_KEY\_generate\_key}      & Второй экземпляр генерации EC-ключа в той же функции \\ \hline
+  218 & \texttt{BN\_generate\_prime\_ex}     & Генерация большого простого числа; индикатор ручной реализации RSA \\ \hline
+  225 & \texttt{BN\_mod\_exp}                & Модульное возведение в степень; ключевая операция RSA/DH \\ \hline
+
+\end{longtable}
+
+Блок \texttt{SAFE} содержит два фрагмента, которые не должны приводить
+к срабатыванию.
+Первый~--- функция \texttt{safe\_aes\_encrypt}, использующая
+\texttt{EVP\_EncryptInit\_ex} с \texttt{EVP\_aes\_256\_gcm()}: симметричный
+режим AES-256-GCM не является объектом поиска квантово-уязвимых
+асимметричных алгоритмов и не входит в базу.
+Второй~--- функция \texttt{safe\_pqc\_kem}, вызывающая
+\texttt{EVP\_PKEY\_CTX\_new\_from\_name} с аргументом
+\texttt{"ML-KEM-768"}: AST-анализатор прослеживает провенанс
+аргумента и подавляет находку при обнаружении постквантового имени
+алгоритма, тогда как regex-анализатор в данном случае даёт ложное
+срабатывание (подробнее~--- в разделе~\ref{sec:analysis_comparison}).
+
+% -----------------------------------------------------------
+\subsection{Модульные тесты}
+
+\subsubsection{Тесты базы данных уязвимых функций}
+
+Набор из девяти тестов класса \texttt{VulnDatabase} проверяет загрузку
+JSON-файла, поиск по основному имени, псевдониму, нечувствительности
+к регистру, отсутствие ответа для несуществующей функции, наличие
+заполненных рекомендаций по миграции и ссылок на стандарты, а
+также слияние с дополнительной базой.
+
+Тест поиска по каноническому имени (листинг~\ref{lst:db-find-rsa})
+проверяет, что запись для \texttt{RSA\_generate\_key\_ex} загружена,
+алгоритм равен \texttt{"RSA"}, уязвимость~--- \texttt{"high"}, а оценка
+риска превышает 9.0.
+
+\begin{itmolisting}[C++]{Тест поиска RSA-функции в базе данных}{lst:db-find-rsa}
+TEST(VulnDatabase, find_rsa_keygen) {
+    pqc::VulnDatabase db;
+    db.load("data/vulnerable_functions.json");
+
+    auto opt = db.find_by_name("RSA_generate_key_ex");
+
+    ASSERT_TRUE(opt.has_value());
+    ASSERT_EQ(opt->algorithm, "RSA");
+    ASSERT_EQ(opt->quantum_vulnerability, "high");
+    ASSERT_GT(opt->risk_score, 9.0);
+}
+\end{itmolisting}
+
+Тест псевдонима (листинг~\ref{lst:db-find-alias}) важен, поскольку
+в базе данных у одной записи может быть несколько совместимых имён~---
+например, \texttt{RSA\_generate\_key} является псевдонимом канонической
+функции \texttt{RSA\_generate\_key\_ex}.
+Тест проверяет, что поиск по псевдониму возвращает ту же запись.
+
+\begin{itmolisting}[C++]{Тест поиска по псевдониму функции}{lst:db-find-alias}
+TEST(VulnDatabase, find_alias) {
+    pqc::VulnDatabase db;
+    db.load("data/vulnerable_functions.json");
+
+    auto opt = db.find_by_name("RSA_generate_key"); // псевдоним
+
+    ASSERT_TRUE(opt.has_value());
+    ASSERT_EQ(opt->name, "RSA_generate_key_ex");    // каноническое имя
+}
+\end{itmolisting}
+
+Тест слияния с дополнительной базой (листинг~\ref{lst:db-merge})
+моделирует сценарий, когда организация добавляет собственные
+функции"=обёртки для корпоративных криптографических API.
+
+\begin{itmolisting}[C++]{Тест слияния с дополнительной базой}{lst:db-merge}
+TEST(VulnDatabase, merge_extra_db) {
+    pqc::VulnDatabase db;
+    db.load("data/vulnerable_functions.json");
+    size_t before = db.size();
+
+    nlohmann::json extra = {
+      {"version", "1.0"},
+      {"libraries", {{"internal", {{"functions", nlohmann::json::array({
+        {{"id","corp-1"},{"name","CorpRSAEncrypt"},
+         {"aliases", nlohmann::json::array()},
+         {"category","asymmetric_encryption"},
+         {"algorithm","RSA"},{"quantum_vulnerability","high"},
+         {"risk_score",9.5},{"description","Internal RSA wrapper"},
+         {"patterns", nlohmann::json::array({"CorpRSAEncrypt\\s*\\("})},
+         {"replacements", nlohmann::json::array()}}
+      })}}}}}
+    };
+
+    db.merge_json(extra);
+
+    ASSERT_GT((int)db.size(), (int)before);
+    ASSERT_TRUE(db.find_by_name("CorpRSAEncrypt").has_value());
+}
+\end{itmolisting}
+
+Тест \texttt{replacements\_present} дополнительно проверяет, что первая
+рекомендация по миграции для \texttt{RSA\_generate\_key\_ex} содержит
+ссылку на стандарт FIPS (поле \texttt{standard}), что обеспечивает
+корректную сериализацию плана миграции в JSON-отчёте.
+
+\subsubsection{Тесты инвентаризации проекта}
+
+Набор из пяти тестов класса \texttt{ProjectScanner} проверяет, что сканер
+обходит директорию, находит C++"=файлы, корректно определяет язык,
+формирует метаданные CBOM и поддерживает пользовательские плагины
+языка (листинг~\ref{lst:scanner-cpp}).
+
+\begin{itmolisting}[C++]{Тест обнаружения C++ файлов при инвентаризации}{lst:scanner-cpp}
+TEST(ProjectScanner, cpp_files_detected) {
+    pqc::ProjectScanner scanner;
+    auto inv = scanner.scan("tests/fixtures");
+
+    auto src = inv.get_source_files();
+
+    ASSERT_GT((int)src.size(), 0);
+    bool found_cpp = false;
+    for (auto* f : src)
+        if (f->path.extension() == ".cpp") { found_cpp = true; break; }
+    ASSERT_TRUE(found_cpp);
+}
+\end{itmolisting}
+
+Тест \texttt{custom\_plugin} демонстрирует расширяемость: в сканер
+регистрируется экземпляр анонимного класса, реализующего интерфейс
+\texttt{ILanguagePlugin}, и проверяется, что инвентаризация проходит
+без ошибок.
+
+\subsubsection{Тесты regex"=анализатора}
+
+Восемь тестов класса \texttt{RegexAnalyzer} проверяют обнаружение
+конкретных функций, атрибуты находки (номер строки, библиотека, ссылка
+NIST) и отсутствие ложных срабатываний на AES.
+Ключевые тест"=кейсы представлены ниже.
+
+Тест \texttt{finds\_rsa\_in\_fixture} (листинг~\ref{lst:regex-rsa})
+проверяет, что анализатор обнаруживает вызов \texttt{RSA\_generate\_key\_ex}
+в тестовом файле.
+
+\begin{itmolisting}[C++]{Тест обнаружения RSA-функции regex-анализатором}{lst:regex-rsa}
+TEST(RegexAnalyzer, finds_rsa_in_fixture) {
+    pqc::VulnDatabase db;
+    db.load("data/vulnerable_functions.json");
+    pqc::RegexAnalyzer ra(db);
+
+    auto findings = ra.analyze_file(
+        "tests/fixtures/sample_vulnerable.cpp"
+    );
+
+    bool found = false;
+    for (auto& f : findings)
+        if (f.function_name == "RSA_generate_key_ex")
+            { found = true; break; }
+    ASSERT_TRUE(found);
+}
+\end{itmolisting}
+
+Тест \texttt{no\_false\_positives\_for\_safe\_code}
+(листинг~\ref{lst:regex-safe}) проверяет, что симметричный вызов
+\texttt{EVP\_EncryptInit\_ex} в блоке \texttt{SAFE} не порождает
+находок~--- функция отсутствует в базе уязвимых функций.
+
+\begin{itmolisting}[C++]{Тест отсутствия ложных срабатываний на AES-код}{lst:regex-safe}
+TEST(RegexAnalyzer, no_false_positives_for_safe_code) {
+    pqc::VulnDatabase db;
+    db.load("data/vulnerable_functions.json");
+    pqc::RegexAnalyzer ra(db);
+    auto findings = ra.analyze_file(
+        "tests/fixtures/sample_vulnerable.cpp"
+    );
+
+    for (auto& f : findings)
+        ASSERT_TRUE(f.function_name != "EVP_EncryptInit_ex");
+}
+\end{itmolisting}
+
+Тест \texttt{finding\_has\_nist\_reference} перебирает все находки и
+проверяет, что каждая из них содержит непустую строку ссылки на стандарт
+NIST~--- это обязательный атрибут для формирования полноценного
+раздела \texttt{nist\_compliance} в отчёте.
+
+\subsubsection{Тесты AST"=анализатора}
+
+Семь тестов класса \texttt{ASTAnalyzer} проверяют режим работы, наличие
+libclang, обнаружение уязвимостей и корректность извлечения контекста.
+
+Тест \texttt{context\_function\_extracted}
+(листинг~\ref{lst:ast-ctx-fn}) проверяет, что хотя бы для одной находки
+поле \texttt{context\_function} непусто и не равно \texttt{"<global>"}~---
+то есть AST-анализатор действительно определяет объемлющую функцию.
+
+\begin{itmolisting}[C++]{Тест извлечения контекстной функции AST-анализатором}{lst:ast-ctx-fn}
+TEST(ASTAnalyzer, context_function_extracted) {
+    pqc::VulnDatabase db;
+    db.load("data/vulnerable_functions.json");
+    pqc::ASTAnalyzer aa(db);
+    auto findings = aa.analyze_file(
+        "tests/fixtures/sample_vulnerable.cpp"
+    );
+
+    bool has_context = false;
+    for (auto& f : findings)
+        if (!f.context_function.empty() &&
+             f.context_function != "<global>")
+            { has_context = true; break; }
+    ASSERT_TRUE(has_context);
+}
+\end{itmolisting}
+
+Тест \texttt{context\_class\_extracted} аналогично проверяет, что для
+хотя бы одной находки заполнено поле \texttt{context\_class}, что
+подтверждает способность анализатора определять вмещающий класс (например,
+\texttt{crypto::tls::TLSHandshake}).
+
+Тест \texttt{no\_system\_header\_findings} (листинг~\ref{lst:ast-nosys})
+критичен для корректности: он проверяет, что все находки указывают
+на файл \texttt{sample\_vulnerable.cpp}, а не на системные заголовки
+OpenSSL, подключаемые при разборе.
+
+\begin{itmolisting}[C++]{Тест исключения находок из системных заголовков}{lst:ast-nosys}
+TEST(ASTAnalyzer, no_system_header_findings) {
+    pqc::VulnDatabase db;
+    db.load("data/vulnerable_functions.json");
+    pqc::ASTAnalyzer aa(db);
+    auto findings = aa.analyze_file(
+        "tests/fixtures/sample_vulnerable.cpp"
+    );
+
+    for (auto& f : findings)
+        ASSERT_CONTAINS(f.file_path, "sample_vulnerable");
+}
+\end{itmolisting}
+
+\subsubsection{Тесты оценщика риска}
+
+Семь тестов класса \texttt{RiskAssessor} проверяют, что контекстные
+факторы корректно влияют на итоговую оценку.
+
+Тест \texttt{test\_file\_reduces\_risk}
+(листинг~\ref{lst:risk-test-reduce}) подтверждает, что путь
+\texttt{tests/test\_tls.cpp} распознаётся как тестовый файл и
+применяется понижающий коэффициент.
+
+\begin{itmolisting}[C++]{Тест снижения риска для тестовых файлов}{lst:risk-test-reduce}
+TEST(RiskAssessor, test_file_reduces_risk) {
+    pqc::VulnDatabase db;
+    db.load("data/vulnerable_functions.json");
+    pqc::RiskAssessor ra(db);
+    pqc::ProjectInventory inv;
+
+    pqc::Finding f;
+    f.function_name  = "RSA_generate_key_ex";
+    f.library        = "openssl";
+    f.category       = "asymmetric_key_generation";
+    f.base_risk_score = 9.5;
+    f.file_path       = "tests/test_tls.cpp";
+
+    auto rr = ra.assess({f}, inv);
+
+    ASSERT_NOT_EMPTY(rr.migration_plan);
+    // Тестовый файл применяет коэффициент x0.7
+    ASSERT_TRUE(rr.migration_plan[0].risk.final_score < 9.5);
+}
+\end{itmolisting}
+
+Тест \texttt{migration\_order\_sorted\_by\_risk}
+(листинг~\ref{lst:risk-order}) намеренно подаёт две находки в
+обратном порядке и проверяет, что план миграции отсортирован по
+убыванию итоговой оценки риска.
+
+\begin{itmolisting}[C++]{Тест сортировки плана миграции по риску}{lst:risk-order}
+TEST(RiskAssessor, migration_order_sorted_by_risk) {
+    pqc::VulnDatabase db;
+    db.load("data/vulnerable_functions.json");
+    pqc::RiskAssessor ra(db);
+    pqc::ProjectInventory inv;
+
+    pqc::Finding f1, f2;
+    // f1 высокий риск (9.5), f2 средний (6.5)
+    f1.function_name = "RSA_generate_key_ex"; f1.base_risk_score = 9.5;
+    f1.file_path = "src/net.cpp";  f1.category = "asymmetric_key_generation";
+    f2.function_name = "SHA1";     f2.base_risk_score = 6.5;
+    f2.file_path = "src/util.cpp"; f2.category = "hash_function";
+
+    // Подаём намеренно в обратном порядке
+    auto rr = ra.assess({f2, f1}, inv);
+
+    ASSERT_EQ((int)rr.migration_plan.size(), 2);
+    ASSERT_GE(rr.migration_plan[0].risk.final_score,
+              rr.migration_plan[1].risk.final_score);
+}
+\end{itmolisting}
+
+\subsubsection{Тесты модуля метрик}
+
+Пять тестов класса \texttt{MetricsCalculator} проверяют вычисление TP,
+FP, FN, precision, recall и F1, а также работу допуска строк и
+сериализацию результатов в JSON.
+
+Тест \texttt{line\_tolerance} (листинг~\ref{lst:metrics-tol}) проверяет,
+что находка на строке~45 засчитывается как TP при эталонном значении
+строки~42 и допуске~5.
+
+\begin{itmolisting}[C++]{Тест допуска при сопоставлении строк}{lst:metrics-tol}
+TEST(MetricsCalculator, line_tolerance) {
+    pqc::MetricsCalculator calc;
+
+    pqc::Finding f;
+    f.function_name = "RSA_sign";
+    f.line_number   = 45;
+
+    pqc::GroundTruth gt;
+    gt.function_name = "RSA_sign";
+    gt.line_number   = 42;
+    gt.line_tolerance = 5;
+
+    auto m = calc.compute({f}, {gt});
+
+    ASSERT_EQ(m.true_positives, 1); // в пределах допуска
+    ASSERT_EQ(m.false_positives, 0);
+    ASSERT_EQ(m.false_negatives, 0);
+}
+\end{itmolisting}
+
+% -----------------------------------------------------------
+\subsection{Интеграционные тесты}
+
+Шесть интеграционных тестов запускают полный конвейер обработки на
+директории \texttt{tests/fixtures} и проверяют корректность итогового
+результата.
+
+Тест \texttt{regex\_pipeline\_end\_to\_end}
+(листинг~\ref{lst:itest-regex}) последовательно выполняет все
+этапы: загрузку базы, инвентаризацию, regex"=анализ и оценку риска,
+после чего проверяет непустоту плана миграции и ненулевую общую оценку
+риска.
+
+\begin{itmolisting}[C++]{Интеграционный тест полного конвейера в режиме regex}{lst:itest-regex}
+TEST(FullPipeline, regex_pipeline_end_to_end) {
+    pqc::VulnDatabase db;
+    db.load("data/vulnerable_functions.json");
+
+    pqc::ProjectScanner scanner;
+    auto inv = scanner.scan("tests/fixtures");
+
+    pqc::RegexAnalyzer ra(db);
+    auto findings = ra.analyze(inv);
+    ASSERT_NOT_EMPTY(findings);
+
+    pqc::RiskAssessor assessor(db);
+    auto rr = assessor.assess(findings, inv);
+
+    ASSERT_NOT_EMPTY(rr.migration_plan);
+    ASSERT_GT(rr.overall_risk_score, 0.0);
+    ASSERT_NOT_EMPTY(rr.nist_readiness);
+}
+\end{itmolisting}
+
+Тест \texttt{ast\_pipeline\_end\_to\_end} аналогично проверяет AST"=режим
+и выводит в лог число найденных уязвимостей и используемый бэкенд
+(libclang или token"=fallback).
+
+Тест \texttt{regex\_precision\_recall\_gt50pct}
+(листинг~\ref{lst:itest-metrics}) является регрессионным: он загружает
+эталонную разметку из \texttt{ground\_truth.json} и проверяет, что
+precision, recall и F1 не опускаются ниже~50\,\%.
+Порог выбран намеренно консервативным, чтобы тест не зависел от
+конкретного состояния базы, однако фиксировал регресс при значительном
+ухудшении.
+
+\begin{itmolisting}[C++]{Интеграционный тест метрик качества}{lst:itest-metrics}
+TEST(FullPipeline, regex_precision_recall_gt50pct) {
+    pqc::VulnDatabase db;
+    db.load("data/vulnerable_functions.json");
+
+    pqc::ProjectScanner scanner;
+    auto inv = scanner.scan("tests/fixtures");
+
+    pqc::RegexAnalyzer ra(db);
+    auto findings = ra.analyze(inv);
+
+    auto gt = pqc::MetricsCalculator::load_from_json(
+        "tests/fixtures/ground_truth.json"
+    );
+    pqc::MetricsCalculator calc;
+    auto m = calc.compute(findings, gt);
+
+    ASSERT_GE(m.precision(), 0.5);
+    ASSERT_GE(m.recall(),    0.5);
+    ASSERT_GE(m.f1_score(),  0.5);
+}
+\end{itmolisting}
+
+Тест \texttt{migration\_plan\_has\_fips\_references} проверяет, что
+хотя бы в одной записи плана миграции поле \texttt{replacement\_standard}
+содержит подстроку \texttt{"FIPS"}, что подтверждает корректную
+загрузку и применение рекомендаций из базы.
+
+% -----------------------------------------------------------
+\subsection{Оценка результатов тестирования}
+
+Все~47 тестов~--- 41 модульный и 6 интеграционных~--- проходят
+успешно (таблица~\ref{tab:test_results_summary}).
+До внесения исправлений, описанных в разделе~\ref{sec:analysis_comparison},
+три теста завершались с ошибкой:
+\texttt{replacements\_present} (поле \texttt{standard} было пустым
+из"=за расхождения имён полей в JSON),
+\texttt{replacement\_info\_present} и \texttt{tc26\_note\_present}
+(поля заполнялись только из объекта \texttt{Finding}, но тестовые
+находки, созданные вручную, не несли этих атрибутов).
+Исправления состояли в расширении парсера базы данных для принятия
+обоих форматов полей (\texttt{"function"}/\texttt{"function\_name"},
+\texttt{"notes"}/\texttt{"migration\_notes"}) и добавлении запасного
+обращения к базе при пустых полях в объекте \texttt{MigrationAction}.
+
+\begin{longtable}{|p{5.5cm}|r|r|r|}
+  \caption{Итоги выполнения тестов}
+  \label{tab:test_results_summary} \\
+  \hline
+  Набор тестов & Всего & Пройдено & Провалено \\ \hline
+  \endfirsthead
+  \multicolumn{4}{r}{\textit{Продолжение таблицы \thetable}} \\ \hline
+  Набор тестов & Всего & Пройдено & Провалено \\ \hline
+  \endhead \hline \endlastfoot
+
+  VulnDatabase      & 9  & 9  & 0 \\ \hline
+  ProjectScanner    & 5  & 5  & 0 \\ \hline
+  RegexAnalyzer     & 8  & 8  & 0 \\ \hline
+  ASTAnalyzer       & 7  & 7  & 0 \\ \hline
+  RiskAssessor      & 7  & 7  & 0 \\ \hline
+  MetricsCalculator & 5  & 5  & 0 \\ \hline
+  FullPipeline (интеграционные) & 6 & 6 & 0 \\ \hline
+  \textbf{Итого}    & \textbf{47} & \textbf{47} & \textbf{0} \\
+
+\end{longtable}
+
+Интеграционный тест \texttt{regex\_precision\_recall\_gt50pct} зафиксировал
+финальные метрики качества на эталонном наборе: precision\,=\,80,0\,\%,
+recall\,=\,100,0\,\%, F1\,=\,88,9\,\% для режима regex.
+AST"=режим даёт precision\,=\,94,1\,\%, recall\,=\,100,0\,\%,
+F1\,=\,97,0\,\%.
+Подробный сравнительный анализ приведён в разделе~\ref{sec:analysis_comparison}.
+
+
+% ============================================================
+% ГЛАВА: АНАЛИЗ ПОЛУЧЕННЫХ РЕЗУЛЬТАТОВ
+% ============================================================
+
+\section{Анализ полученных результатов}
+
+\subsection{Соответствие реализации поставленным требованиям}
+
+В таблице~\ref{tab:req_compliance} приведено соответствие реализованных
+функций ключевым требованиям, сформулированным в техническом задании.
+
+\begin{longtable}{|p{6.0cm}|p{4.5cm}|p{4.5cm}|}
+  \caption{Соответствие реализации функциональным требованиям}
+  \label{tab:req_compliance} \\
+  \hline
+  Требование & Реализация & Подтверждение \\ \hline
+  \endfirsthead
+  \multicolumn{3}{r}{\textit{Продолжение таблицы \thetable}} \\ \hline
+  Требование & Реализация & Подтверждение \\ \hline
+  \endhead \hline \endlastfoot
+
+  Обнаружение квантово-уязвимых функций в C/C++ коде
+    & Два анализатора: regex и AST (libclang)
+    & TP\,=\,32/32 на эталонном наборе в обоих режимах \\ \hline
+
+  Поддержка баз OpenSSL, Crypto++, ГОСТ"=криптографии
+    & Три библиотечных секции в \texttt{vulnerable\_functions.json}
+    & Тест \texttt{gost\_library\_entries} \\ \hline
+
+  Расчёт риска с учётом контекста
+    & Модуль \texttt{RiskAssessor}: 6 контекстных множителей
+    & Тесты \texttt{network\_file\_increases\_risk}, \texttt{test\_file\_reduces\_risk} \\ \hline
+
+  Формирование плана миграции, отсортированного по приоритету
+    & \texttt{RiskAssessor::assess} с сортировкой по \texttt{final\_score}
+    & Тест \texttt{migration\_order\_sorted\_by\_risk} \\ \hline
+
+  Рекомендации по миграции со ссылками FIPS и ТК\,26
+    & Поля \texttt{replacement\_standard}, \texttt{tc26\_note} в \texttt{MigrationAction}
+    & Тесты \texttt{migration\_plan\_has\_fips\_references}, \texttt{risk\_report\_has\_tc26\_data} \\ \hline
+
+  Формирование CBOM по стандарту CycloneDX
+    & Модуль \texttt{Cbom} и \texttt{ReportGenerator::build\_cbom}
+    & Тест \texttt{report\_json\_serialization} \\ \hline
+
+  Расширяемость через пользовательскую базу
+    & Метод \texttt{VulnDatabase::merge\_json}
+    & Тест \texttt{merge\_extra\_db} \\ \hline
+
+  Измерение точности и полноты с эталонной разметкой
+    & Модуль \texttt{MetricsCalculator}, флаг \texttt{{-}{-}metrics}
+    & Тест \texttt{regex\_precision\_recall\_gt50pct} \\
+
+\end{longtable}
+
+Все восемь функциональных требований реализованы и подтверждены
+автоматическими тестами.
+
+% -----------------------------------------------------------
+\subsection{Сравнение режимов анализа}
+\label{sec:analysis_comparison}
+
+Оба режима проверялись на одном и том же тестовом файле
+\texttt{sample\_vulnerable.cpp} (32 записи в эталонной разметке).
+Результаты представлены в таблице~\ref{tab:mode_comparison}.
+
+\begin{longtable}{|p{4.5cm}|r|r|}
+  \caption{Сравнение метрик качества AST и regex"=режимов}
+  \label{tab:mode_comparison} \\
+  \hline
+  Метрика & AST & Regex \\ \hline
+  \endfirsthead
+  \multicolumn{3}{r}{\textit{Продолжение таблицы \thetable}} \\ \hline
+  Метрика & AST & Regex \\ \hline
+  \endhead \hline \endlastfoot
+
+  Эталонных записей (GT)    & 32 & 32 \\ \hline
+  True Positives (TP)        & 32 & 32 \\ \hline
+  False Positives (FP)       & 2  & 8  \\ \hline
+  False Negatives (FN)       & 0  & 0  \\ \hline
+  Precision                  & 94,1\,\% & 80,0\,\% \\ \hline
+  Recall                     & 100,0\,\% & 100,0\,\% \\ \hline
+  F1                         & 97,0\,\% & 88,9\,\% \\ \hline
+  Время анализа тестового файла & $\approx$1030\,мс & $\approx$80\,мс \\
+
+\end{longtable}
+
+\paragraph{True Positives.}
+Оба режима обнаружили все~32 ожидаемых вызова.
+В числе найденных~--- условно уязвимый
+\texttt{EVP\_PKEY\_CTX\_new\_from\_name("RSA", ...)}, шесть функций
+EVP"=подписи/верификации, хеш"=функции SHA"=1 и MD5, низкоуровневые
+BIGNUM"=операции, а также псевдонимные вызовы
+\texttt{EC\_KEY\_generate\_key} и \texttt{DH\_generate\_parameters\_ex},
+которые не были в базе изначально.
+
+\paragraph{False Positives.}
+\textbf{AST (2 FP):} обе находки~--- \texttt{BN\_new} на строках~50 и~217~---
+являются реальными уязвимостями (создание BIGNUM"=структуры как индикатор
+ручной реализации RSA/DH), которые просто отсутствуют в эталонной разметке.
+С формальной точки зрения они считаются FP, однако с содержательной~---
+это корректные срабатывания.
+Если включить эти строки в GT, precision AST достигнет 100\,\%.
+
+\textbf{Regex (8 FP):} включают те же~2 валидных \texttt{BN\_new} плюс~6
+ложных срабатываний, обусловленных фундаментальным ограничением подхода:
+\begin{itemize}
+  \item 3 вызова из блока \texttt{safe\_pqc\_kem}~---
+        \texttt{EVP\_PKEY\_CTX\_new\_from\_name("ML-KEM-768", ...)},
+        \texttt{EVP\_PKEY\_keygen\_init}, \texttt{EVP\_PKEY\_keygen}~---
+        являются постквантовыми и не должны давать находок, однако
+        regex"=анализатор не может отследить провенанс аргумента
+        \texttt{"ML-KEM-768"};
+  \item аналогичные~3 вызова из второго экземпляра \texttt{EVP\_PKEY\_CTX\_new\_from\_name}
+        с тем же аргументом.
+\end{itemize}
+AST"=анализатор корректно подавляет все эти~6 находок, прослеживая цепочку
+значений через механизм \texttt{resolve\_expr} и проверяя, содержит ли
+аргумент имя постквантового алгоритма.
+
+\paragraph{False Negatives.}
+Ни одного FN в обоих режимах.
+Нулевое значение FN достигнуто после внесения следующих исправлений в
+базу данных:
+добавление записей \texttt{SHA1}, \texttt{MD5};
+добавление псевдонима \texttt{EC\_KEY\_generate\_key} к \texttt{EC\_KEY\_new};
+добавление псевдонима \texttt{DH\_generate\_parameters\_ex} к \texttt{DH\_generate\_key};
+смена канонического имени группы RSA-генерации с \texttt{RSA\_generate\_key}
+на \texttt{RSA\_generate\_key\_ex}.
+Помимо этого, в AST"=анализаторе исправлено поле \texttt{function\_name}:
+теперь в находке указывается фактически вызванная функция, а не
+каноническое имя в базе, что обеспечивает корректное совпадение с GT.
+
+\paragraph{Рекомендации по применению режимов.}
+Regex"=режим целесообразно использовать как быстрый скрининг: время
+работы на тестовом файле составляет~$\approx$80\,мс против
+$\approx$1030\,мс у AST"=режима.
+При этом~6 из~8 FP неустранимы без анализа аргументов.
+AST"=режим рекомендуется как основной для итогового отчёта и
+для случаев, когда необходимо подавить ложные срабатывания на
+постквантовый код.
+
+% -----------------------------------------------------------
+\subsection{Оценка практической применимости}
+
+Инструмент был запущен на нескольких открытых проектах с использованием
+OpenSSL для оценки практической применимости.
+В проектах обнаруживались те же паттерны, что и в тестовом файле:
+прямые вызовы \texttt{RSA\_generate\_key\_ex}, \texttt{ECDH\_compute\_key},
+блоки EVP"=инициализации.
+Время анализа файла объёмом~$\approx$2000\,строк составило
+менее~2\,с в AST"=режиме, что является приемлемым для CI"=конвейера.
+
+Помимо поиска уязвимостей, инструмент формирует:
+\begin{itemize}
+  \item CBOM"=файл в формате CycloneDX с полями \texttt{primitive},
+        \texttt{cryptoFunctions}, \texttt{quantumSecurityLevel}~---
+        стандартизованный инвентарь криптографических активов;
+  \item план миграции с явными ссылками на FIPS\,203/204/205 и
+        рекомендации ТК\,26 в переходный период 2025--2030;
+  \item оценку NIST"=готовности (\texttt{not-started} / \texttt{in-progress} /
+        \texttt{near-compliant} / \texttt{compliant}).
+\end{itemize}
+Эти выходные данные пригодны как для внутреннего аудита, так и для
+представления регулятору.
+
+% -----------------------------------------------------------
+\subsection{Ограничения реализации}
+
+\paragraph{Межпроцедурный анализ потоков данных.}
+Если ключевой материал передаётся через несколько функций, AST"=анализатор
+отслеживает цепочку только в рамках одной функции (через
+\texttt{resolve\_expr}). Межпроцедурный анализ не реализован, что может
+приводить к пропуску уязвимостей при глубоком стеке вызовов.
+
+\paragraph{Провенанс аргументов в режиме regex.}
+Regex"=анализатор не может отслеживать значения переменных, поэтому
+не способен подавить ложные срабатывания на постквантовый код
+(6~FP из~8 в тестовом наборе). Частичное решение~--- доэмпирические
+правила~--- хрупко и не масштабируется.
+
+\paragraph{Зависимость от libclang.}
+AST"=анализатор требует установленной libclang и правильно настроенных
+путей включения. При отсутствии libclang система переключается на
+токенизирующий fallback"=режим с пониженной точностью извлечения контекста.
+
+\paragraph{Покрытие базы данных.}
+Текущая база охватывает три библиотеки: OpenSSL, Crypto++ и библиотеку
+ГОСТ"=криптографии. Функции из wolfSSL, Botan, mbedTLS и прочих
+библиотек не включены и будут пропущены.
+
+\paragraph{Отсутствие модуля автоматической миграции.}
+Инструмент формирует план миграции, но не выполняет кодовые
+преобразования автоматически. Разработчик должен вручную применять
+рекомендации на основе сгенерированного отчёта.
+
+% -----------------------------------------------------------
+\subsection{Направления дальнейшего развития}
+
+\paragraph{Модуль автоматической миграции кода.}
+Приоритетным направлением является реализация модуля, который по
+готовому плану миграции и шаблонам из базы данных генерирует
+патчи или заготовки замены~--- например, заменяет
+\texttt{RSA\_generate\_key\_ex} на блок инициализации
+\texttt{EVP\_PKEY\_CTX\_new\_from\_name("ML-DSA-65", ...)} с
+сохранением семантики.
+Для этого потребуется расширить AST"=обходчик до уровня переписывающего
+трансформера, использующего тот же cursor"=механизм libclang.
+
+\paragraph{Межпроцедурный анализ.}
+Реализация простого межпроцедурного анализа потоков данных (хотя бы
+в рамках одной единицы трансляции) позволит правильно
+оценивать риск при передаче ключевого материала через вспомогательные
+функции, что снизит число FN на реальных проектах с абстракциями
+над криптографическими API.
+
+\paragraph{Расширение базы данных.}
+Добавление функций из wolfSSL, mbedTLS, Botan, а также Python"=биндингов
+(\texttt{cryptography}, \texttt{pyOpenSSL}), Go"=стандартной библиотеки
+(\texttt{crypto/rsa}, \texttt{crypto/elliptic}) и Rust"=крейтов
+(\texttt{rsa}, \texttt{p256}) повысит применимость инструмента для
+многоязычных проектов.
+
+\paragraph{Интеграция в CI/CD.}
+Добавление режима выхода с ненулевым кодом при обнаружении критических
+находок (\texttt{{-}{-}fail-on-critical}) позволит встраивать инструмент
+в GitHub Actions, GitLab CI и аналогичные системы как шаг проверки
+перед слиянием.
+
+\paragraph{Отслеживание истечения срока действия сертификатов.}
+Текущий модуль анализа сертификатов определяет алгоритм, но не
+сигнализирует о скором истечении срока действия ключей,
+сгенерированных с квантово-уязвимыми параметрами.
+Добавление временно"=зависимой оценки риска (с учётом горизонта
+появления криптографически значимых квантовых компьютеров к 2030\,г.)
+сделает приоритизацию плана миграции более реалистичной.

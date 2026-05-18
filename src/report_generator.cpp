@@ -12,6 +12,15 @@ static std::string now_iso(){
 }
 static std::string primitive_for(const std::string& alg){
     std::string a=alg; std::transform(a.begin(),a.end(),a.begin(),::tolower);
+    // EVP abstraction-layer compound names ("RSA/EC/DH (EVP)", "RSA/EC (EVP)", …).
+    // Parsed before individual checks to avoid the "rsa" substring firing first.
+    if(a.find("(evp)")!=std::string::npos){
+        if(a.find("ecdh")!=std::string::npos) return "ecdh"; // ECDH/DH (EVP)
+        return "evp";  // RSA/EC/DH (EVP), RSA/EC (EVP)
+    }
+    // BIGNUM manual-arithmetic indicators
+    if(a.find("bignum")!=std::string::npos) return "asymmetric_primitive";
+    // Standard single-algorithm names
     if(a.find("rsa")!=std::string::npos)  return "rsa";
     if(a.find("ecdh")!=std::string::npos) return "ecdh";
     if(a.find("ecdsa")!=std::string::npos)return "ecdsa";
@@ -30,6 +39,7 @@ static std::string fn_for_cat(const std::string& cat){
     if(cat=="key_exchange")              return "keyAgreement";
     if(cat=="digital_signature")         return "sign";
     if(cat=="hash_function")             return "digest";
+    if(cat=="asymmetric_primitive")      return "encryptAndDecrypt";
     return "other";
 }
 static int classical_sec(const std::string& alg, int /*key_bits*/){
@@ -59,7 +69,10 @@ Cbom ReportGenerator::build_cbom(const std::vector<Finding>& findings, const Pro
         ap.primitive=primitive_for(f.algorithm);
         ap.cryptoFunctions=fn_for_cat(f.category);
         ap.classicalSecurityLevel=classical_sec(f.algorithm,0);
-        ap.quantumSecurityLevel=(f.quantum_vulnerability=="high"?0:
+        // "conditional" findings are emitted only when a classical (vulnerable)
+        // argument was detected, so treat them as fully broken (level 0).
+        ap.quantumSecurityLevel=(f.quantum_vulnerability=="high"||
+                                  f.quantum_vulnerability=="conditional"?0:
                                   f.quantum_vulnerability=="medium"?50:128);
         cbom.add_component(std::move(c));
     }

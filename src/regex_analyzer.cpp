@@ -81,20 +81,42 @@ std::vector<Finding> RegexAnalyzer::analyze_file(const std::filesystem::path& p)
     std::vector<Finding> findings;
     std::set<std::pair<std::string, int>> seen;
     
+    bool in_block_comment = false;
     for(int li = 0; li < (int)lines.size(); ++li){
         const auto& line = lines[li];
-        std::string trimmed = line; 
-        auto it = trimmed.begin();
-        
-        while(it != trimmed.end() && std::isspace((unsigned char)*it)) {
-            ++it;
+
+        // Strip block comments and produce a comment-free version for matching.
+        std::string stripped;
+        stripped.reserve(line.size());
+        for(std::size_t i = 0; i < line.size(); ++i){
+            if(in_block_comment){
+                if(i + 1 < line.size() && line[i] == '*' && line[i+1] == '/'){
+                    in_block_comment = false;
+                    ++i; // skip '/'
+                }
+                // Replace comment chars with spaces to preserve column alignment.
+                stripped += ' ';
+            } else {
+                if(i + 1 < line.size() && line[i] == '/' && line[i+1] == '*'){
+                    in_block_comment = true;
+                    stripped += ' ';
+                    ++i; // skip '*'
+                } else if(i + 1 < line.size() && line[i] == '/' && line[i+1] == '/'){
+                    // Rest of line is a line comment — stop.
+                    break;
+                } else {
+                    stripped += line[i];
+                }
+            }
         }
-        if(it != trimmed.end() && *it == '/' && (it + 1) != trimmed.end() && *(it + 1) == '/') {
-            continue;
-        }
-        
+
+        // Skip lines that are entirely whitespace after stripping.
+        bool all_space = true;
+        for(char c : stripped) if(!std::isspace((unsigned char)c)){ all_space = false; break; }
+        if(all_space) continue;
+
         for(auto& cp : patterns_){
-            std::sregex_iterator rit(line.begin(), line.end(), cp.re);
+            std::sregex_iterator rit(stripped.begin(), stripped.end(), cp.re);
             std::sregex_iterator rend;
             
             while(rit != rend){
@@ -105,8 +127,18 @@ std::vector<Finding> RegexAnalyzer::analyze_file(const std::filesystem::path& p)
                 if(!seen.count(key)){
                     seen.insert(key);
                     
+                    // Extract the actual called name from the match text
+                    // (e.g. "EC_KEY_generate_key(" → "EC_KEY_generate_key").
+                    std::string actual_name;
+                    std::string ms = match.str();
+                    for(char c : ms){
+                        if(c == '(' || std::isspace((unsigned char)c)) break;
+                        actual_name += c;
+                    }
+                    if(actual_name.empty()) actual_name = cp.func->name;
+
                     Finding f;
-                    f.function_name = cp.func->name; 
+                    f.function_name = actual_name;
                     f.file_path = p.string();
                     f.line_number = li + 1; 
                     f.column = col;

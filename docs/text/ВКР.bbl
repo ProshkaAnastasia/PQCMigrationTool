@@ -1,0 +1,360 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.3 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{none/global//global/global/global}
+    \entry{IBM_Secure_PQ_2025}{report}{}{}
+      \name{author}{2}{}{%
+        {{hash=903d81e0018dfeff18ec9ca83cb22a7f}{%
+           family={{IBM Institute for Business Value}},
+           familyi={I\bibinitperiod}}}%
+        {{hash=d5e5e5bd30390fc02e3a35ae4b888fa0}{%
+           family={{Cloud Security Alliance}},
+           familyi={C\bibinitperiod}}}%
+      }
+      \list{institution}{2}{%
+        {IBM Institute for Business Value}%
+        {Cloud Security Alliance}%
+      }
+      \strng{namehash}{9a72904479eabbbbf8f2337d4e1da2b4}
+      \strng{fullhash}{9a72904479eabbbbf8f2337d4e1da2b4}
+      \strng{fullhashraw}{9a72904479eabbbbf8f2337d4e1da2b4}
+      \strng{bibnamehash}{9a72904479eabbbbf8f2337d4e1da2b4}
+      \strng{authorbibnamehash}{9a72904479eabbbbf8f2337d4e1da2b4}
+      \strng{authornamehash}{9a72904479eabbbbf8f2337d4e1da2b4}
+      \strng{authorfullhash}{9a72904479eabbbbf8f2337d4e1da2b4}
+      \strng{authorfullhashraw}{9a72904479eabbbbf8f2337d4e1da2b4}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{IBM Quantum Safe / IBM Institute for Business Value report}
+      \field{title}{Secure the post-quantum future: Global readiness, risks, and opportunities}
+      \field{type}{Industry report}
+      \field{year}{2025}
+      \verb{urlraw}
+      \verb https://www.ibm.com/downloads/documents/us-en/1443d5f5af4f5316
+      \endverb
+      \verb{url}
+      \verb https://www.ibm.com/downloads/documents/us-en/1443d5f5af4f5316
+      \endverb
+    \endentry
+    \entry{gidney2025million}{misc}{}{}
+      \name{author}{1}{}{%
+        {{hash=0101a428978c8ddc038880b7a77afd98}{%
+           family={Gidney},
+           familyi={G\bibinitperiod},
+           given={Craig},
+           giveni={C\bibinitperiod}}}%
+      }
+      \strng{namehash}{0101a428978c8ddc038880b7a77afd98}
+      \strng{fullhash}{0101a428978c8ddc038880b7a77afd98}
+      \strng{fullhashraw}{0101a428978c8ddc038880b7a77afd98}
+      \strng{bibnamehash}{0101a428978c8ddc038880b7a77afd98}
+      \strng{authorbibnamehash}{0101a428978c8ddc038880b7a77afd98}
+      \strng{authornamehash}{0101a428978c8ddc038880b7a77afd98}
+      \strng{authorfullhash}{0101a428978c8ddc038880b7a77afd98}
+      \strng{authorfullhashraw}{0101a428978c8ddc038880b7a77afd98}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{langid}{english}
+      \field{title}{How to factor 2048 bit {RSA} integers with less than a million noisy qubits}
+      \field{urlday}{10}
+      \field{urlmonth}{5}
+      \field{urlyear}{2026}
+      \field{year}{2025}
+      \field{urldateera}{ce}
+      \verb{eprint}
+      \verb arXiv:2505.15917
+      \endverb
+      \verb{urlraw}
+      \verb https://arxiv.org/abs/2505.15917
+      \endverb
+      \verb{url}
+      \verb https://arxiv.org/abs/2505.15917
+      \endverb
+    \endentry
+    \entry{mosca2025timeline}{report}{}{}
+      \name{author}{2}{}{%
+        {{hash=cac498e264a2fdb0a8c4dd3e95c92055}{%
+           family={Mosca},
+           familyi={M\bibinitperiod},
+           given={Michele},
+           giveni={M\bibinitperiod}}}%
+        {{hash=ed4db86931bf26b1b1a782b6a797258a}{%
+           family={Piani},
+           familyi={P\bibinitperiod},
+           given={Marco},
+           giveni={M\bibinitperiod}}}%
+      }
+      \list{institution}{2}{%
+        {Global Risk Institute}%
+        {evolutionQ Inc.}%
+      }
+      \strng{namehash}{afe00f0d006fa66b185b7bd4d737e464}
+      \strng{fullhash}{afe00f0d006fa66b185b7bd4d737e464}
+      \strng{fullhashraw}{afe00f0d006fa66b185b7bd4d737e464}
+      \strng{bibnamehash}{afe00f0d006fa66b185b7bd4d737e464}
+      \strng{authorbibnamehash}{afe00f0d006fa66b185b7bd4d737e464}
+      \strng{authornamehash}{afe00f0d006fa66b185b7bd4d737e464}
+      \strng{authorfullhash}{afe00f0d006fa66b185b7bd4d737e464}
+      \strng{authorfullhashraw}{afe00f0d006fa66b185b7bd4d737e464}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{langid}{english}
+      \field{title}{Quantum Threat Timeline Report 2025}
+      \field{type}{techreport}
+      \field{urlday}{10}
+      \field{urlmonth}{5}
+      \field{urlyear}{2026}
+      \field{year}{2026}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://globalriskinstitute.org/publication/quantum-threat-timeline-report-2025b/
+      \endverb
+      \verb{url}
+      \verb https://globalriskinstitute.org/publication/quantum-threat-timeline-report-2025b/
+      \endverb
+    \endentry
+    \entry{klucharyov-osnovy-kvantovyh}{article}{}{}
+      \name{author}{1}{}{%
+        {{hash=b307bd292a0ee9b9d68c7504207fe46c}{%
+           family={Ключарев},
+           familyi={К\bibinitperiod},
+           given={П.\bibnamedelimi Г.},
+           giveni={П\bibinitperiod\bibinitdelim Г\bibinitperiod}}}%
+      }
+      \strng{namehash}{b307bd292a0ee9b9d68c7504207fe46c}
+      \strng{fullhash}{b307bd292a0ee9b9d68c7504207fe46c}
+      \strng{fullhashraw}{b307bd292a0ee9b9d68c7504207fe46c}
+      \strng{bibnamehash}{b307bd292a0ee9b9d68c7504207fe46c}
+      \strng{authorbibnamehash}{b307bd292a0ee9b9d68c7504207fe46c}
+      \strng{authornamehash}{b307bd292a0ee9b9d68c7504207fe46c}
+      \strng{authorfullhash}{b307bd292a0ee9b9d68c7504207fe46c}
+      \strng{authorfullhashraw}{b307bd292a0ee9b9d68c7504207fe46c}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{International Journal of Open Information Technologies}
+      \field{langid}{russian}
+      \field{title}{Основы квантовых вычислений и квантовой криптографии}
+      \field{urlday}{10}
+      \field{urlmonth}{5}
+      \field{urlyear}{2026}
+      \field{year}{2022}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://cyberleninka.ru/article/n/osnovy-kvantovyh-vychisleniy-i-kvantovoy-kriptografii
+      \endverb
+      \verb{url}
+      \verb https://cyberleninka.ru/article/n/osnovy-kvantovyh-vychisleniy-i-kvantovoy-kriptografii
+      \endverb
+    \endentry
+    \entry{kvantovye-algoritmy-shor-grover}{article}{}{}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Инновационная наука}
+      \field{langid}{russian}
+      \field{title}{Квантовые алгоритмы: алгоритм Шора и алгоритм Гровера}
+      \field{urlday}{10}
+      \field{urlmonth}{5}
+      \field{urlyear}{2026}
+      \field{year}{2025}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://cyberleninka.ru/article/n/kvantovye-algoritmy-algoritm-shora-i-algoritm-grovera
+      \endverb
+      \verb{url}
+      \verb https://cyberleninka.ru/article/n/kvantovye-algoritmy-algoritm-shora-i-algoritm-grovera
+      \endverb
+    \endentry
+    \entry{kvantovyj-kompyuter-kriptostoykost}{article}{}{}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Материалы российской конференции по информационной безопасности}
+      \field{langid}{russian}
+      \field{title}{Квантовый компьютер и криптографическая стойкость современных систем шифрования}
+      \field{urlday}{10}
+      \field{urlmonth}{5}
+      \field{urlyear}{2026}
+      \field{year}{2023}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://cyberleninka.ru/article/n/kvantovyy-kompyuter-i-kriptograficheskaya-stoykost-sovremennyh-sistem-shifrovaniya
+      \endverb
+      \verb{url}
+      \verb https://cyberleninka.ru/article/n/kvantovyy-kompyuter-i-kriptograficheskaya-stoykost-sovremennyh-sistem-shifrovaniya
+      \endverb
+    \endentry
+    \entry{saha2024grover}{article}{useauthor=false}{}
+      \true{moreauthor}
+      \name{author}{1}{}{%
+        {{hash=1611ba706c057886877dc5f5c26ae874}{%
+           family={Saha},
+           familyi={S\bibinitperiod},
+           given={Ananya},
+           giveni={A\bibinitperiod}}}%
+      }
+      \strng{authorbibnamehash}{19e46cf4c0e2c26cbe7d838994a546b4}
+      \strng{authornamehash}{19e46cf4c0e2c26cbe7d838994a546b4}
+      \strng{authorfullhash}{19e46cf4c0e2c26cbe7d838994a546b4}
+      \strng{authorfullhashraw}{19e46cf4c0e2c26cbe7d838994a546b4}
+      \field{sortinit}{7}
+      \field{sortinithash}{108d0be1b1bee9773a1173443802c0a3}
+      \field{labeltitlesource}{title}
+      \field{internalsortvolume}{14}
+      \field{journaltitle}{Scientific Reports}
+      \field{langid}{english}
+      \field{title}{Implementing {G}rover's on {AES}-based {AEAD} schemes}
+      \field{year}{2024}
+      \field{pages}{21105}
+      \range{pages}{1}
+      \field{volume}{14}
+      \range{volume}{1}
+      \verb{doi}
+      \verb 10.1038/s41598-024-69188-8
+      \endverb
+    \endentry
+    \entry{nist-ir8547}{report}{}{}
+      \name{author}{1}{}{%
+        {{hash=ef9cb61878e61d434507444346b29d1a}{%
+           family={{National Institute of Standards and Technology}},
+           familyi={N\bibinitperiod}}}%
+      }
+      \list{institution}{1}{%
+        {U.S. Department of Commerce}%
+      }
+      \strng{namehash}{ef9cb61878e61d434507444346b29d1a}
+      \strng{fullhash}{ef9cb61878e61d434507444346b29d1a}
+      \strng{fullhashraw}{ef9cb61878e61d434507444346b29d1a}
+      \strng{bibnamehash}{ef9cb61878e61d434507444346b29d1a}
+      \strng{authorbibnamehash}{ef9cb61878e61d434507444346b29d1a}
+      \strng{authornamehash}{ef9cb61878e61d434507444346b29d1a}
+      \strng{authorfullhash}{ef9cb61878e61d434507444346b29d1a}
+      \strng{authorfullhashraw}{ef9cb61878e61d434507444346b29d1a}
+      \field{extraname}{1}
+      \field{sortinit}{8}
+      \field{sortinithash}{a231b008ebf0ecbe0b4d96dcc159445f}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{langid}{english}
+      \field{title}{{NIST IR 8547} (Initial Public Draft). Transition to Post-Quantum Cryptography Standards}
+      \field{type}{techreport}
+      \field{urlday}{10}
+      \field{urlmonth}{5}
+      \field{urlyear}{2026}
+      \field{year}{2024}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://csrc.nist.gov/pubs/ir/8547/ipd
+      \endverb
+      \verb{url}
+      \verb https://csrc.nist.gov/pubs/ir/8547/ipd
+      \endverb
+    \endentry
+    \entry{nist-fips203}{standard}{}{}
+      \name{author}{1}{}{%
+        {{hash=ef9cb61878e61d434507444346b29d1a}{%
+           family={{National Institute of Standards and Technology}},
+           familyi={N\bibinitperiod}}}%
+      }
+      \list{institution}{1}{%
+        {U.S. Department of Commerce}%
+      }
+      \strng{namehash}{ef9cb61878e61d434507444346b29d1a}
+      \strng{fullhash}{ef9cb61878e61d434507444346b29d1a}
+      \strng{fullhashraw}{ef9cb61878e61d434507444346b29d1a}
+      \strng{bibnamehash}{ef9cb61878e61d434507444346b29d1a}
+      \strng{authorbibnamehash}{ef9cb61878e61d434507444346b29d1a}
+      \strng{authornamehash}{ef9cb61878e61d434507444346b29d1a}
+      \strng{authorfullhash}{ef9cb61878e61d434507444346b29d1a}
+      \strng{authorfullhashraw}{ef9cb61878e61d434507444346b29d1a}
+      \field{extraname}{2}
+      \field{sortinit}{9}
+      \field{sortinithash}{0a5ebc79d83c96b6579069544c73c7d4}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{langid}{english}
+      \field{title}{{FIPS} 203. Module-Lattice-Based Key-Encapsulation Mechanism Standard}
+      \field{urlday}{10}
+      \field{urlmonth}{5}
+      \field{urlyear}{2026}
+      \field{year}{2024}
+      \field{urldateera}{ce}
+      \verb{doi}
+      \verb 10.6028/NIST.FIPS.203
+      \endverb
+      \verb{urlraw}
+      \verb https://csrc.nist.gov/pubs/fips/203/final
+      \endverb
+      \verb{url}
+      \verb https://csrc.nist.gov/pubs/fips/203/final
+      \endverb
+    \endentry
+    \entry{razdelenie-sekreta-postkvantovoe}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=27a7e16ddc9dab4eac3c2b087219d629}{%
+           family={Кустов},
+           familyi={К\bibinitperiod},
+           given={Е.\bibnamedelimi Ф.},
+           giveni={Е\bibinitperiod\bibinitdelim Ф\bibinitperiod}}}%
+        {{hash=f5c52630dbc9dfcbd9be8f0504bd31c1}{%
+           family={Беззатеев},
+           familyi={Б\bibinitperiod},
+           given={С.\bibnamedelimi В.},
+           giveni={С\bibinitperiod\bibinitdelim В\bibinitperiod}}}%
+      }
+      \strng{namehash}{39dea11ceef37d35152f27d05fa32cbb}
+      \strng{fullhash}{39dea11ceef37d35152f27d05fa32cbb}
+      \strng{fullhashraw}{39dea11ceef37d35152f27d05fa32cbb}
+      \strng{bibnamehash}{39dea11ceef37d35152f27d05fa32cbb}
+      \strng{authorbibnamehash}{39dea11ceef37d35152f27d05fa32cbb}
+      \strng{authornamehash}{39dea11ceef37d35152f27d05fa32cbb}
+      \strng{authorfullhash}{39dea11ceef37d35152f27d05fa32cbb}
+      \strng{authorfullhashraw}{39dea11ceef37d35152f27d05fa32cbb}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Научно-технический вестник информационных технологий, механики и оптики}
+      \field{langid}{russian}
+      \field{title}{Анализ применимости существующих схем разделения секрета в условиях постквантовой эры}
+      \field{urlday}{10}
+      \field{urlmonth}{5}
+      \field{urlyear}{2026}
+      \field{year}{2025}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://ntv.elpub.ru/jour/article/view/468
+      \endverb
+      \verb{url}
+      \verb https://ntv.elpub.ru/jour/article/view/468
+      \endverb
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+

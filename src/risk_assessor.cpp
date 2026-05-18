@@ -45,6 +45,7 @@ ContextFactors RiskAssessor::analyze_context(const Finding& f, const ProjectInve
     std::transform(fn_lower.begin(),fn_lower.end(),fn_lower.begin(),::tolower);
     ctx.is_key_material = (f.category=="asymmetric_key_generation"||
                            f.category=="key_exchange"||
+                           f.category=="digital_signature"||
                            fn_lower.find("key")!=std::string::npos);
     // In-loop: raw line contains for/while, or repeat patterns
     ctx.is_in_loop = (f.raw_line.find("for")!=std::string::npos ||
@@ -63,7 +64,7 @@ RiskScore RiskAssessor::compute_risk(const Finding& f, const ContextFactors& ctx
     double mult = 1.0;
     std::ostringstream oss;
     oss<<"Base: "<<f.base_risk_score<<" ("<<f.algorithm<<"/"<<f.library<<").";
-    if(ctx.is_test_code)        { mult*=0.4;  oss<<" TestCode(x0.4)."; }
+    if(ctx.is_test_code)        { mult*=0.7;  oss<<" TestCode(x0.7)."; }
     if(ctx.is_network_facing)   { mult*=1.3;  oss<<" NetworkFacing(+30%)."; }
     if(ctx.is_persistent_data)  { mult*=1.25; oss<<" PersistentData(+25%)."; }
     if(ctx.is_key_material)     { mult*=1.2;  oss<<" KeyMaterial(+20%)."; }
@@ -97,6 +98,12 @@ MigrationAction RiskAssessor::build_action(const Finding& f, const RiskScore& rs
     a.priority     = rs.priority;
     a.migration_order = order;
     auto opt=db_.find_by_name(f.function_name);
+    // Fall back to DB fields if the finding itself didn't carry them
+    // (e.g. when created directly in tests without going through an analyzer).
+    if(opt){
+        if(a.nist_reference.empty()) a.nist_reference = opt->nist_reference;
+        if(a.tc26_note.empty())      a.tc26_note      = opt->tc26_reference;
+    }
     if(opt&&!opt->replacements.empty()){
         auto& rep=opt->replacements[0];
         a.replacement_function  = rep.function_name;

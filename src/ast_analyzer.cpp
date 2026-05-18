@@ -1573,6 +1573,28 @@ static void emit_finding(const PendingCall& pc, VisitData* vd) {
         return;
     }
 
+    // Suppress cleanup/ref-count functions that are erroneously listed as DB
+    // aliases (e.g. BN_free aliased to BN_new). They are never vulnerabilities.
+    {
+        std::string cln = fname;
+        std::transform(cln.begin(), cln.end(), cln.begin(), ::tolower);
+        static const char* const kCleanupSuffixes[] = {
+            "_free", "_clear_free", "_up_ref", "_cleanup", nullptr
+        };
+        for (const char* const* sfx = kCleanupSuffixes; *sfx; ++sfx) {
+            std::string s(*sfx);
+            if (cln.size() > s.size() &&
+                cln.compare(cln.size() - s.size(), s.size(), s) == 0)
+            {
+#if PQC_AST_DEBUG
+                std::cerr << "[AST][debug] emit skip (cleanup alias): callee='"
+                          << fname << "'\n";
+#endif
+                return;
+            }
+        }
+    }
+
     auto opt = vd->db.find_by_name(fname);
     if (!opt) {
 #if PQC_AST_DEBUG
@@ -1580,6 +1602,33 @@ static void emit_finding(const PendingCall& pc, VisitData* vd) {
                   << "' raw='" << pc.raw_line << "'\n";
 #endif
         return;
+    }
+
+    // Suppress any finding whose argument chain contains a PQC-safe algorithm
+    // name. This covers:
+    //  (a) Conditional functions (EVP_PKEY_CTX_new_from_name with "ML-KEM-*")
+    //  (b) Functions that receive an EVP_PKEY_CTX* built from a PQC context
+    //      (e.g. EVP_PKEY_keygen_init/EVP_PKEY_keygen after a safe ctx).
+    // RSA/DH/EC operations never carry PQC algorithm names in their arguments,
+    // so this check cannot suppress true positives.
+    {
+        static const char* const kPQCSafePrefixes[] = {
+            "ml-kem", "ml-dsa", "slh-dsa", "fn-dsa", "falcon",
+            "sphincs", "kyber", "dilithium", "hawk", "mceliece", nullptr
+        };
+        for (const auto& arg : pc.arguments) {
+            std::string al = arg;
+            std::transform(al.begin(), al.end(), al.begin(), ::tolower);
+            for (const char* const* pfx = kPQCSafePrefixes; *pfx; ++pfx) {
+                if (al.find(*pfx) != std::string::npos) {
+#if PQC_AST_DEBUG
+                    std::cerr << "[AST][debug] emit skip (PQC safe arg): callee='"
+                              << fname << "' arg='" << arg << "'\n";
+#endif
+                    return;
+                }
+            }
+        }
     }
 
 #if PQC_AST_DEBUG
@@ -1591,7 +1640,9 @@ static void emit_finding(const PendingCall& pc, VisitData* vd) {
 #endif
 
     Finding f;
-    f.function_name         = opt->name;
+    // Use the actual called name (fname) so findings report what's in the source.
+    // The canonical opt->name is used for DB lookups; fname may be an alias.
+    f.function_name         = fname.empty() ? opt->name : fname;
     f.file_path             = pc.file_path;
     f.line_number           = static_cast<int>(pc.line);
     f.column                = static_cast<int>(pc.col);

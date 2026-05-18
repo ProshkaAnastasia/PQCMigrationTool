@@ -9,8 +9,8 @@
       "functions": [
         {
           "id": "ossl-rsa-generate-key",
-          "name": "RSA_generate_key",
-          "aliases": ["RSA_generate_key_ex"],
+          "name": "RSA_generate_key_ex",
+          "aliases": ["RSA_generate_key"],
           "category": "asymmetric_key_generation",
           "algorithm": "RSA",
           "quantum_vulnerability": "high",
@@ -23,9 +23,13 @@
           "context_keywords": ["rsa", "key", "generate", "pkey"],
           "replacements": [
             {
+              "function_name": "EVP_PKEY_keygen",
               "library": "liboqs / oqsprovider",
-              "function": "OQS_KEM_new / EVP_PKEY_keygen (ML-KEM)",
-              "notes": "Use NIST PQC ML-KEM (CRYSTALS-Kyber) for key encapsulation, or ML-DSA for signing."
+              "standard": "FIPS 203",
+              "algorithm": "ML-KEM-768",
+              "type": "kem",
+              "notes": "Use NIST PQC ML-KEM (CRYSTALS-Kyber) for key encapsulation, or ML-DSA for signing.",
+              "migration_notes": "Replace RSA_generate_key_ex with EVP_PKEY_keygen backed by oqsprovider ML-KEM-768 context."
             }
           ]
         },
@@ -85,7 +89,7 @@
           "nist_reference": "NIST FIPS 186-5 (DSA withdrawn); NISTIR 8413",
           "tc26_reference": "Алгоритм DSA не включён в перечень алгоритмов, рекомендованных ТК 26 для долгосрочного использования в условиях квантовых угроз.",
           "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/DSA_sign.html",
-          "patterns": ["DSA_sign\\s*\\(", "DSA_verify\\s*\\(", "DSA_do_sign\\s*\\(", "DSA_do_verify\\s*\\("],
+          "patterns": ["\\bDSA_sign\\s*\\(", "\\bDSA_verify\\s*\\(", "DSA_do_sign\\s*\\(", "DSA_do_verify\\s*\\("],
           "context_keywords": ["dsa", "sign", "verify"],
           "replacements": [
             {
@@ -98,7 +102,7 @@
         {
           "id": "ossl-dh-generate-key",
           "name": "DH_generate_key",
-          "aliases": ["DH_compute_key", "DH_compute_key_padded"],
+          "aliases": ["DH_compute_key", "DH_compute_key_padded", "DH_generate_parameters_ex"],
           "category": "key_exchange",
           "algorithm": "DH",
           "quantum_vulnerability": "high",
@@ -107,7 +111,7 @@
           "nist_reference": "NIST SP 800-56A Rev.3; NIST SP 800-131A Rev.2",
           "tc26_reference": "ТК 26: протокол Диффи-Хеллмана на конечных полях уязвим к квантовым атакам; рекомендуется переход на механизмы инкапсуляции ключей (КЕМ) на постквантовых схемах.",
           "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/DH_generate_key.html",
-          "patterns": ["DH_generate_key\\s*\\(", "DH_compute_key\\s*\\(", "DH_compute_key_padded\\s*\\("],
+          "patterns": ["DH_generate_key\\s*\\(", "\\bDH_compute_key\\s*\\(", "DH_compute_key_padded\\s*\\(", "DH_generate_parameters_ex\\s*\\("],
           "context_keywords": ["dh", "diffie", "hellman", "key", "exchange"],
           "replacements": [
             {
@@ -230,7 +234,7 @@
         {
           "id": "ossl-dh-new",
           "name": "DH_new",
-          "aliases": ["DH_free", "DH_new_by_nid"],
+          "aliases": ["DH_new_by_nid"],
           "category": "asymmetric_key_generation",
           "algorithm": "DH",
           "quantum_vulnerability": "high",
@@ -568,7 +572,7 @@
         {
           "id": "ossl-bn-new",
           "name": "BN_new",
-          "aliases": ["BN_secure_new", "BN_free", "BN_clear_free"],
+          "aliases": ["BN_secure_new"],
           "category": "asymmetric_primitive",
           "algorithm": "BIGNUM (manual RSA/DH/DSA)",
           "quantum_vulnerability": "medium",
@@ -660,7 +664,7 @@
         {
           "id": "ossl-bn-gencb",
           "name": "BN_GENCB",
-          "aliases": ["BN_GENCB_new", "BN_GENCB_free", "BN_GENCB_call", "BN_GENCB_set"],
+          "aliases": ["BN_GENCB_new", "BN_GENCB_call", "BN_GENCB_set"],
           "category": "asymmetric_primitive",
           "algorithm": "BIGNUM (manual RSA/DH/DSA)",
           "quantum_vulnerability": "medium",
@@ -683,7 +687,7 @@
         {
           "id": "ossl-rsa-new",
           "name": "RSA_new",
-          "aliases": ["RSA_free", "RSA_up_ref"],
+          "aliases": [],
           "category": "asymmetric_key_generation",
           "algorithm": "RSA",
           "quantum_vulnerability": "high",
@@ -706,7 +710,7 @@
         {
           "id": "ossl-dsa-new",
           "name": "DSA_new",
-          "aliases": ["DSA_free", "DSA_up_ref"],
+          "aliases": [],
           "category": "asymmetric_key_generation",
           "algorithm": "DSA",
           "quantum_vulnerability": "high",
@@ -729,7 +733,7 @@
         {
           "id": "ossl-ec-key-new",
           "name": "EC_KEY_new",
-          "aliases": ["EC_KEY_free", "EC_KEY_new_by_curve_name", "EC_KEY_up_ref"],
+          "aliases": ["EC_KEY_new_by_curve_name", "EC_KEY_generate_key"],
           "category": "asymmetric_key_generation",
           "algorithm": "ECDSA/ECDH",
           "quantum_vulnerability": "high",
@@ -738,7 +742,7 @@
           "nist_reference": "NISTIR 8413; NIST SP 800-131A Rev.2",
           "tc26_reference": "ТК 26: структуры EC_KEY используются для ECDSA и ECDH — алгоритмов, уязвимых к квантовым атакам (задача ECDLP решается алгоритмом Шора).",
           "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/EC_KEY_new.html",
-          "patterns": ["EC_KEY_new\\s*\\(", "EC_KEY_new_by_curve_name\\s*\\("],
+          "patterns": ["EC_KEY_new\\s*\\(", "EC_KEY_new_by_curve_name\\s*\\(", "EC_KEY_generate_key\\s*\\("],
           "context_keywords": ["ec", "key", "elliptic", "curve", "ecdsa", "ecdh"],
           "replacements": [
             {
@@ -768,6 +772,60 @@
               "library": "liboqs / oqsprovider",
               "function": "EVP_PKEY_keygen with ML-KEM or ML-DSA context (no EC group needed)",
               "notes": "PQC algorithms do not use elliptic curve groups; eliminate EC_GROUP_* usage by migrating to oqsprovider."
+            }
+          ]
+        },
+
+        {
+          "id": "ossl-sha1",
+          "name": "SHA1",
+          "aliases": ["SHA1_Init", "SHA1_Update", "SHA1_Final"],
+          "category": "hash_function",
+          "algorithm": "SHA-1",
+          "quantum_vulnerability": "medium",
+          "risk_score": 6.0,
+          "description": "SHA-1 produces a 160-bit digest. While not directly broken by Shor's algorithm, Grover's algorithm reduces its effective security to ~80 bits against preimage attacks, falling below the 128-bit minimum recommended by NIST SP 800-57. SHA-1 has also been practically broken for collision resistance (SHAttered, 2017).",
+          "nist_reference": "NIST SP 800-131A Rev.2 (SHA-1 disallowed for digital signatures after 2013); NIST SP 800-57 Part 1 Rev.5",
+          "tc26_reference": "ТК 26: SHA-1 не рекомендован; для хэширования следует использовать Стрибог (ГОСТ Р 34.11-2012) с длиной дайджеста 256 или 512 бит.",
+          "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/SHA1.html",
+          "patterns": ["\\bSHA1\\s*\\(", "SHA1_Init\\s*\\(", "SHA1_Update\\s*\\(", "SHA1_Final\\s*\\("],
+          "context_keywords": ["sha1", "hash", "digest"],
+          "replacements": [
+            {
+              "function_name": "EVP_DigestInit_ex",
+              "library": "OpenSSL (EVP)",
+              "standard": "NIST SP 800-57",
+              "algorithm": "SHA-256",
+              "type": "hash",
+              "migration_notes": "Replace SHA-1 with SHA-256 or SHA-3-256 at minimum. For PQC contexts where Grover's algorithm halves security, prefer SHA-512 or SHA3-512.",
+              "example_code": "EVP_MD_CTX *ctx = EVP_MD_CTX_new();\nEVP_DigestInit_ex(ctx, EVP_sha256(), NULL);\nEVP_DigestUpdate(ctx, data, len);\nEVP_DigestFinal_ex(ctx, digest, &digest_len);"
+            }
+          ]
+        },
+
+        {
+          "id": "ossl-md5",
+          "name": "MD5",
+          "aliases": ["MD5_Init", "MD5_Update", "MD5_Final"],
+          "category": "hash_function",
+          "algorithm": "MD5",
+          "quantum_vulnerability": "medium",
+          "risk_score": 7.0,
+          "description": "MD5 produces a 128-bit digest. Collision resistance is completely broken (classical attacks); Grover's algorithm further reduces preimage resistance to ~64 bits. MD5 must not be used for any security-sensitive purpose.",
+          "nist_reference": "NIST SP 800-131A Rev.2 (MD5 disallowed); NIST SP 800-57 Part 1 Rev.5",
+          "tc26_reference": "ТК 26: MD5 не рекомендован для применения в криптографических протоколах; следует использовать Стрибог (ГОСТ Р 34.11-2012).",
+          "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/MD5.html",
+          "patterns": ["\\bMD5\\s*\\(", "MD5_Init\\s*\\(", "MD5_Update\\s*\\(", "MD5_Final\\s*\\("],
+          "context_keywords": ["md5", "hash", "digest", "checksum"],
+          "replacements": [
+            {
+              "function_name": "EVP_DigestInit_ex",
+              "library": "OpenSSL (EVP)",
+              "standard": "NIST SP 800-57",
+              "algorithm": "SHA-256",
+              "type": "hash",
+              "migration_notes": "Replace MD5 with SHA-256 or SHA-3-256. MD5 is broken for collision resistance and must not be used in any security context.",
+              "example_code": "EVP_MD_CTX *ctx = EVP_MD_CTX_new();\nEVP_DigestInit_ex(ctx, EVP_sha256(), NULL);\nEVP_DigestUpdate(ctx, data, len);\nEVP_DigestFinal_ex(ctx, digest, &digest_len);"
             }
           ]
         }
