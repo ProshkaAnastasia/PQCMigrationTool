@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.10.24)  18 MAY 2026 16:16
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.10.24)  18 MAY 2026 17:08
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1601,6 +1601,12 @@ Underfull \hbox (badness 4048) in paragraph at lines 190--191
 
 
 [12]
+Underfull \hbox (badness 1824) in paragraph at lines 219--220
+\TU/TimesNewRoman(2)/m/n/14.4 битная хеш-сумма, рекомендуется NIST), SHA-1 (160
+ бит, устаревший,
+ []
+
+
 
 [13]
 
@@ -1613,12 +1619,6 @@ Underfull \hbox (badness 4048) in paragraph at lines 190--191
 [17]
 
 [18]
-Underfull \hbox (badness 2401) in paragraph at lines 289--290
-[]\TU/TimesNewRoman(2)/m/n/14.4 Авторитетная работа, опубликованная в журнале N
-ature Scientific
- []
-
-
 
 [19]
 
@@ -1688,10 +1688,6 @@ Underfull \hbox (badness 4967) in paragraph at lines 328--329
 File: figures/code-c.png Graphic file (type bmp)
 <figures/code-c.png>
 
-
-LaTeX Warning: `!h' float specifier changed to `!ht'.
-
-
 Underfull \hbox (badness 10000) in paragraph at lines 376--377
 []\TU/TimesNewRoman(2)/m/n/14.4 В режиме API Discovery инструмент зафиксирует в
 ызов
@@ -1739,8 +1735,6 @@ Underfull \hbox (badness 2662) in paragraph at lines 402--403
 
 [35]
 
-[36]
-
 Package fontspec Info: 
 (fontspec)             Font family 'TimesNewRoman(3)' created for font 'Times
 (fontspec)             New Roman' with options
@@ -1760,6 +1754,8 @@ Space,Script=Cyrillic].
 (fontspec)             Roman/BI/OT:script=cyrl;language=dflt;"
 
 
+
+[36]
 
 [37]
 
@@ -1798,22 +1794,20 @@ Underfull \hbox (badness 4144) in paragraph at lines 535--536
 [39]
 
 [40]
-
-[41]
 Underfull \hbox (badness 1394) in paragraph at lines 578--579
 []\TU/TimesNewRoman(2)/m/n/14.4 Во-первых, задачу криптографической инвентариза
 ции интуитивно
  []
 
 
+
+[41]
 Underfull \hbox (badness 2529) in paragraph at lines 614--615
 \TU/TimesNewRoman(2)/m/n/14.4 описывает сертификат. RiskReport описывает резуль
 таты оценки риска.
  []
 
-
-
-[42] (/usr/local/texlive/2024/texmf-dist/tex/latex/listings/lstlang1.sty
+(/usr/local/texlive/2024/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2024/09/23 1.10c listings language file
 )
 (/usr/local/texlive/2024/texmf-dist/tex/latex/listings/lstlang1.sty
@@ -1832,6 +1826,8 @@ LaTeX Font Info:    Font shape `TU/Menlo(0)/b/n' will be
 (Font)              scaled to size 9.85107pt on input line 619.
 
 
+[42]
+
 [43]
 Underfull \hbox (badness 3029) in paragraph at lines 672--673
 \TU/TimesNewRoman(2)/m/it/14.4 line_number \TU/TimesNewRoman(2)/m/n/14.4 и \TU/
@@ -1848,9 +1844,7 @@ Underfull \hbox (badness 1028) in paragraph at lines 674--675
 
 
 
-[44]
-
-[45]
+[44] [45]
 
 [46]
 Underfull \hbox (badness 1622) in paragraph at lines 792--793
@@ -1861,8 +1855,6 @@ Underfull \hbox (badness 1622) in paragraph at lines 792--793
 
 
 [47]
-
-[48]
 Overfull \hbox (4.21504pt too wide) in alignment at lines 833--838
  [] [] [] 
  []
@@ -2009,7 +2001,9 @@ Overfull \hbox (4.21504pt too wide) in alignment at lines 845--856
  [] [] [] 
  []
 
-[49]
+
+
+[48] [49]
 Overfull \hbox (1.8309pt too wide) in alignment at lines 861--866
  [] [] [] 
  []
@@ -2984,9 +2978,52 @@ esNewRoman(2)/m/n/14.4 . Secure the
  []
 
 
+Package biblatex Warning: No driver for 'standard'.
+(biblatex)                Using fallback driver on input line 2423.
+
+
+Underfull \hbox (badness 1845) in paragraph at lines 2424--2424
+[]\TU/TimesNewRoman(2)/m/it/14.4 National Institute of Standards and Technology
+\TU/TimesNewRoman(2)/m/n/14.4 . FIPS 197. Advanced
+ []
+
+
+Underfull \hbox (badness 1107) in paragraph at lines 2424--2424
+[]\TU/TimesNewRoman(2)/m/it/14.4 Rivest R. L.\TU/TimesNewRoman(2)/m/n/14.4 , \T
+U/TimesNewRoman(2)/m/it/14.4 Shamir A.\TU/TimesNewRoman(2)/m/n/14.4 , \TU/Times
+NewRoman(2)/m/it/14.4 Adleman L. \TU/TimesNewRoman(2)/m/n/14.4 A Method for Obt
+aining Digital
+ []
+
+
+Underfull \hbox (badness 3977) in paragraph at lines 2424--2424
+\TU/TimesNewRoman(2)/m/n/14.4 Signatures and Public-Key Cryptosystems [] Commun
+ications of the
+ []
+
+
+
+[93]
+
+Package biblatex Warning: No driver for 'standard'.
+(biblatex)                Using fallback driver on input line 2423.
+
+
+Underfull \hbox (badness 2932) in paragraph at lines 2424--2424
+[]\TU/TimesNewRoman(2)/m/it/14.4 National Institute of Standards and Technology
+\TU/TimesNewRoman(2)/m/n/14.4 . FIPS 186-5. Digital
+ []
+
+
 Underfull \hbox (badness 1412) in paragraph at lines 2424--2424
 []\TU/TimesNewRoman(2)/m/it/14.4 Iceberg Quantum\TU/TimesNewRoman(2)/m/n/14.4 .
  Pinnacle: A Quantum LDPC-based Architecture for
+ []
+
+
+Underfull \hbox (badness 2073) in paragraph at lines 2424--2424
+[]\TU/TimesNewRoman(2)/m/n/14.4 Experimental realization of Shor’s quantum fact
+oring algorithm using
  []
 
 
@@ -2997,7 +3034,15 @@ ic Curve Discrete
 
 
 
-[93]
+[94]
+Underfull \hbox (badness 10000) in paragraph at lines 2424--2424
+[]\TU/TimesNewRoman(2)/m/it/14.4 National Security Agency\TU/TimesNewRoman(2)/m
+/n/14.4 . Quantum Computing and Post-Quantum
+ []
+
+
+
+[95]
 Underfull \hbox (badness 1189) in paragraph at lines 2430--2431
 \TU/TimesNewRoman(2)/m/n/14.4 ходок для интеграционного тестирования. Каждая за
 пись включает имя
@@ -3005,7 +3050,7 @@ Underfull \hbox (badness 1189) in paragraph at lines 2430--2431
 
 
 
-[94] (./ВКР.aux)
+[96] (./ВКР.aux)
  ***********
 LaTeX2e <2025-06-01> patch level 1
 L3 programming layer <2025-10-09>
@@ -3017,12 +3062,12 @@ Package logreq Info: Writing requests to 'ВКР.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 38649 strings out of 468388
- 784939 string characters out of 5440602
- 2016989 words of memory out of 5000000
- 66572 multiletter control sequences out of 15000+600000
+ 38707 strings out of 468388
+ 787903 string characters out of 5440602
+ 2009328 words of memory out of 5000000
+ 66630 multiletter control sequences out of 15000+600000
  635773 words of font info for 126 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 88i,12n,126p,2258b,5384s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 88i,12n,126p,2258b,5491s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on ВКР.pdf (94 pages).
+Output written on ВКР.pdf (96 pages).

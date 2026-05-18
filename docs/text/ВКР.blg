@@ -1,18 +1,17 @@
 [0] Config.pm:328> INFO - This is Biber 2.21
 [0] Config.pm:331> INFO - Logfile is 'ВКР.blg'
-[39] biber-darwin:342> INFO - === Mon May 18, 2026, 16:16:38
-[51] Biber.pm:421> INFO - Reading 'ВКР.bcf'
-[193] Biber.pm:1002> INFO - Found 21 citekeys in bib section 0
-[205] Biber.pm:4487> INFO - Processing section 0
-[211] Biber.pm:4678> INFO - Looking for bibtex file 'references.bib' for section 0
-[213] bibtex.pm:1713> INFO - LaTeX decoding ...
-[237] bibtex.pm:1519> INFO - Found BibTeX data source 'references.bib'
-[312] UCollate.pm:68> INFO - Overriding locale 'ru-RU' defaults 'normalization = NFD' with 'normalization = prenormalized'
-[313] UCollate.pm:68> INFO - Overriding locale 'ru-RU' defaults 'variable = shifted' with 'variable = non-ignorable'
-[313] Biber.pm:4307> INFO - Sorting list 'none/global//global/global/global' of type 'entry' with template 'none' and locale 'ru-RU'
-[313] Biber.pm:4313> INFO - No sort tailoring available for locale 'ru-RU'
-[325] bbl.pm:676> INFO - Writing 'ВКР.bbl' with encoding 'UTF-8'
-[331] bbl.pm:779> INFO - Output to ВКР.bbl
-[331] Biber.pm:132> WARN - Duplicate entry key: 'saha2024grover' in file 'references.bib', skipping ...
-[331] Biber.pm:132> WARN - legacy month field 'March' in entry 'TQI_GoogleRoadmap2026' is not an integer - this will probably not sort properly.
-[331] Biber.pm:134> INFO - WARNINGS: 2
+[42] biber-darwin:342> INFO - === Mon May 18, 2026, 17:03:48
+[54] Biber.pm:421> INFO - Reading 'ВКР.bcf'
+[128] Biber.pm:1002> INFO - Found 40 citekeys in bib section 0
+[138] Biber.pm:4487> INFO - Processing section 0
+[144] Biber.pm:4678> INFO - Looking for bibtex file 'references.bib' for section 0
+[146] bibtex.pm:1713> INFO - LaTeX decoding ...
+[175] bibtex.pm:1519> INFO - Found BibTeX data source 'references.bib'
+[296] UCollate.pm:68> INFO - Overriding locale 'ru-RU' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[296] UCollate.pm:68> INFO - Overriding locale 'ru-RU' defaults 'variable = shifted' with 'variable = non-ignorable'
+[296] Biber.pm:4307> INFO - Sorting list 'none/global//global/global/global' of type 'entry' with template 'none' and locale 'ru-RU'
+[296] Biber.pm:4313> INFO - No sort tailoring available for locale 'ru-RU'
+[315] bbl.pm:676> INFO - Writing 'ВКР.bbl' with encoding 'UTF-8'
+[325] bbl.pm:779> INFO - Output to ВКР.bbl
+[325] Biber.pm:132> WARN - legacy month field 'March' in entry 'TQI_GoogleRoadmap2026' is not an integer - this will probably not sort properly.
+[325] Biber.pm:134> INFO - WARNINGS: 1

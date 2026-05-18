@@ -457,15 +457,6 @@
   note        = {JRC144095}
 }
 
-@article{saha2024grover,
-  author  = {Saha, R. and others},
-  title   = {Grover's algorithm and its application to AES},
-  journal = {Scientific Reports},
-  year    = {2024},
-  volume  = {14},
-  doi     = {10.1038/s41598-024-XXXXX}
-}
-
 @article{krivtsun2023kvantovye,
   author  = {Кривцун, Е. В. and Симаков, В. Н.},
   title   = {Угрозы квантовых компьютеров для современных криптографических стандартов},
@@ -531,7 +522,7 @@
 }
 
 @misc{iceberg2026pinnacle,
-      title={Pinnacle: A Quantum {LDPC}-based Architecture for Breaking {RSA}-2048 with 100k Qubits}, 
+      title={Pinnacle: A Quantum {LDPC}-based Architecture for Breaking {RSA}-2048 with 100k Qubits},
       author={{Iceberg Quantum}},
       year={2026},
       eprint={2602.11457},
@@ -539,4 +530,150 @@
       primaryClass={quant-ph},
       version={v1},
       url={https://arxiv.org}
+}
+
+% ------------------------------------------------------------
+% 5. ДОПОЛНИТЕЛЬНЫЕ ИСТОЧНИКИ (алгоритмы, стандарты, эксперименты)
+% ------------------------------------------------------------
+
+@inproceedings{grover1996fast,
+    author    = {Grover, Lov K.},
+    title     = {A Fast Quantum Mechanical Algorithm for Database Search},
+    booktitle = {Proceedings of the 28th Annual {ACM} Symposium on
+                 Theory of Computing ({STOC})},
+    pages     = {212--219},
+    publisher = {ACM},
+    year      = {1996},
+    doi       = {10.1145/237814.237866},
+    langid    = {english}
+}
+
+@standard{nist-fips197,
+    author      = {{National Institute of Standards and Technology}},
+    title       = {{FIPS} 197. Advanced Encryption Standard ({AES})},
+    institution = {U.S. Department of Commerce},
+    year        = {2001},
+    doi         = {10.6028/NIST.FIPS.197},
+    url         = {https://csrc.nist.gov/pubs/fips/197/final},
+    urldate     = {2026-05-18},
+    langid      = {english}
+}
+
+@standard{nist-fips186-5,
+    author      = {{National Institute of Standards and Technology}},
+    title       = {{FIPS} 186-5. Digital Signature Standard ({DSS})},
+    institution = {U.S. Department of Commerce},
+    year        = {2023},
+    doi         = {10.6028/NIST.FIPS.186-5},
+    url         = {https://csrc.nist.gov/pubs/fips/186-5/final},
+    urldate     = {2026-05-18},
+    langid      = {english}
+}
+
+@techreport{nist-sp800131a,
+    author      = {{National Institute of Standards and Technology}},
+    title       = {{NIST SP 800-131A} Rev.~2. Transitioning the Use of
+                   Cryptographic Algorithms and Key Lengths},
+    institution = {U.S. Department of Commerce},
+    year        = {2019},
+    doi         = {10.6028/NIST.SP.800-131Ar2},
+    url         = {https://csrc.nist.gov/pubs/sp/800/131/a/r2/final},
+    urldate     = {2026-05-18},
+    langid      = {english}
+}
+
+@article{google-willow-2024,
+    author    = {{Google Quantum AI}},
+    title     = {Quantum error correction below the surface code threshold},
+    journal   = {Nature},
+    year      = {2024},
+    volume    = {634},
+    pages     = {965--971},
+    doi       = {10.1038/s41586-024-08197-1},
+    langid    = {english}
+}
+
+@techreport{nsa-cnsa2,
+    author      = {{National Security Agency}},
+    title       = {Commercial National Security Algorithm Suite 2.0 ({CNSA} 2.0)
+                   Cybersecurity Advisory},
+    institution = {NSA / Central Security Service},
+    year        = {2022},
+    url         = {https://media.defense.gov/2022/Sep/07/2003071834/-1/-1/0/CSA_CNSA_2.0_ALGORITHMS_.PDF},
+    urldate     = {2026-05-18},
+    langid      = {english}
+}
+
+@techreport{nsa-quantum-faq2021,
+    author      = {{National Security Agency}},
+    title       = {Quantum Computing and Post-Quantum Cryptography:
+                   Frequently Asked Questions},
+    institution = {NSA / Central Security Service},
+    year        = {2021},
+    url         = {https://media.defense.gov/2021/Aug/04/2002821837/-1/-1/1/Quantum_FAQs.PDF},
+    urldate     = {2026-05-18},
+    langid      = {english}
+}
+
+@article{vandersypen2001experimental,
+    author    = {Vandersypen, Lieven M. K. and Steffen, Matthias and
+                 Breyta, Gregory and Yannoni, Costantino S. and
+                 Sherwood, Mark H. and Chuang, Isaac L.},
+    title     = {Experimental realization of {S}hor's quantum factoring
+                 algorithm using nuclear magnetic resonance},
+    journal   = {Nature},
+    year      = {2001},
+    volume    = {414},
+    pages     = {883--887},
+    doi       = {10.1038/414883a},
+    langid    = {english}
+}
+
+@online{nist-hqc2025,
+    author  = {{National Institute of Standards and Technology}},
+    title   = {{NIST} Selects {HQC} as Fifth Post-Quantum Cryptography Algorithm},
+    year    = {2025},
+    url     = {https://www.nist.gov/news-events/news/2025/03/nist-selects-hqc-fifth-algorithm-post-quantum-cryptography-standardization},
+    urldate = {2026-05-18},
+    langid  = {english}
+}
+
+@techreport{ncsc2023annual,
+    author      = {{National Cyber Security Centre}},
+    title       = {{NCSC} Annual Review 2023},
+    institution = {UK National Cyber Security Centre},
+    year        = {2023},
+    url         = {https://www.ncsc.gov.uk/collection/annual-review-2023},
+    urldate     = {2026-05-18},
+    langid      = {english}
+}
+
+@online{tc26-postquantum,
+    author  = {{Технический комитет по стандартизации ТК~26}},
+    title   = {Постквантовые криптографические механизмы.
+               Материалы рабочей группы},
+    year    = {2024},
+    url     = {https://tc26.ru/standarts/rabochie-dokumenty/},
+    urldate = {2026-05-18},
+    langid  = {russian}
+}
+
+@online{kryptonite-shipovnik,
+    author  = {{НПК~«Криптонит»}},
+    title   = {Постквантовая криптография: российские разработки и стандарты
+               (алгоритм «Шиповник»)},
+    year    = {2024},
+    url     = {https://npckt.ru},
+    urldate = {2026-05-18},
+    langid  = {russian}
+}
+
+@online{projecteleven2025qday,
+    author  = {{Project Eleven}},
+    title   = {The {Q}-Day Report 2025: Timeline to a Cryptographically
+               Relevant Quantum Computer},
+    year    = {2025},
+    url     = {https://projecteleven.com},
+    urldate = {2026-05-18},
+    langid  = {english}
 }

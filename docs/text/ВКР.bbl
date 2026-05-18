@@ -310,6 +310,7 @@
       \strng{authornamehash}{0a8ba0f5bd77c94ff7d7a21a7a5ae5b6}
       \strng{authorfullhash}{0a8ba0f5bd77c94ff7d7a21a7a5ae5b6}
       \strng{authorfullhashraw}{0a8ba0f5bd77c94ff7d7a21a7a5ae5b6}
+      \field{extraname}{1}
       \field{sortinit}{9}
       \field{sortinithash}{0a5ebc79d83c96b6579069544c73c7d4}
       \field{labelnamesource}{author}
@@ -399,6 +400,367 @@
       \verb https://www.ibm.com/downloads/documents/us-en/1443d5f5af4f5316
       \endverb
     \endentry
+    \entry{menezes1996handbook}{book}{}{}
+      \name{author}{3}{}{%
+        {{hash=4bd07a7ac2197453f866bfc9e67dad78}{%
+           family={Menezes},
+           familyi={M\bibinitperiod},
+           given={A.\bibnamedelimi J.},
+           giveni={A\bibinitperiod\bibinitdelim J\bibinitperiod}}}%
+        {{hash=0c7fd828cf8a4a4e67188c6f4cf8207c}{%
+           family={Oorschot},
+           familyi={O\bibinitperiod},
+           given={P.\bibnamedelimi C.},
+           giveni={P\bibinitperiod\bibinitdelim C\bibinitperiod},
+           prefix={van},
+           prefixi={v\bibinitperiod}}}%
+        {{hash=53bf42f6914605c20a3a2e318295d448}{%
+           family={Vanstone},
+           familyi={V\bibinitperiod},
+           given={S.\bibnamedelimi A.},
+           giveni={S\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {CRC Press}%
+      }
+      \strng{namehash}{8b127882bb93aa888f435503e778dffd}
+      \strng{fullhash}{8b127882bb93aa888f435503e778dffd}
+      \strng{fullhashraw}{8b127882bb93aa888f435503e778dffd}
+      \strng{bibnamehash}{8b127882bb93aa888f435503e778dffd}
+      \strng{authorbibnamehash}{8b127882bb93aa888f435503e778dffd}
+      \strng{authornamehash}{8b127882bb93aa888f435503e778dffd}
+      \strng{authorfullhash}{8b127882bb93aa888f435503e778dffd}
+      \strng{authorfullhashraw}{8b127882bb93aa888f435503e778dffd}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{Available: \url{https://cacr.uwaterloo.ca/hac/}}
+      \field{title}{Handbook of Applied Cryptography}
+      \field{year}{1996}
+    \endentry
+    \entry{stallings2022cryptography}{book}{}{}
+      \name{author}{1}{}{%
+        {{hash=bb9ca3ca373a55ac4be837d0fdb28903}{%
+           family={Stallings},
+           familyi={S\bibinitperiod},
+           given={W.},
+           giveni={W\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Pearson}%
+      }
+      \strng{namehash}{bb9ca3ca373a55ac4be837d0fdb28903}
+      \strng{fullhash}{bb9ca3ca373a55ac4be837d0fdb28903}
+      \strng{fullhashraw}{bb9ca3ca373a55ac4be837d0fdb28903}
+      \strng{bibnamehash}{bb9ca3ca373a55ac4be837d0fdb28903}
+      \strng{authorbibnamehash}{bb9ca3ca373a55ac4be837d0fdb28903}
+      \strng{authornamehash}{bb9ca3ca373a55ac4be837d0fdb28903}
+      \strng{authorfullhash}{bb9ca3ca373a55ac4be837d0fdb28903}
+      \strng{authorfullhashraw}{bb9ca3ca373a55ac4be837d0fdb28903}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{edition}{8th}
+      \field{title}{Cryptography and Network Security: Principles and Practice}
+      \field{year}{2022}
+    \endentry
+    \entry{nist-fips197}{standard}{}{}
+      \name{author}{1}{}{%
+        {{hash=ef9cb61878e61d434507444346b29d1a}{%
+           family={{National Institute of Standards and Technology}},
+           familyi={N\bibinitperiod}}}%
+      }
+      \list{institution}{1}{%
+        {U.S. Department of Commerce}%
+      }
+      \strng{namehash}{ef9cb61878e61d434507444346b29d1a}
+      \strng{fullhash}{ef9cb61878e61d434507444346b29d1a}
+      \strng{fullhashraw}{ef9cb61878e61d434507444346b29d1a}
+      \strng{bibnamehash}{ef9cb61878e61d434507444346b29d1a}
+      \strng{authorbibnamehash}{ef9cb61878e61d434507444346b29d1a}
+      \strng{authornamehash}{ef9cb61878e61d434507444346b29d1a}
+      \strng{authorfullhash}{ef9cb61878e61d434507444346b29d1a}
+      \strng{authorfullhashraw}{ef9cb61878e61d434507444346b29d1a}
+      \field{extraname}{4}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{langid}{english}
+      \field{title}{{FIPS} 197. Advanced Encryption Standard ({AES})}
+      \field{urlday}{18}
+      \field{urlmonth}{5}
+      \field{urlyear}{2026}
+      \field{year}{2001}
+      \field{urldateera}{ce}
+      \verb{doi}
+      \verb 10.6028/NIST.FIPS.197
+      \endverb
+      \verb{urlraw}
+      \verb https://csrc.nist.gov/pubs/fips/197/final
+      \endverb
+      \verb{url}
+      \verb https://csrc.nist.gov/pubs/fips/197/final
+      \endverb
+    \endentry
+    \entry{nist-ir8547}{report}{}{}
+      \name{author}{1}{}{%
+        {{hash=ef9cb61878e61d434507444346b29d1a}{%
+           family={{National Institute of Standards and Technology}},
+           familyi={N\bibinitperiod}}}%
+      }
+      \list{institution}{1}{%
+        {U.S. Department of Commerce}%
+      }
+      \strng{namehash}{ef9cb61878e61d434507444346b29d1a}
+      \strng{fullhash}{ef9cb61878e61d434507444346b29d1a}
+      \strng{fullhashraw}{ef9cb61878e61d434507444346b29d1a}
+      \strng{bibnamehash}{ef9cb61878e61d434507444346b29d1a}
+      \strng{authorbibnamehash}{ef9cb61878e61d434507444346b29d1a}
+      \strng{authornamehash}{ef9cb61878e61d434507444346b29d1a}
+      \strng{authorfullhash}{ef9cb61878e61d434507444346b29d1a}
+      \strng{authorfullhashraw}{ef9cb61878e61d434507444346b29d1a}
+      \field{extraname}{5}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{langid}{english}
+      \field{title}{{NIST IR 8547} (Initial Public Draft). Transition to Post-Quantum Cryptography Standards}
+      \field{type}{techreport}
+      \field{urlday}{10}
+      \field{urlmonth}{5}
+      \field{urlyear}{2026}
+      \field{year}{2024}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://csrc.nist.gov/pubs/ir/8547/ipd
+      \endverb
+      \verb{url}
+      \verb https://csrc.nist.gov/pubs/ir/8547/ipd
+      \endverb
+    \endentry
+    \entry{diffie1976new}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=00f805450f7a5ede5c2ed15d27594667}{%
+           family={Diffie},
+           familyi={D\bibinitperiod},
+           given={W.},
+           giveni={W\bibinitperiod}}}%
+        {{hash=92e159a96b3e8adafb90586f146ba7d6}{%
+           family={Hellman},
+           familyi={H\bibinitperiod},
+           given={M.},
+           giveni={M\bibinitperiod}}}%
+      }
+      \strng{namehash}{1e28220b6786463e50caa5557636d6e2}
+      \strng{fullhash}{1e28220b6786463e50caa5557636d6e2}
+      \strng{fullhashraw}{1e28220b6786463e50caa5557636d6e2}
+      \strng{bibnamehash}{1e28220b6786463e50caa5557636d6e2}
+      \strng{authorbibnamehash}{1e28220b6786463e50caa5557636d6e2}
+      \strng{authornamehash}{1e28220b6786463e50caa5557636d6e2}
+      \strng{authorfullhash}{1e28220b6786463e50caa5557636d6e2}
+      \strng{authorfullhashraw}{1e28220b6786463e50caa5557636d6e2}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{internalsortvolume}{22}
+      \field{journaltitle}{IEEE Transactions on Information Theory}
+      \field{title}{New Directions in Cryptography}
+      \field{year}{1976}
+      \field{number}{6}
+      \range{number}{1}
+      \field{pages}{644\bibrangedash 654}
+      \range{pages}{11}
+      \field{volume}{22}
+      \range{volume}{1}
+    \endentry
+    \entry{rivest1978method}{article}{}{}
+      \name{author}{3}{}{%
+        {{hash=6a630bbc1f4da3f000de53a8c3fcda9a}{%
+           family={Rivest},
+           familyi={R\bibinitperiod},
+           given={R.\bibnamedelimi L.},
+           giveni={R\bibinitperiod\bibinitdelim L\bibinitperiod}}}%
+        {{hash=7b33764dee51f9ccad6bf7f94f4a5328}{%
+           family={Shamir},
+           familyi={S\bibinitperiod},
+           given={A.},
+           giveni={A\bibinitperiod}}}%
+        {{hash=4a8266f26fefcaad4dc64bfd4220a4ae}{%
+           family={Adleman},
+           familyi={A\bibinitperiod},
+           given={L.},
+           giveni={L\bibinitperiod}}}%
+      }
+      \strng{namehash}{e6041f1e6bea0c7f11abe539180c7aa5}
+      \strng{fullhash}{e6041f1e6bea0c7f11abe539180c7aa5}
+      \strng{fullhashraw}{e6041f1e6bea0c7f11abe539180c7aa5}
+      \strng{bibnamehash}{e6041f1e6bea0c7f11abe539180c7aa5}
+      \strng{authorbibnamehash}{e6041f1e6bea0c7f11abe539180c7aa5}
+      \strng{authornamehash}{e6041f1e6bea0c7f11abe539180c7aa5}
+      \strng{authorfullhash}{e6041f1e6bea0c7f11abe539180c7aa5}
+      \strng{authorfullhashraw}{e6041f1e6bea0c7f11abe539180c7aa5}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{internalsortvolume}{21}
+      \field{journaltitle}{Communications of the ACM}
+      \field{title}{A Method for Obtaining Digital Signatures and Public-Key Cryptosystems}
+      \field{year}{1978}
+      \field{number}{2}
+      \range{number}{1}
+      \field{pages}{120\bibrangedash 126}
+      \range{pages}{7}
+      \field{volume}{21}
+      \range{volume}{1}
+    \endentry
+    \entry{nist-sp800131a}{report}{}{}
+      \name{author}{1}{}{%
+        {{hash=ef9cb61878e61d434507444346b29d1a}{%
+           family={{National Institute of Standards and Technology}},
+           familyi={N\bibinitperiod}}}%
+      }
+      \list{institution}{1}{%
+        {U.S. Department of Commerce}%
+      }
+      \strng{namehash}{ef9cb61878e61d434507444346b29d1a}
+      \strng{fullhash}{ef9cb61878e61d434507444346b29d1a}
+      \strng{fullhashraw}{ef9cb61878e61d434507444346b29d1a}
+      \strng{bibnamehash}{ef9cb61878e61d434507444346b29d1a}
+      \strng{authorbibnamehash}{ef9cb61878e61d434507444346b29d1a}
+      \strng{authornamehash}{ef9cb61878e61d434507444346b29d1a}
+      \strng{authorfullhash}{ef9cb61878e61d434507444346b29d1a}
+      \strng{authorfullhashraw}{ef9cb61878e61d434507444346b29d1a}
+      \field{extraname}{6}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{langid}{english}
+      \field{title}{{NIST SP 800-131A} Rev.~2. Transitioning the Use of Cryptographic Algorithms and Key Lengths}
+      \field{type}{techreport}
+      \field{urlday}{18}
+      \field{urlmonth}{5}
+      \field{urlyear}{2026}
+      \field{year}{2019}
+      \field{urldateera}{ce}
+      \verb{doi}
+      \verb 10.6028/NIST.SP.800-131Ar2
+      \endverb
+      \verb{urlraw}
+      \verb https://csrc.nist.gov/pubs/sp/800/131/a/r2/final
+      \endverb
+      \verb{url}
+      \verb https://csrc.nist.gov/pubs/sp/800/131/a/r2/final
+      \endverb
+    \endentry
+    \entry{nist-fips186-5}{standard}{}{}
+      \name{author}{1}{}{%
+        {{hash=ef9cb61878e61d434507444346b29d1a}{%
+           family={{National Institute of Standards and Technology}},
+           familyi={N\bibinitperiod}}}%
+      }
+      \list{institution}{1}{%
+        {U.S. Department of Commerce}%
+      }
+      \strng{namehash}{ef9cb61878e61d434507444346b29d1a}
+      \strng{fullhash}{ef9cb61878e61d434507444346b29d1a}
+      \strng{fullhashraw}{ef9cb61878e61d434507444346b29d1a}
+      \strng{bibnamehash}{ef9cb61878e61d434507444346b29d1a}
+      \strng{authorbibnamehash}{ef9cb61878e61d434507444346b29d1a}
+      \strng{authornamehash}{ef9cb61878e61d434507444346b29d1a}
+      \strng{authorfullhash}{ef9cb61878e61d434507444346b29d1a}
+      \strng{authorfullhashraw}{ef9cb61878e61d434507444346b29d1a}
+      \field{extraname}{7}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{langid}{english}
+      \field{title}{{FIPS} 186-5. Digital Signature Standard ({DSS})}
+      \field{urlday}{18}
+      \field{urlmonth}{5}
+      \field{urlyear}{2026}
+      \field{year}{2023}
+      \field{urldateera}{ce}
+      \verb{doi}
+      \verb 10.6028/NIST.FIPS.186-5
+      \endverb
+      \verb{urlraw}
+      \verb https://csrc.nist.gov/pubs/fips/186-5/final
+      \endverb
+      \verb{url}
+      \verb https://csrc.nist.gov/pubs/fips/186-5/final
+      \endverb
+    \endentry
+    \entry{krivtsun2023kvantovye}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=88501a5f72abf529aa119a9fec2d1012}{%
+           family={Кривцун},
+           familyi={К\bibinitperiod},
+           given={Е.\bibnamedelimi В.},
+           giveni={Е\bibinitperiod\bibinitdelim В\bibinitperiod}}}%
+        {{hash=7f4079a59178f3c7136aebb879a19ae8}{%
+           family={Симаков},
+           familyi={С\bibinitperiod},
+           given={В.\bibnamedelimi Н.},
+           giveni={В\bibinitperiod\bibinitdelim Н\bibinitperiod}}}%
+      }
+      \strng{namehash}{1d2149100be830d80eca6236cd80a80f}
+      \strng{fullhash}{1d2149100be830d80eca6236cd80a80f}
+      \strng{fullhashraw}{1d2149100be830d80eca6236cd80a80f}
+      \strng{bibnamehash}{1d2149100be830d80eca6236cd80a80f}
+      \strng{authorbibnamehash}{1d2149100be830d80eca6236cd80a80f}
+      \strng{authornamehash}{1d2149100be830d80eca6236cd80a80f}
+      \strng{authorfullhash}{1d2149100be830d80eca6236cd80a80f}
+      \strng{authorfullhashraw}{1d2149100be830d80eca6236cd80a80f}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Вопросы кибербезопасности}
+      \field{note}{Входит в перечень ВАК}
+      \field{title}{Угрозы квантовых компьютеров для современных криптографических стандартов}
+      \field{year}{2023}
+      \field{number}{1}
+      \range{number}{1}
+    \endentry
+    \entry{google-willow-2024}{article}{}{}
+      \name{author}{1}{}{%
+        {{hash=8ca1ac5fec40f92509852add6b0f846c}{%
+           family={{Google Quantum AI}},
+           familyi={G\bibinitperiod}}}%
+      }
+      \strng{namehash}{8ca1ac5fec40f92509852add6b0f846c}
+      \strng{fullhash}{8ca1ac5fec40f92509852add6b0f846c}
+      \strng{fullhashraw}{8ca1ac5fec40f92509852add6b0f846c}
+      \strng{bibnamehash}{8ca1ac5fec40f92509852add6b0f846c}
+      \strng{authorbibnamehash}{8ca1ac5fec40f92509852add6b0f846c}
+      \strng{authornamehash}{8ca1ac5fec40f92509852add6b0f846c}
+      \strng{authorfullhash}{8ca1ac5fec40f92509852add6b0f846c}
+      \strng{authorfullhashraw}{8ca1ac5fec40f92509852add6b0f846c}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{internalsortvolume}{634}
+      \field{journaltitle}{Nature}
+      \field{langid}{english}
+      \field{title}{Quantum error correction below the surface code threshold}
+      \field{year}{2024}
+      \field{pages}{965\bibrangedash 971}
+      \range{pages}{7}
+      \field{volume}{634}
+      \range{volume}{1}
+      \verb{doi}
+      \verb 10.1038/s41586-024-08197-1
+      \endverb
+    \endentry
     \entry{iceberg2026pinnacle}{misc}{}{}
       \name{author}{1}{}{%
         {{hash=619f3ba5ecfb8a6d81879c9ac2d04ad8}{%
@@ -413,8 +775,8 @@
       \strng{authornamehash}{619f3ba5ecfb8a6d81879c9ac2d04ad8}
       \strng{authorfullhash}{619f3ba5ecfb8a6d81879c9ac2d04ad8}
       \strng{authorfullhashraw}{619f3ba5ecfb8a6d81879c9ac2d04ad8}
-      \field{sortinit}{1}
-      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{eprintclass}{quant-ph}
@@ -430,6 +792,38 @@
       \endverb
       \verb{url}
       \verb https://arxiv.org
+      \endverb
+    \endentry
+    \entry{projecteleven2025qday}{online}{}{}
+      \name{author}{1}{}{%
+        {{hash=37a42cdfc88fb9bbf235afed8cfcc956}{%
+           family={{Project Eleven}},
+           familyi={P\bibinitperiod}}}%
+      }
+      \strng{namehash}{37a42cdfc88fb9bbf235afed8cfcc956}
+      \strng{fullhash}{37a42cdfc88fb9bbf235afed8cfcc956}
+      \strng{fullhashraw}{37a42cdfc88fb9bbf235afed8cfcc956}
+      \strng{bibnamehash}{37a42cdfc88fb9bbf235afed8cfcc956}
+      \strng{authorbibnamehash}{37a42cdfc88fb9bbf235afed8cfcc956}
+      \strng{authornamehash}{37a42cdfc88fb9bbf235afed8cfcc956}
+      \strng{authorfullhash}{37a42cdfc88fb9bbf235afed8cfcc956}
+      \strng{authorfullhashraw}{37a42cdfc88fb9bbf235afed8cfcc956}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{langid}{english}
+      \field{title}{The {Q}-Day Report 2025: Timeline to a Cryptographically Relevant Quantum Computer}
+      \field{urlday}{18}
+      \field{urlmonth}{5}
+      \field{urlyear}{2026}
+      \field{year}{2025}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://projecteleven.com
+      \endverb
+      \verb{url}
+      \verb https://projecteleven.com
       \endverb
     \endentry
     \entry{klucharyov-osnovy-kvantovyh}{article}{}{}
@@ -448,8 +842,8 @@
       \strng{authornamehash}{b307bd292a0ee9b9d68c7504207fe46c}
       \strng{authorfullhash}{b307bd292a0ee9b9d68c7504207fe46c}
       \strng{authorfullhashraw}{b307bd292a0ee9b9d68c7504207fe46c}
-      \field{sortinit}{1}
-      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{journaltitle}{International Journal of Open Information Technologies}
@@ -468,8 +862,8 @@
       \endverb
     \endentry
     \entry{kvantovye-algoritmy-shor-grover}{article}{}{}
-      \field{sortinit}{1}
-      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
       \field{labeltitlesource}{title}
       \field{journaltitle}{Инновационная наука}
       \field{langid}{russian}
@@ -487,8 +881,8 @@
       \endverb
     \endentry
     \entry{kvantovyj-kompyuter-kriptostoykost}{article}{}{}
-      \field{sortinit}{1}
-      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
       \field{labeltitlesource}{title}
       \field{journaltitle}{Материалы российской конференции по информационной безопасности}
       \field{langid}{russian}
@@ -503,6 +897,59 @@
       \endverb
       \verb{url}
       \verb https://cyberleninka.ru/article/n/kvantovyy-kompyuter-i-kriptograficheskaya-stoykost-sovremennyh-sistem-shifrovaniya
+      \endverb
+    \endentry
+    \entry{vandersypen2001experimental}{article}{useauthor=false}{}
+      \name{author}{6}{}{%
+        {{hash=32374120f06a95944f0ca5e62ad87444}{%
+           family={Vandersypen},
+           familyi={V\bibinitperiod},
+           given={Lieven\bibnamedelimb M.\bibnamedelimi K.},
+           giveni={L\bibinitperiod\bibinitdelim M\bibinitperiod\bibinitdelim K\bibinitperiod}}}%
+        {{hash=4d699184e97e79510fba7d47b54242fa}{%
+           family={Steffen},
+           familyi={S\bibinitperiod},
+           given={Matthias},
+           giveni={M\bibinitperiod}}}%
+        {{hash=b29f33472c6622c139313867dc0ea650}{%
+           family={Breyta},
+           familyi={B\bibinitperiod},
+           given={Gregory},
+           giveni={G\bibinitperiod}}}%
+        {{hash=67a7bcb847ca4ff2bba98cfc4194ac31}{%
+           family={Yannoni},
+           familyi={Y\bibinitperiod},
+           given={Costantino\bibnamedelima S.},
+           giveni={C\bibinitperiod\bibinitdelim S\bibinitperiod}}}%
+        {{hash=7edaae6c2f45ce8337885ffb013ec399}{%
+           family={Sherwood},
+           familyi={S\bibinitperiod},
+           given={Mark\bibnamedelima H.},
+           giveni={M\bibinitperiod\bibinitdelim H\bibinitperiod}}}%
+        {{hash=415ddff2f58b25977b1a2dedf18f4501}{%
+           family={Chuang},
+           familyi={C\bibinitperiod},
+           given={Isaac\bibnamedelima L.},
+           giveni={I\bibinitperiod\bibinitdelim L\bibinitperiod}}}%
+      }
+      \strng{authorbibnamehash}{401a499b1006ef90815afd661176a1c7}
+      \strng{authornamehash}{401a499b1006ef90815afd661176a1c7}
+      \strng{authorfullhash}{8b0d46c88ba4919369aebd84e93f5c1f}
+      \strng{authorfullhashraw}{8b0d46c88ba4919369aebd84e93f5c1f}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labeltitlesource}{title}
+      \field{internalsortvolume}{414}
+      \field{journaltitle}{Nature}
+      \field{langid}{english}
+      \field{title}{Experimental realization of {S}hor's quantum factoring algorithm using nuclear magnetic resonance}
+      \field{year}{2001}
+      \field{pages}{883\bibrangedash 887}
+      \range{pages}{5}
+      \field{volume}{414}
+      \range{volume}{1}
+      \verb{doi}
+      \verb 10.1038/414883a
       \endverb
     \endentry
     \entry{roetteler2017ecc}{inproceedings}{useauthor=false}{}
@@ -535,8 +982,8 @@
       \strng{authornamehash}{af43b9c19549966023a33040515f6934}
       \strng{authorfullhash}{4383d6c4b328713064a68eb2f37a97fb}
       \strng{authorfullhashraw}{4383d6c4b328713064a68eb2f37a97fb}
-      \field{sortinit}{1}
-      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
       \field{labeltitlesource}{title}
       \field{booktitle}{Advances in Cryptology -- {ASIACRYPT} 2017}
       \field{internalsortvolume}{10624}
@@ -568,8 +1015,8 @@
       \strng{authornamehash}{e3e4705aecc913997750bcad144fc01a}
       \strng{authorfullhash}{e3e4705aecc913997750bcad144fc01a}
       \strng{authorfullhashraw}{e3e4705aecc913997750bcad144fc01a}
-      \field{sortinit}{2}
-      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{internalsortvolume}{3}
@@ -613,8 +1060,8 @@
       \strng{authornamehash}{8ce288458d5f714288e824b5c64c8ae5}
       \strng{authorfullhash}{8ce288458d5f714288e824b5c64c8ae5}
       \strng{authorfullhashraw}{8ce288458d5f714288e824b5c64c8ae5}
-      \field{sortinit}{2}
-      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{howpublished}{Cryptology ePrint Archive, Report 2024/222}
@@ -632,6 +1079,39 @@
       \verb https://eprint.iacr.org/2024/222
       \endverb
     \endentry
+    \entry{grover1996fast}{inproceedings}{}{}
+      \name{author}{1}{}{%
+        {{hash=619ef89ee12058aba6b0df9b17b11ca3}{%
+           family={Grover},
+           familyi={G\bibinitperiod},
+           given={Lov\bibnamedelima K.},
+           giveni={L\bibinitperiod\bibinitdelim K\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {ACM}%
+      }
+      \strng{namehash}{619ef89ee12058aba6b0df9b17b11ca3}
+      \strng{fullhash}{619ef89ee12058aba6b0df9b17b11ca3}
+      \strng{fullhashraw}{619ef89ee12058aba6b0df9b17b11ca3}
+      \strng{bibnamehash}{619ef89ee12058aba6b0df9b17b11ca3}
+      \strng{authorbibnamehash}{619ef89ee12058aba6b0df9b17b11ca3}
+      \strng{authornamehash}{619ef89ee12058aba6b0df9b17b11ca3}
+      \strng{authorfullhash}{619ef89ee12058aba6b0df9b17b11ca3}
+      \strng{authorfullhashraw}{619ef89ee12058aba6b0df9b17b11ca3}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the 28th Annual {ACM} Symposium on Theory of Computing ({STOC})}
+      \field{langid}{english}
+      \field{title}{A Fast Quantum Mechanical Algorithm for Database Search}
+      \field{year}{1996}
+      \field{pages}{212\bibrangedash 219}
+      \range{pages}{8}
+      \verb{doi}
+      \verb 10.1145/237814.237866
+      \endverb
+    \endentry
     \entry{saha2024grover}{article}{useauthor=false}{}
       \true{moreauthor}
       \name{author}{1}{}{%
@@ -645,8 +1125,8 @@
       \strng{authornamehash}{19e46cf4c0e2c26cbe7d838994a546b4}
       \strng{authorfullhash}{19e46cf4c0e2c26cbe7d838994a546b4}
       \strng{authorfullhashraw}{19e46cf4c0e2c26cbe7d838994a546b4}
-      \field{sortinit}{2}
-      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
       \field{labeltitlesource}{title}
       \field{internalsortvolume}{14}
       \field{journaltitle}{Scientific Reports}
@@ -661,14 +1141,159 @@
       \verb 10.1038/s41598-024-69188-8
       \endverb
     \endentry
-    \entry{nist-ir8547}{report}{}{}
+    \entry{fedfed2025hndl}{report}{}{}
+      \name{author}{1}{}{%
+        {{hash=3cd2bc76777b6930ba38f494b40da914}{%
+           family={{Board of Governors of the Federal Reserve System}},
+           familyi={B\bibinitperiod}}}%
+      }
+      \list{institution}{1}{%
+        {Federal Reserve Board}%
+      }
+      \strng{namehash}{3cd2bc76777b6930ba38f494b40da914}
+      \strng{fullhash}{3cd2bc76777b6930ba38f494b40da914}
+      \strng{fullhashraw}{3cd2bc76777b6930ba38f494b40da914}
+      \strng{bibnamehash}{3cd2bc76777b6930ba38f494b40da914}
+      \strng{authorbibnamehash}{3cd2bc76777b6930ba38f494b40da914}
+      \strng{authornamehash}{3cd2bc76777b6930ba38f494b40da914}
+      \strng{authorfullhash}{3cd2bc76777b6930ba38f494b40da914}
+      \strng{authorfullhashraw}{3cd2bc76777b6930ba38f494b40da914}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{langid}{english}
+      \field{title}{``Harvest Now, Decrypt Later'': Examining Post-Quantum Threats to Financial Systems}
+      \field{type}{techreport}
+      \field{urlday}{10}
+      \field{urlmonth}{5}
+      \field{urlyear}{2026}
+      \field{year}{2025}
+      \field{urldateera}{ce}
+      \field{number}{2025\bibrangedash 093}
+      \range{number}{69}
+      \verb{urlraw}
+      \verb https://www.federalreserve.gov/econres/feds/files/2025093pap.pdf
+      \endverb
+      \verb{url}
+      \verb https://www.federalreserve.gov/econres/feds/files/2025093pap.pdf
+      \endverb
+    \endentry
+    \entry{ncsc2023annual}{report}{}{}
+      \name{author}{1}{}{%
+        {{hash=36515162308416e005faa1a996fcc06d}{%
+           family={{National Cyber Security Centre}},
+           familyi={N\bibinitperiod}}}%
+      }
+      \list{institution}{1}{%
+        {UK National Cyber Security Centre}%
+      }
+      \strng{namehash}{36515162308416e005faa1a996fcc06d}
+      \strng{fullhash}{36515162308416e005faa1a996fcc06d}
+      \strng{fullhashraw}{36515162308416e005faa1a996fcc06d}
+      \strng{bibnamehash}{36515162308416e005faa1a996fcc06d}
+      \strng{authorbibnamehash}{36515162308416e005faa1a996fcc06d}
+      \strng{authornamehash}{36515162308416e005faa1a996fcc06d}
+      \strng{authorfullhash}{36515162308416e005faa1a996fcc06d}
+      \strng{authorfullhashraw}{36515162308416e005faa1a996fcc06d}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{langid}{english}
+      \field{title}{{NCSC} Annual Review 2023}
+      \field{type}{techreport}
+      \field{urlday}{18}
+      \field{urlmonth}{5}
+      \field{urlyear}{2026}
+      \field{year}{2023}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://www.ncsc.gov.uk/collection/annual-review-2023
+      \endverb
+      \verb{url}
+      \verb https://www.ncsc.gov.uk/collection/annual-review-2023
+      \endverb
+    \endentry
+    \entry{nsa-quantum-faq2021}{report}{}{}
+      \name{author}{1}{}{%
+        {{hash=eee2e3280b72459a568be70f1d6b1ae3}{%
+           family={{National Security Agency}},
+           familyi={N\bibinitperiod}}}%
+      }
+      \list{institution}{1}{%
+        {NSA / Central Security Service}%
+      }
+      \strng{namehash}{eee2e3280b72459a568be70f1d6b1ae3}
+      \strng{fullhash}{eee2e3280b72459a568be70f1d6b1ae3}
+      \strng{fullhashraw}{eee2e3280b72459a568be70f1d6b1ae3}
+      \strng{bibnamehash}{eee2e3280b72459a568be70f1d6b1ae3}
+      \strng{authorbibnamehash}{eee2e3280b72459a568be70f1d6b1ae3}
+      \strng{authornamehash}{eee2e3280b72459a568be70f1d6b1ae3}
+      \strng{authorfullhash}{eee2e3280b72459a568be70f1d6b1ae3}
+      \strng{authorfullhashraw}{eee2e3280b72459a568be70f1d6b1ae3}
+      \field{extraname}{1}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{langid}{english}
+      \field{title}{Quantum Computing and Post-Quantum Cryptography: Frequently Asked Questions}
+      \field{type}{techreport}
+      \field{urlday}{18}
+      \field{urlmonth}{5}
+      \field{urlyear}{2026}
+      \field{year}{2021}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://media.defense.gov/2021/Aug/04/2002821837/-1/-1/1/Quantum_FAQs.PDF
+      \endverb
+      \verb{url}
+      \verb https://media.defense.gov/2021/Aug/04/2002821837/-1/-1/1/Quantum_FAQs.PDF
+      \endverb
+    \endentry
+    \entry{nsa-cnsa2}{report}{}{}
+      \name{author}{1}{}{%
+        {{hash=eee2e3280b72459a568be70f1d6b1ae3}{%
+           family={{National Security Agency}},
+           familyi={N\bibinitperiod}}}%
+      }
+      \list{institution}{1}{%
+        {NSA / Central Security Service}%
+      }
+      \strng{namehash}{eee2e3280b72459a568be70f1d6b1ae3}
+      \strng{fullhash}{eee2e3280b72459a568be70f1d6b1ae3}
+      \strng{fullhashraw}{eee2e3280b72459a568be70f1d6b1ae3}
+      \strng{bibnamehash}{eee2e3280b72459a568be70f1d6b1ae3}
+      \strng{authorbibnamehash}{eee2e3280b72459a568be70f1d6b1ae3}
+      \strng{authornamehash}{eee2e3280b72459a568be70f1d6b1ae3}
+      \strng{authorfullhash}{eee2e3280b72459a568be70f1d6b1ae3}
+      \strng{authorfullhashraw}{eee2e3280b72459a568be70f1d6b1ae3}
+      \field{extraname}{2}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{langid}{english}
+      \field{title}{Commercial National Security Algorithm Suite 2.0 ({CNSA} 2.0) Cybersecurity Advisory}
+      \field{type}{techreport}
+      \field{urlday}{18}
+      \field{urlmonth}{5}
+      \field{urlyear}{2026}
+      \field{year}{2022}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://media.defense.gov/2022/Sep/07/2003071834/-1/-1/0/CSA_CNSA_2.0_ALGORITHMS_.PDF
+      \endverb
+      \verb{url}
+      \verb https://media.defense.gov/2022/Sep/07/2003071834/-1/-1/0/CSA_CNSA_2.0_ALGORITHMS_.PDF
+      \endverb
+    \endentry
+    \entry{nist-hqc2025}{online}{}{}
       \name{author}{1}{}{%
         {{hash=ef9cb61878e61d434507444346b29d1a}{%
            family={{National Institute of Standards and Technology}},
            familyi={N\bibinitperiod}}}%
-      }
-      \list{institution}{1}{%
-        {U.S. Department of Commerce}%
       }
       \strng{namehash}{ef9cb61878e61d434507444346b29d1a}
       \strng{fullhash}{ef9cb61878e61d434507444346b29d1a}
@@ -678,24 +1303,88 @@
       \strng{authornamehash}{ef9cb61878e61d434507444346b29d1a}
       \strng{authorfullhash}{ef9cb61878e61d434507444346b29d1a}
       \strng{authorfullhashraw}{ef9cb61878e61d434507444346b29d1a}
-      \field{extraname}{4}
-      \field{sortinit}{2}
-      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{extraname}{8}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{langid}{english}
-      \field{title}{{NIST IR 8547} (Initial Public Draft). Transition to Post-Quantum Cryptography Standards}
-      \field{type}{techreport}
-      \field{urlday}{10}
+      \field{title}{{NIST} Selects {HQC} as Fifth Post-Quantum Cryptography Algorithm}
+      \field{urlday}{18}
+      \field{urlmonth}{5}
+      \field{urlyear}{2026}
+      \field{year}{2025}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://www.nist.gov/news-events/news/2025/03/nist-selects-hqc-fifth-algorithm-post-quantum-cryptography-standardization
+      \endverb
+      \verb{url}
+      \verb https://www.nist.gov/news-events/news/2025/03/nist-selects-hqc-fifth-algorithm-post-quantum-cryptography-standardization
+      \endverb
+    \endentry
+    \entry{tc26-postquantum}{online}{}{}
+      \name{author}{1}{}{%
+        {{hash=d96c1d7379b0dfd895310a94d47250ed}{%
+           family={{Технический комитет по стандартизации ТК~26}},
+           familyi={Т\bibinitperiod}}}%
+      }
+      \strng{namehash}{d96c1d7379b0dfd895310a94d47250ed}
+      \strng{fullhash}{d96c1d7379b0dfd895310a94d47250ed}
+      \strng{fullhashraw}{d96c1d7379b0dfd895310a94d47250ed}
+      \strng{bibnamehash}{d96c1d7379b0dfd895310a94d47250ed}
+      \strng{authorbibnamehash}{d96c1d7379b0dfd895310a94d47250ed}
+      \strng{authornamehash}{d96c1d7379b0dfd895310a94d47250ed}
+      \strng{authorfullhash}{d96c1d7379b0dfd895310a94d47250ed}
+      \strng{authorfullhashraw}{d96c1d7379b0dfd895310a94d47250ed}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{langid}{russian}
+      \field{title}{Постквантовые криптографические механизмы. Материалы рабочей группы}
+      \field{urlday}{18}
       \field{urlmonth}{5}
       \field{urlyear}{2026}
       \field{year}{2024}
       \field{urldateera}{ce}
       \verb{urlraw}
-      \verb https://csrc.nist.gov/pubs/ir/8547/ipd
+      \verb https://tc26.ru/standarts/rabochie-dokumenty/
       \endverb
       \verb{url}
-      \verb https://csrc.nist.gov/pubs/ir/8547/ipd
+      \verb https://tc26.ru/standarts/rabochie-dokumenty/
+      \endverb
+    \endentry
+    \entry{kryptonite-shipovnik}{online}{}{}
+      \name{author}{1}{}{%
+        {{hash=0a8ba0f5bd77c94ff7d7a21a7a5ae5b6}{%
+           family={{НПК~«Криптонит»}},
+           familyi={Н\bibinitperiod}}}%
+      }
+      \strng{namehash}{0a8ba0f5bd77c94ff7d7a21a7a5ae5b6}
+      \strng{fullhash}{0a8ba0f5bd77c94ff7d7a21a7a5ae5b6}
+      \strng{fullhashraw}{0a8ba0f5bd77c94ff7d7a21a7a5ae5b6}
+      \strng{bibnamehash}{0a8ba0f5bd77c94ff7d7a21a7a5ae5b6}
+      \strng{authorbibnamehash}{0a8ba0f5bd77c94ff7d7a21a7a5ae5b6}
+      \strng{authornamehash}{0a8ba0f5bd77c94ff7d7a21a7a5ae5b6}
+      \strng{authorfullhash}{0a8ba0f5bd77c94ff7d7a21a7a5ae5b6}
+      \strng{authorfullhashraw}{0a8ba0f5bd77c94ff7d7a21a7a5ae5b6}
+      \field{extraname}{2}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{langid}{russian}
+      \field{title}{Постквантовая криптография: российские разработки и стандарты (алгоритм «Шиповник»)}
+      \field{urlday}{18}
+      \field{urlmonth}{5}
+      \field{urlyear}{2026}
+      \field{year}{2024}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://npckt.ru
+      \endverb
+      \verb{url}
+      \verb https://npckt.ru
       \endverb
     \endentry
     \entry{razdelenie-sekreta-postkvantovoe}{article}{}{}
@@ -719,8 +1408,8 @@
       \strng{authornamehash}{39dea11ceef37d35152f27d05fa32cbb}
       \strng{authorfullhash}{39dea11ceef37d35152f27d05fa32cbb}
       \strng{authorfullhashraw}{39dea11ceef37d35152f27d05fa32cbb}
-      \field{sortinit}{2}
-      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{journaltitle}{Научно-технический вестник информационных технологий, механики и оптики}
