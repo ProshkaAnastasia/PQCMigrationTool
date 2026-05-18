@@ -216,13 +216,19 @@
 % Сокращения: столбцом, с переносами, без рамок
 \RequirePackage{array}
 
+\usepackage{longtable}
+
 \newenvironment{abbreviations}
-{\par\noindent
-	\begin{tabular}{@{}l p{\dimexpr\textwidth-2\tabcolsep-1.5cm\relax}@{}}}
-	{\end{tabular}\par}
+{
+\par\noindent
+\begin{longtable}{@{}p{3cm}p{12cm}@{}}
+}
+{
+\end{longtable}\par
+}
 
 \newcommand{\abbritem}[2]{%
-	#1 & -- #2\\
+#1 & #2\\
 }
 
 % Термины: таблица с рамкой
