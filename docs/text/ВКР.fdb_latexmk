@@ -1,6 +1,6 @@
 # Fdb version 4
-["pdflatex"] 1779112470.87847 "/Users/anastasiapronina/Downloads/pqc-migration-tool-v2/docs/text/ВКР.tex" "ВКР.pdf" "ВКР" 1779112471.05713 2
-  "/Users/anastasiapronina/Downloads/pqc-migration-tool-v2/docs/text/ВКР.tex" 1779112465.9347 258909 fbea68fa4b5c512fd0102422c36e588f ""
+["pdflatex"] 1779119429.91973 "/Users/anastasiapronina/Downloads/pqc-migration-tool-v2/docs/text/ВКР.tex" "ВКР.pdf" "ВКР" 1779119430.13211 2
+  "/Users/anastasiapronina/Downloads/pqc-migration-tool-v2/docs/text/ВКР.tex" 1779119429.39505 266375 40e4f5cdaa440cfd0286db5ea48626af ""
   "/usr/local/texlive/2024/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2024/texmf-dist/fonts/tfm/public/cm/cmr12.tfm" 1136768653 1288 655e228510b4c2a1abe905c368440826 ""
   "/usr/local/texlive/2024/texmf-dist/tex/latex/base/exscale.sty" 1738182759 2581 410e238d5562ac0c02c3a54e6b0161aa ""
@@ -13,9 +13,9 @@
   "/usr/local/texlive/2024/texmf-dist/web2c/texmf.cnf" 1749313668 42213 4e2ca030e8e2640502016e9e45868dcb ""
   "/usr/local/texlive/2024/texmf-var/web2c/pdftex/pdflatex.fmt" 1761335700 3628969 54ec7c98ad45cb1899aa64e416fb2d8a ""
   "/usr/local/texlive/2024/texmf.cnf" 1710266656 577 e590dabc9e28c5b61546e15f63eebcdf ""
-  "itmo-vkr.cls" 1779101132.80939 13355 c72b51057467a9de545a0a11acf6fd32 ""
-  "ВКР.aux" 0 -1 0 "pdflatex"
-  "ВКР.tex" 1779112465.9347 258909 fbea68fa4b5c512fd0102422c36e588f ""
+  "itmo-vkr.cls" 1779114980.06812 13554 ac8c516acc03000bd9e88adf3e91f098 ""
+  "ВКР.aux" 1779119421.9192 32 3985256e7290058c681f74d7a3565a19 "pdflatex"
+  "ВКР.tex" 1779119429.39505 266375 40e4f5cdaa440cfd0286db5ea48626af ""
   (generated)
   "ВКР.aux"
   "ВКР.log"

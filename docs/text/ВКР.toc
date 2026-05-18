@@ -1,73 +1,73 @@
 \xpg@aux {}{russian}
-\contentsline {section}{\uppercase {СПИСОК СОКРАЩЕНИЙ И УСЛОВНЫХ ОБОЗНАЧЕНИЙ}}{4}{section*.1}%
-\contentsline {section}{\uppercase {ТЕРМИНЫ И ОПРЕДЕЛЕНИЯ}}{7}{section*.2}%
-\contentsline {section}{\uppercase {ВВЕДЕНИЕ}}{8}{section*.3}%
-\contentsline {section}{\numberline {1}Анализ квантовых угроз и нормативной базы}{10}{section.1}%
-\contentsline {subsection}{\numberline {1.1}Основы современной криптографии}{10}{subsection.1.1}%
-\contentsline {subsection}{\numberline {1.2}Квантовые вычисления как новый вектор угроз для современной криптографии}{14}{subsection.1.2}%
-\contentsline {subsection}{\numberline {1.3}Алгоритм Шора: теоретическая угроза асимметричной криптографии}{16}{subsection.1.3}%
-\contentsline {subsection}{\numberline {1.4}Алгоритм Гровера: влияние на симметричную криптографию}{18}{subsection.1.4}%
-\contentsline {subsection}{\numberline {1.5}Угроза «перехвати сейчас -- расшифруй потом» (HNDL)}{19}{subsection.1.5}%
-\contentsline {subsection}{\numberline {1.6}Стандарты NIST в области постквантовой криптографии}{20}{subsection.1.6}%
-\contentsline {subsection}{\numberline {1.7}Рекомендации ТК 26 в контексте постквантового перехода}{22}{subsection.1.7}%
-\contentsline {section}{\numberline {2}Анализ существующих аналогов}{24}{section.2}%
-\contentsline {subsection}{\numberline {2.1}IBM Quantum Safe (экосистема)}{25}{subsection.2.1}%
-\contentsline {subsection}{\numberline {2.2}CodeQL}{27}{subsection.2.2}%
-\contentsline {subsection}{\numberline {2.3}CBOMkit}{29}{subsection.2.3}%
-\contentsline {subsection}{\numberline {2.4}CryptoScan}{30}{subsection.2.4}%
-\contentsline {subsection}{\numberline {2.5}SonarQube}{31}{subsection.2.5}%
-\contentsline {subsection}{\numberline {2.6}CycloneDX cdxgen}{32}{subsection.2.6}%
-\contentsline {subsection}{\numberline {2.7}QApp}{33}{subsection.2.7}%
-\contentsline {subsection}{\numberline {2.8}Выводы по результатам анализа аналогов}{34}{subsection.2.8}%
-\contentsline {section}{\numberline {3}Проектирование архитектуры инструмента}{35}{section.3}%
-\contentsline {subsection}{\numberline {3.1}Формирование требований}{35}{subsection.3.1}%
-\contentsline {subsubsection}{\numberline {3.1.1}Требования к входным данным и запуску инструмента}{36}{subsubsection.3.1.1}%
-\contentsline {subsubsection}{\numberline {3.1.2}Требования к инвентаризации файлов проекта}{37}{subsubsection.3.1.2}%
-\contentsline {subsubsection}{\numberline {3.1.3}Требования к модулю статического анализа исходного кода}{38}{subsubsection.3.1.3}%
-\contentsline {subsubsection}{\numberline {3.1.4}Требования к базе данных криптографических сигнатур}{39}{subsubsection.3.1.4}%
-\contentsline {subsubsection}{\numberline {3.1.5}Требования к модулю анализа сертификатов}{39}{subsubsection.3.1.5}%
-\contentsline {subsubsection}{\numberline {3.1.6}Требования к модулю оценки рисков и формирования плана миграции}{40}{subsubsection.3.1.6}%
-\contentsline {subsubsection}{\numberline {3.1.7}Требования к отчетности}{40}{subsubsection.3.1.7}%
-\contentsline {subsubsection}{\numberline {3.1.8}Нефункциональные требования}{41}{subsubsection.3.1.8}%
-\contentsline {subsection}{\numberline {3.2}Общая архитектура и процесс обработки}{41}{subsection.3.2}%
-\contentsline {section}{\numberline {4}Реализация инструмента}{44}{section.4}%
-\contentsline {subsection}{\numberline {4.1}Общая организация разработки}{44}{subsection.4.1}%
-\contentsline {subsection}{\numberline {4.2}Реализация конфигурации и командного интерфейса}{45}{subsection.4.2}%
-\contentsline {subsection}{\numberline {4.3}Реализация базы уязвимых функций}{47}{subsection.4.3}%
-\contentsline {subsection}{\numberline {4.4}Реализация инвентаризации проекта}{51}{subsection.4.4}%
-\contentsline {subsection}{\numberline {4.5}Реализация общего интерфейса анализаторов}{54}{subsection.4.5}%
-\contentsline {subsection}{\numberline {4.6}Реализация анализатора регулярных выражений}{55}{subsection.4.6}%
-\contentsline {subsection}{\numberline {4.7}Реализация AST-анализатора}{57}{subsection.4.7}%
-\contentsline {subsubsection}{\numberline {4.7.1}Парсинг единицы трансляции}{57}{subsubsection.4.7.1}%
-\contentsline {subsubsection}{\numberline {4.7.2}Построение внутренней модели функций}{58}{subsubsection.4.7.2}%
-\contentsline {subsubsection}{\numberline {4.7.3}Сбор локальных значений}{59}{subsubsection.4.7.3}%
-\contentsline {subsubsection}{\numberline {4.7.4}Сбор полей классов и побочных эффектов}{60}{subsubsection.4.7.4}%
-\contentsline {subsubsection}{\numberline {4.7.5}Построение достижимости}{60}{subsubsection.4.7.5}%
-\contentsline {subsubsection}{\numberline {4.7.6}Разрешение аргументов}{61}{subsubsection.4.7.6}%
-\contentsline {subsubsection}{\numberline {4.7.7}Ограничения AST-анализатора}{63}{subsubsection.4.7.7}%
-\contentsline {subsection}{\numberline {4.8}Реализация анализа сертификатов}{63}{subsection.4.8}%
-\contentsline {subsection}{\numberline {4.9}Реализация оценки рисков}{65}{subsection.4.9}%
-\contentsline {subsection}{\numberline {4.10}Реализация плана миграции}{68}{subsection.4.10}%
-\contentsline {subsection}{\numberline {4.11}Реализация CBOM и генератора отчетов}{70}{subsection.4.11}%
-\contentsline {section}{\numberline {5}Тестирование и оценка}{73}{section.5}%
-\contentsline {subsection}{\numberline {5.1}Общий подход к тестированию}{73}{subsection.5.1}%
-\contentsline {subsection}{\numberline {5.2}Тестовые данные}{75}{subsection.5.2}%
-\contentsline {subsection}{\numberline {5.3}Модульные тесты}{78}{subsection.5.3}%
-\contentsline {subsubsection}{\numberline {5.3.1}База данных уязвимых функций (\textit {VulnDatabase})}{78}{subsubsection.5.3.1}%
-\contentsline {subsubsection}{\numberline {5.3.2}Инвентаризация проекта (\textit {ProjectScanner})}{79}{subsubsection.5.3.2}%
-\contentsline {subsubsection}{\numberline {5.3.3}Regex-анализатор (\textit {RegexAnalyzer})}{79}{subsubsection.5.3.3}%
-\contentsline {subsubsection}{\numberline {5.3.4}AST-анализатор (\textit {ASTAnalyzer})}{80}{subsubsection.5.3.4}%
-\contentsline {subsubsection}{\numberline {5.3.5}Оценщик риска (\textit {RiskAssessor})}{80}{subsubsection.5.3.5}%
-\contentsline {subsubsection}{\numberline {5.3.6}Модуль метрик (\textit {MetricsCalculator})}{81}{subsubsection.5.3.6}%
-\contentsline {subsection}{\numberline {5.4}Интеграционные тесты}{82}{subsection.5.4}%
-\contentsline {subsection}{\numberline {5.5}Оценка результатов тестирования}{83}{subsection.5.5}%
-\contentsline {section}{\numberline {6}Анализ полученных результатов}{84}{section.6}%
-\contentsline {subsection}{\numberline {6.1}Соответствие реализации поставленным требованиям}{84}{subsection.6.1}%
-\contentsline {subsection}{\numberline {6.2}Сравнение режимов анализа}{86}{subsection.6.2}%
-\contentsline {subsection}{\numberline {6.3}Оценка практической применимости}{87}{subsection.6.3}%
-\contentsline {subsection}{\numberline {6.4}Ограничения реализации}{88}{subsection.6.4}%
-\contentsline {subsection}{\numberline {6.5}Направления дальнейшего развития}{89}{subsection.6.5}%
-\contentsline {section}{Заключение}{90}{subsection.6.5}%
-\contentsline {section}{СПИСОК ИСПОЛЬЗОВАННЫХ ИСТОЧНИКОВ}{92}{section*.13}%
-\contentsline {section}{\numberline {A}Перечень записей эталонной разметки}{96}{appendix.A}%
-\contentsline {section}{\numberline {B}Листинг теста расширения базы данных}{96}{appendix.B}%
+\contentsline {section}{\uppercase {СПИСОК СОКРАЩЕНИЙ И УСЛОВНЫХ ОБОЗНАЧЕНИЙ}}{2}{section*.1}%
+\contentsline {section}{\uppercase {ТЕРМИНЫ И ОПРЕДЕЛЕНИЯ}}{5}{section*.2}%
+\contentsline {section}{\uppercase {ВВЕДЕНИЕ}}{9}{section*.3}%
+\contentsline {section}{\numberline {1}Анализ квантовых угроз и нормативной базы}{11}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Основы современной криптографии}{11}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}Квантовые вычисления как новый вектор угроз для современной криптографии}{15}{subsection.1.2}%
+\contentsline {subsection}{\numberline {1.3}Алгоритм Шора: теоретическая угроза асимметричной криптографии}{17}{subsection.1.3}%
+\contentsline {subsection}{\numberline {1.4}Алгоритм Гровера: влияние на симметричную криптографию}{19}{subsection.1.4}%
+\contentsline {subsection}{\numberline {1.5}Угроза «перехвати сейчас -- расшифруй потом» (HNDL)}{20}{subsection.1.5}%
+\contentsline {subsection}{\numberline {1.6}Стандарты NIST в области постквантовой криптографии}{21}{subsection.1.6}%
+\contentsline {subsection}{\numberline {1.7}Рекомендации ТК 26 в контексте постквантового перехода}{23}{subsection.1.7}%
+\contentsline {section}{\numberline {2}Анализ существующих аналогов}{25}{section.2}%
+\contentsline {subsection}{\numberline {2.1}IBM Quantum Safe (экосистема)}{26}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}CodeQL}{28}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}CBOMkit}{30}{subsection.2.3}%
+\contentsline {subsection}{\numberline {2.4}CryptoScan}{31}{subsection.2.4}%
+\contentsline {subsection}{\numberline {2.5}SonarQube}{32}{subsection.2.5}%
+\contentsline {subsection}{\numberline {2.6}CycloneDX cdxgen}{33}{subsection.2.6}%
+\contentsline {subsection}{\numberline {2.7}QApp}{34}{subsection.2.7}%
+\contentsline {subsection}{\numberline {2.8}Выводы по результатам анализа аналогов}{35}{subsection.2.8}%
+\contentsline {section}{\numberline {3}Проектирование архитектуры инструмента}{36}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Формирование требований}{36}{subsection.3.1}%
+\contentsline {subsubsection}{\numberline {3.1.1}Требования к входным данным и запуску инструмента}{37}{subsubsection.3.1.1}%
+\contentsline {subsubsection}{\numberline {3.1.2}Требования к инвентаризации файлов проекта}{38}{subsubsection.3.1.2}%
+\contentsline {subsubsection}{\numberline {3.1.3}Требования к модулю статического анализа исходного кода}{39}{subsubsection.3.1.3}%
+\contentsline {subsubsection}{\numberline {3.1.4}Требования к базе данных криптографических сигнатур}{40}{subsubsection.3.1.4}%
+\contentsline {subsubsection}{\numberline {3.1.5}Требования к модулю анализа сертификатов}{40}{subsubsection.3.1.5}%
+\contentsline {subsubsection}{\numberline {3.1.6}Требования к модулю оценки рисков и формирования плана миграции}{41}{subsubsection.3.1.6}%
+\contentsline {subsubsection}{\numberline {3.1.7}Требования к отчетности}{41}{subsubsection.3.1.7}%
+\contentsline {subsubsection}{\numberline {3.1.8}Нефункциональные требования}{42}{subsubsection.3.1.8}%
+\contentsline {subsection}{\numberline {3.2}Общая архитектура и процесс обработки}{42}{subsection.3.2}%
+\contentsline {section}{\numberline {4}Реализация инструмента}{45}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Общая организация разработки}{45}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Реализация конфигурации и командного интерфейса}{46}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Реализация базы уязвимых функций}{48}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}Реализация инвентаризации проекта}{52}{subsection.4.4}%
+\contentsline {subsection}{\numberline {4.5}Реализация общего интерфейса анализаторов}{55}{subsection.4.5}%
+\contentsline {subsection}{\numberline {4.6}Реализация анализатора регулярных выражений}{56}{subsection.4.6}%
+\contentsline {subsection}{\numberline {4.7}Реализация AST-анализатора}{58}{subsection.4.7}%
+\contentsline {subsubsection}{\numberline {4.7.1}Парсинг единицы трансляции}{58}{subsubsection.4.7.1}%
+\contentsline {subsubsection}{\numberline {4.7.2}Построение внутренней модели функций}{59}{subsubsection.4.7.2}%
+\contentsline {subsubsection}{\numberline {4.7.3}Сбор локальных значений}{60}{subsubsection.4.7.3}%
+\contentsline {subsubsection}{\numberline {4.7.4}Сбор полей классов и побочных эффектов}{61}{subsubsection.4.7.4}%
+\contentsline {subsubsection}{\numberline {4.7.5}Построение достижимости}{61}{subsubsection.4.7.5}%
+\contentsline {subsubsection}{\numberline {4.7.6}Разрешение аргументов}{62}{subsubsection.4.7.6}%
+\contentsline {subsubsection}{\numberline {4.7.7}Ограничения AST-анализатора}{64}{subsubsection.4.7.7}%
+\contentsline {subsection}{\numberline {4.8}Реализация анализа сертификатов}{64}{subsection.4.8}%
+\contentsline {subsection}{\numberline {4.9}Реализация оценки рисков}{66}{subsection.4.9}%
+\contentsline {subsection}{\numberline {4.10}Реализация плана миграции}{69}{subsection.4.10}%
+\contentsline {subsection}{\numberline {4.11}Реализация CBOM и генератора отчетов}{71}{subsection.4.11}%
+\contentsline {section}{\numberline {5}Тестирование и оценка}{74}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Общий подход к тестированию}{74}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Тестовые данные}{76}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}Модульные тесты}{79}{subsection.5.3}%
+\contentsline {subsubsection}{\numberline {5.3.1}База данных уязвимых функций (\textit {VulnDatabase})}{79}{subsubsection.5.3.1}%
+\contentsline {subsubsection}{\numberline {5.3.2}Инвентаризация проекта (\textit {ProjectScanner})}{80}{subsubsection.5.3.2}%
+\contentsline {subsubsection}{\numberline {5.3.3}Regex-анализатор (\textit {RegexAnalyzer})}{80}{subsubsection.5.3.3}%
+\contentsline {subsubsection}{\numberline {5.3.4}AST-анализатор (\textit {ASTAnalyzer})}{81}{subsubsection.5.3.4}%
+\contentsline {subsubsection}{\numberline {5.3.5}Оценщик риска (\textit {RiskAssessor})}{81}{subsubsection.5.3.5}%
+\contentsline {subsubsection}{\numberline {5.3.6}Модуль метрик (\textit {MetricsCalculator})}{82}{subsubsection.5.3.6}%
+\contentsline {subsection}{\numberline {5.4}Интеграционные тесты}{83}{subsection.5.4}%
+\contentsline {subsection}{\numberline {5.5}Оценка результатов тестирования}{84}{subsection.5.5}%
+\contentsline {section}{\numberline {6}Анализ полученных результатов}{85}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Соответствие реализации поставленным требованиям}{85}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}Сравнение режимов анализа}{87}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}Оценка практической применимости}{88}{subsection.6.3}%
+\contentsline {subsection}{\numberline {6.4}Ограничения реализации}{89}{subsection.6.4}%
+\contentsline {subsection}{\numberline {6.5}Направления дальнейшего развития}{90}{subsection.6.5}%
+\contentsline {section}{Заключение}{91}{subsection.6.5}%
+\contentsline {section}{СПИСОК ИСПОЛЬЗОВАННЫХ ИСТОЧНИКОВ}{93}{section*.13}%
+\contentsline {section}{\numberline {A}Перечень записей эталонной разметки}{97}{appendix.A}%
+\contentsline {section}{\numberline {B}Листинг теста расширения базы данных}{97}{appendix.B}%

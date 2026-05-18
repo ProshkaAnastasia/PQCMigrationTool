@@ -232,14 +232,22 @@
 }
 
 % Термины: таблица с рамкой
-\newenvironment{termlist}
-{\noindent\begin{tabular}{|p{4cm}|p{\dimexpr\textwidth-4cm-2\tabcolsep\relax}|}
-		\hline}
-	{\end{tabular}}
+\newenvironment{termlist}{%
+  \setlength{\LTpre}{0pt}%
+  \setlength{\LTpost}{0pt}%
+  \begin{longtable}{|>{\bfseries\raggedright\arraybackslash}p{6.2cm}|>{\raggedright\arraybackslash}p{\dimexpr\linewidth-6.2cm-4\tabcolsep-3\arrayrulewidth\relax}|}
+  \hline
+  \endfirsthead
+  \hline
+  \endhead
+  \endfoot
+}{%
+  \end{longtable}%
+}
 
-% Одна строка "термин – определение"
+% Одна строка «термин — определение»
 \newcommand{\termitem}[2]{%
-	#1 & #2\\\hline
+  #1 & #2\\*\hline
 }
 
 
