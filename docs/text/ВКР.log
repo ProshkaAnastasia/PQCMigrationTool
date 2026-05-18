@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.10.24)  18 MAY 2026 18:50
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.10.24)  18 MAY 2026 21:42
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1241,7 +1241,11 @@ Package fontspec Info:
 (fontspec)             Roman/BI/OT:script=cyrl;language=dflt;mapping=tex-text;"
 
 
- (./ВКР.aux)
+ (./ВКР.aux
+
+LaTeX Warning: Label `lst:cbom' multiply defined.
+
+)
 \openout1 = `ВКР.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 51.
@@ -1445,22 +1449,33 @@ Package biblatex Info: ... file 'ВКР.bbl' found.
 Package biblatex Info: Reference section=0 on input line 51.
 Package biblatex Info: Reference segment=0 on input line 51.
 Package hyperref Info: Link coloring OFF on input line 51.
+ (./ВКР.out) (./ВКР.out)
 \@outlinefile=\write5
 \openout5 = `ВКР.out'.
 
+ (./ВКР.toc
+LaTeX Font Info:    Trying to load font information for U+msa on input line 2.
 
+(/usr/local/texlive/2024/texmf-dist/tex/latex/amsfonts/umsa.fd
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+)
+LaTeX Font Info:    Trying to load font information for U+msb on input line 2.
 
-Package hyperref Warning: Rerun to get /PageLabels entry.
+(/usr/local/texlive/2024/texmf-dist/tex/latex/amsfonts/umsb.fd
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+)
 
-No file ВКР.toc.
+[1
+
+]
+
+[2])
 \tf@toc=\write6
 \openout6 = `ВКР.toc'.
 
 
 
-[1
-
-]
+[3]
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 (hyperref)                removing `\uppercase' on input line 58.
@@ -1471,74 +1486,55 @@ Underfull \hbox (badness 4859) in paragraph at lines 86--87
 о
  []
 
-[2] [3]
+[4] [5]
 
-[4]
+[6]
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 (hyperref)                removing `\uppercase' on input line 97.
 
-LaTeX Font Info:    Trying to load font information for U+msa on input line 110
-.
-(/usr/local/texlive/2024/texmf-dist/tex/latex/amsfonts/umsa.fd
-File: umsa.fd 2013/01/14 v3.01 AMS symbols A
-)
-LaTeX Font Info:    Trying to load font information for U+msb on input line 110
-.
+[7] [8] [9]
 
-(/usr/local/texlive/2024/texmf-dist/tex/latex/amsfonts/umsb.fd
-File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-)
-
-Package longtable Warning: Column widths have changed
-(longtable)                in table 0.2 on input line 215.
-
-[5] [6] [7]
-
-[8]
+[10]
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 (hyperref)                removing `\uppercase' on input line 220.
 
 
 
-[9]
-Underfull \hbox (badness 1675) in paragraph at lines 238--239
+[11]
+
+[12]
+Underfull \hbox (badness 1675) in paragraph at lines 254--255
 \TU/TimesNewRoman(2)/m/n/14.4 ных сигнатур, содержащую параметры уязвимых API-ф
 ункций,
  []
 
 
 
-[10]
-Underfull \hbox (badness 1521) in paragraph at lines 263--264
+[13]
+Underfull \hbox (badness 1521) in paragraph at lines 279--280
 []\TU/TimesNewRoman(2)/m/n/14.4 Эталонным стандартом симметричного шифрования я
 вляется AES
  []
 
 
 
-[11]
-
-[12]
-Underfull \hbox (badness 4048) in paragraph at lines 281--282
+[14]
+Underfull \hbox (badness 4048) in paragraph at lines 297--298
 []\TU/TimesNewRoman(2)/m/n/14.4 Проблема симметричной криптографии – распределе
 ние ключей:
  []
 
 
 
-[13]
-Underfull \hbox (badness 1824) in paragraph at lines 310--311
+[15]
+Underfull \hbox (badness 1824) in paragraph at lines 326--327
 \TU/TimesNewRoman(2)/m/n/14.4 битная хеш-сумма, рекомендуется NIST), SHA-1 (160
  бит, устаревший,
  []
 
 
-
-[14]
-
-[15]
 
 [16]
 
@@ -1551,107 +1547,89 @@ Underfull \hbox (badness 1824) in paragraph at lines 310--311
 [20]
 
 [21]
-Underfull \hbox (badness 10000) in paragraph at lines 409--410
+
+[22]
+
+[23]
+Underfull \hbox (badness 10000) in paragraph at lines 424--425
 []\TU/TimesNewRoman(2)/b/n/14.4 FIPS 203 (ML-KEM, Module-Lattice-Based Key-Enca
 psulation
  []
 
 
-Underfull \hbox (badness 1158) in paragraph at lines 409--410
-\TU/TimesNewRoman(2)/b/n/14.4 Mechanism) \TU/TimesNewRoman(2)/m/n/14.4 – основн
-ой стандарт инкапсуляции ключей, разработанный
- []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 417--418
+[24]
+Underfull \hbox (badness 10000) in paragraph at lines 432--433
 []\TU/TimesNewRoman(2)/b/n/14.4 FIPS 204 (ML-DSA, Module-Lattice-Based Digital 
 Signature
  []
 
 
-Underfull \hbox (badness 1859) in paragraph at lines 417--418
-\TU/TimesNewRoman(2)/b/n/14.4 Algorithm) \TU/TimesNewRoman(2)/m/n/14.4 – основн
-ой стандарт цифровой подписи, разработанный на
+Underfull \hbox (badness 3199) in paragraph at lines 432--433
+\TU/TimesNewRoman(2)/b/n/14.4 Algorithm)\TU/TimesNewRoman(2)/m/n/14.4 [[]7[]] –
+ основной стандарт цифровой подписи, разработанный
  []
 
 
-Underfull \hbox (badness 2781) in paragraph at lines 417--418
-\TU/TimesNewRoman(2)/m/n/14.4 основе алгоритма CRYSTALS-Dilithium. Как и ML-KEM
-, безопасность
- []
-
-
-Underfull \hbox (badness 6332) in paragraph at lines 417--418
+Underfull \hbox (badness 6332) in paragraph at lines 432--433
 \TU/TimesNewRoman(2)/m/n/14.4 ML-DSA-44, ML-DSA-65 и ML-DSA-87, соответствующие
  категориям
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 419--420
+Underfull \hbox (badness 10000) in paragraph at lines 434--435
 []\TU/TimesNewRoman(2)/b/n/14.4 FIPS 205 (SLH-DSA, Stateless Hash-Based Digital
  Signature
  []
 
 
-Underfull \hbox (badness 5161) in paragraph at lines 419--420
-\TU/TimesNewRoman(2)/b/n/14.4 Algorithm) \TU/TimesNewRoman(2)/m/n/14.4 – альтер
-нативный стандарт цифровой подписи на основе
+Underfull \hbox (badness 2837) in paragraph at lines 434--435
+\TU/TimesNewRoman(2)/b/n/14.4 Algorithm)\TU/TimesNewRoman(2)/m/n/14.4 [[]8[]] –
+ альтернативный стандарт цифровой подписи на осно-
  []
 
 
-Underfull \hbox (badness 4967) in paragraph at lines 419--420
-\TU/TimesNewRoman(2)/m/n/14.4 алгоритма SPHINCS+. В отличие от двух предыдущих,
- безопасность
- []
-
-
-
-[22]
-
-[23]
-
-[24]
 
 [25]
-File: figures/code-c.png Graphic file (type bmp)
-<figures/code-c.png>
-
-Underfull \hbox (badness 10000) in paragraph at lines 467--468
-[]\TU/TimesNewRoman(2)/m/n/14.4 В режиме API Discovery инструмент зафиксирует в
-ызов
- []
-
-
-Underfull \hbox (badness 2205) in paragraph at lines 467--468
-\OML/cmm/m/it/14.4 EVP[]CipherInit[]ex$\TU/TimesNewRoman(2)/m/n/14.4 , однако н
-е сможет определить, какой именно ал-
- []
-
-
-Underfull \hbox (badness 3323) in paragraph at lines 467--468
-\TU/TimesNewRoman(2)/m/n/14.4 криптографическую семантику применительно к C/C++
- – заключается
- []
-
-
 
 [26]
 
 [27]
 
 [28]
+File: figures/code-c.png Graphic file (type bmp)
+<figures/code-c.png>
+
+Underfull \hbox (badness 10000) in paragraph at lines 482--483
+[]\TU/TimesNewRoman(2)/m/n/14.4 В режиме API Discovery инструмент зафиксирует в
+ызов
+ []
+
+
+Underfull \hbox (badness 2205) in paragraph at lines 482--483
+\OML/cmm/m/it/14.4 EVP[]CipherInit[]ex$\TU/TimesNewRoman(2)/m/n/14.4 , однако н
+е сможет определить, какой именно ал-
+ []
+
+
+Underfull \hbox (badness 3323) in paragraph at lines 482--483
+\TU/TimesNewRoman(2)/m/n/14.4 криптографическую семантику применительно к C/C++
+ – заключается
+ []
+
+
 
 [29]
-Underfull \hbox (badness 2662) in paragraph at lines 493--494
+
+[30]
+
+[31]
+Underfull \hbox (badness 2662) in paragraph at lines 508--509
 []\TU/TimesNewRoman(2)/m/n/14.4 CBOMkit – открытый инструментальный комплекс дл
 я работы с
  []
 
 
-
-[30]
-
-[31]
 
 [32]
 
@@ -1663,9 +1641,11 @@ Underfull \hbox (badness 2662) in paragraph at lines 493--494
 
 [36]
 
-LaTeX Warning: Reference `tab:input_params' on page 37 undefined on input line 
-567.
+[37]
 
+[38]
+
+[39]
 
 Package fontspec Info: 
 (fontspec)             Font family 'TimesNewRoman(3)' created for font 'Times
@@ -1687,63 +1667,28 @@ Space,Script=Cyrillic].
 
 
 
-[37]
-
-[38]
-
-[39]
-Underfull \hbox (badness 1931) in paragraph at lines 626--627
-[]\TU/TimesNewRoman(2)/m/it/14.4 FR-12. \TU/TimesNewRoman(2)/m/n/14.4 Инструмен
-т должен анализировать X.509-сертификаты, пе-
- []
-
-
-Underfull \hbox (badness 6063) in paragraph at lines 626--627
-\TU/TimesNewRoman(2)/m/n/14.4 реданные отдельным файлом или директорией. Анализ
- сертификатов
- []
-
-
-Underfull \hbox (badness 1622) in paragraph at lines 626--627
-\TU/TimesNewRoman(2)/m/n/14.4 необходим, поскольку квантово-уязвимая криптограф
-ия присутствует не
- []
-
-
-Underfull \hbox (badness 3148) in paragraph at lines 626--627
-\TU/TimesNewRoman(2)/m/n/14.4 только в исходном коде, но и в инфраструктурных а
-ртефактах: TLS-
- []
-
-
-Underfull \hbox (badness 4144) in paragraph at lines 626--627
-\TU/TimesNewRoman(2)/m/n/14.4 сертификатах, цепочках доверия, локальных тестовы
-х сертификатах и
- []
+LaTeX Warning: `h' float specifier changed to `ht'.
 
 
 
 [40]
 
 [41]
-Underfull \hbox (badness 1394) in paragraph at lines 669--670
+
+[42]
+
+[43]
+
+[44]
+Underfull \hbox (badness 1394) in paragraph at lines 684--685
 []\TU/TimesNewRoman(2)/m/n/14.4 Во-первых, задачу криптографической инвентариза
 ции интуитивно
  []
 
 
 
-[42]
-
-LaTeX Warning: Reference `fig:structure' on page 43 undefined on input line 675
-.
-
-
-LaTeX Warning: Reference `fig:pipeline' on page 43 undefined on input line 703.
-
-
-
-Underfull \hbox (badness 2529) in paragraph at lines 705--706
+[45]
+Underfull \hbox (badness 2529) in paragraph at lines 720--721
 \TU/TimesNewRoman(2)/m/n/14.4 описывает сертификат. RiskReport описывает резуль
 таты оценки риска.
  []
@@ -1758,23 +1703,17 @@ File: lstlang1.sty 2024/09/23 1.10c listings language file
 File: lstmisc.sty 2024/09/23 1.10c (Carsten Heinz)
 )
 Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on i
-nput line 709.
+nput line 724.
 LaTeX Font Info:    Font shape `TU/Menlo(0)/m/n' will be
-(Font)              scaled to size 11.82127pt on input line 709.
+(Font)              scaled to size 11.82127pt on input line 724.
 LaTeX Font Info:    Font shape `TU/Menlo(0)/m/n' will be
-(Font)              scaled to size 9.85107pt on input line 709.
+(Font)              scaled to size 9.85107pt on input line 724.
 LaTeX Font Info:    Font shape `TU/Menlo(0)/b/n' will be
-(Font)              scaled to size 9.85107pt on input line 710.
+(Font)              scaled to size 9.85107pt on input line 725.
 
 
-[43]
-
-LaTeX Warning: Reference `lst:finding' on page 44 undefined on input line 734.
-
-
-
-[44]
-Underfull \hbox (badness 3029) in paragraph at lines 763--764
+[46]
+Underfull \hbox (badness 3029) in paragraph at lines 778--779
 \TU/TimesNewRoman(2)/m/it/14.4 line_number \TU/TimesNewRoman(2)/m/n/14.4 и \TU/
 TimesNewRoman(2)/m/it/14.4 column \TU/TimesNewRoman(2)/m/n/14.4 определяют мест
 о находки. Поля \TU/TimesNewRoman(2)/m/it/14.4 function_name\TU/TimesNewRoman(2
@@ -1782,1364 +1721,1179 @@ TimesNewRoman(2)/m/it/14.4 column \TU/TimesNewRoman(2)/m/n/14.4 определя
  []
 
 
-Underfull \hbox (badness 1028) in paragraph at lines 765--766
+Underfull \hbox (badness 1028) in paragraph at lines 780--781
 \TU/TimesNewRoman(2)/m/n/14.4 ковые плагины: новые типы файлов можно добавить ч
 ерез реализацию
  []
 
 
-LaTeX Warning: Reference `fig:dir' on page 45 undefined on input line 773.
-
-
-
-[45]
-
-LaTeX Warning: Reference `fig:data-flow' on page 46 undefined on input line 792
-.
-
-
-LaTeX Warning: Reference `tab:cli-impl' on page 46 undefined on input line 823.
-
-
-[46]
-
-LaTeX Warning: Reference `lst:appconfig' on page 47 undefined on input line 857
-.
-
-
 
 [47]
-Underfull \hbox (badness 1622) in paragraph at lines 883--884
+
+[48]
+
+[49]
+Underfull \hbox (badness 1622) in paragraph at lines 898--899
 \TU/TimesNewRoman(2)/m/n/14.4 бору анализатора, cert_path и skip_cert нужны мод
 улю сертификатов, а
  []
 
 
-LaTeX Warning: Reference `lst:bd' on page 48 undefined on input line 891.
+
+[50]
+
+[51]
+Overfull \hbox (4.21504pt too wide) in alignment at lines 939--944
+ [] [] [] 
+ []
 
 
+Overfull \hbox (4.21504pt too wide) in alignment at lines 944--949
+ [] [] [] 
+ []
 
-[48]
 
-LaTeX Warning: Reference `tab:openssl' on page 49 undefined on input line 922.
+Overfull \hbox (4.21504pt too wide) in alignment at lines 949--951
+ [] [] [] 
+ []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 939--939
+Underfull \hbox (badness 10000) in paragraph at lines 954--954
 []|\TU/TimesNewRoman(3)/m/n/14.4 RSA_generate_key\TU/TimesNewRoman(2)/m/n/14.4 
 ,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 939--939
+Underfull \hbox (badness 10000) in paragraph at lines 954--954
 \TU/TimesNewRoman(3)/m/n/14.4 RSA_generate_key_ex\TU/TimesNewRoman(2)/m/n/14.4 
 ,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 939--939
+Underfull \hbox (badness 10000) in paragraph at lines 954--954
 \TU/TimesNewRoman(3)/m/n/14.4 RSA_public_encrypt\TU/TimesNewRoman(2)/m/n/14.4 ,
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 939--939
+Underfull \hbox (badness 10000) in paragraph at lines 954--954
 \TU/TimesNewRoman(3)/m/n/14.4 RSA_private_decrypt\TU/TimesNewRoman(2)/m/n/14.4 
 ,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 940--940
+Underfull \hbox (badness 10000) in paragraph at lines 955--955
 \TU/TimesNewRoman(3)/m/n/14.4 DSA_do_sign\TU/TimesNewRoman(2)/m/n/14.4 ,
  []
 
 
-Underfull \hbox (badness 2435) in paragraph at lines 940--940
+Underfull \hbox (badness 2435) in paragraph at lines 955--955
 []|\TU/TimesNewRoman(2)/m/n/14.4 DSA основан на сложности
  []
 
 
-Underfull \hbox (badness 2772) in paragraph at lines 940--940
+Underfull \hbox (badness 2772) in paragraph at lines 955--955
 \TU/TimesNewRoman(2)/m/n/14.4 дискретного логарифмирова-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 941--941
+Underfull \hbox (badness 10000) in paragraph at lines 956--956
 []|\TU/TimesNewRoman(3)/m/n/14.4 DH_generate_key\TU/TimesNewRoman(2)/m/n/14.4 ,
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 941--941
+Underfull \hbox (badness 10000) in paragraph at lines 956--956
 []|\TU/TimesNewRoman(2)/m/n/14.4 Классический Диффи-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 942--942
+Underfull \hbox (badness 10000) in paragraph at lines 957--957
 []|\TU/TimesNewRoman(2)/m/n/14.4 Эллиптический Диффи-
  []
 
 
-Underfull \hbox (badness 2020) in paragraph at lines 942--942
+Underfull \hbox (badness 2020) in paragraph at lines 957--957
 \TU/TimesNewRoman(2)/m/n/14.4 Хеллман также относится к
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 943--943
+Underfull \hbox (badness 10000) in paragraph at lines 958--958
 []|\TU/TimesNewRoman(3)/m/n/14.4 ECDSA_sign\TU/TimesNewRoman(2)/m/n/14.4 ,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 943--943
+Underfull \hbox (badness 10000) in paragraph at lines 958--958
 \TU/TimesNewRoman(3)/m/n/14.4 ECDSA_verify\TU/TimesNewRoman(2)/m/n/14.4 ,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 943--943
+Underfull \hbox (badness 10000) in paragraph at lines 958--958
 \TU/TimesNewRoman(3)/m/n/14.4 ECDSA_do_sign\TU/TimesNewRoman(2)/m/n/14.4 ,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 943--943
+Underfull \hbox (badness 10000) in paragraph at lines 958--958
 []|\TU/TimesNewRoman(2)/m/n/14.4 Подпись на эллиптических
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 944--944
+Underfull \hbox (badness 10000) in paragraph at lines 959--959
 []|\TU/TimesNewRoman(3)/m/n/14.4 EVP_PKEY_encrypt\TU/TimesNewRoman(2)/m/n/14.4 
 ,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 944--944
+Underfull \hbox (badness 10000) in paragraph at lines 959--959
 \TU/TimesNewRoman(3)/m/n/14.4 EVP_PKEY_decrypt\TU/TimesNewRoman(2)/m/n/14.4 ,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 944--944
+Underfull \hbox (badness 10000) in paragraph at lines 959--959
 \TU/TimesNewRoman(3)/m/n/14.4 EVP_DigestSignInit\TU/TimesNewRoman(2)/m/n/14.4 ,
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 944--944
+Underfull \hbox (badness 10000) in paragraph at lines 959--959
 []|\TU/TimesNewRoman(2)/m/n/14.4 Высокоуровневые вызовы
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 944--944
+Underfull \hbox (badness 10000) in paragraph at lines 959--959
 \TU/TimesNewRoman(2)/m/n/14.4 OpenSSL могут скрывать
  []
 
 
-Underfull \hbox (badness 1577) in paragraph at lines 944--944
+Underfull \hbox (badness 1577) in paragraph at lines 959--959
 \TU/TimesNewRoman(2)/m/n/14.4 RSA, ECDSA, DH и другие
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 945--945
+Underfull \hbox (badness 10000) in paragraph at lines 960--960
 []|\TU/TimesNewRoman(2)/m/n/14.4 отдельные операции
  []
 
 
-Underfull \hbox (badness 1845) in paragraph at lines 945--945
+Underfull \hbox (badness 1845) in paragraph at lines 960--960
 []|\TU/TimesNewRoman(2)/m/n/14.4 Могут быть признаком руч-
  []
 
 
-Underfull \hbox (badness 1681) in paragraph at lines 946--947
+Underfull \hbox (badness 1681) in paragraph at lines 961--962
 \TU/TimesNewRoman(2)/m/n/14.4 постквантовой миграции, но
  []
 
 
-Overfull \hbox (4.21504pt too wide) in alignment at lines 936--947
+Overfull \hbox (4.21504pt too wide) in alignment at lines 951--962
+ [] [] [] 
+ []
+
+[52]
+Overfull \hbox (1.8309pt too wide) in alignment at lines 967--972
  [] [] [] 
  []
 
 
-
-[49]
-
-Package longtable Warning: Column widths have changed
-(longtable)                in table 4.2 on input line 947.
-
-[50]
-
-LaTeX Warning: Reference `tab:crypto' on page 51 undefined on input line 950.
+Overfull \hbox (1.8309pt too wide) in alignment at lines 972--977
+ [] [] [] 
+ []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 968--968
+Overfull \hbox (1.8309pt too wide) in alignment at lines 977--980
+ [] [] [] 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 983--983
 []|\TU/TimesNewRoman(3)/m/n/14.4 RSA::PublicKey\TU/TimesNewRoman(2)/m/n/14.4 ,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 969--969
+Underfull \hbox (badness 10000) in paragraph at lines 984--984
 []|\TU/TimesNewRoman(3)/m/n/14.4 RSAES_PKCS1v15_Encryptor\TU/TimesNewRoman(2)/m
 /n/14.4 ,
  []
 
 
-Overfull \hbox (3.50374pt too wide) in paragraph at lines 969--969
+Overfull \hbox (3.50374pt too wide) in paragraph at lines 984--984
 \TU/TimesNewRoman(3)/m/n/14.4 RSAES_OAEP_SHA_Decryptor| 
  []
 
 
-Overfull \hbox (1.8309pt too wide) in alignment at lines 965--973
+Overfull \hbox (1.8309pt too wide) in alignment at lines 980--988
  [] [] [] 
  []
 
 
-Package longtable Warning: Column widths have changed
-(longtable)                in table 4.3 on input line 973.
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 976--977
+Underfull \hbox (badness 10000) in paragraph at lines 991--992
 \TU/TimesNewRoman(2)/m/n/14.4 GOST_R3410_keypair, VKO_cryptopro_2001, VKO_crypt
 opro_2012,
  []
 
 
-Underfull \hbox (badness 1953) in paragraph at lines 976--977
+Underfull \hbox (badness 1953) in paragraph at lines 991--992
 \TU/TimesNewRoman(2)/m/n/14.4 gost_vko_compute. Их включение важно, поскольку и
 нструмент должен
  []
 
 
-LaTeX Warning: Reference `lst:vulndb-class' on page 51 undefined on input line 
-978.
-
-
-
-[51]
-
-[52]
-
-LaTeX Warning: Reference `lst:inv' on page 53 undefined on input line 1016.
-
-
-LaTeX Warning: Reference `lst:inv2' on page 53 undefined on input line 1035.
-
-
 
 [53]
 
-LaTeX Warning: Reference `fig:inv' on page 54 undefined on input line 1075.
-
-
-
 [54]
 
-LaTeX Warning: Reference `lst:analyzer' on page 55 undefined on input line 1110
-.
-
-
-
 [55]
-Underfull \hbox (badness 10000) in paragraph at lines 1131--1132
+
+[56]
+
+[57]
+Underfull \hbox (badness 10000) in paragraph at lines 1146--1147
 []\TU/TimesNewRoman(2)/m/n/14.4 Метод analyze работает с полной инвентаризацией
  проекта, а
  []
 
 
-Underfull \hbox (badness 1496) in paragraph at lines 1133--1134
+Underfull \hbox (badness 1496) in paragraph at lines 1148--1149
 \TU/TimesNewRoman(2)/m/n/14.4 лиза на одинаковых тестовых данных. Например, оди
 н и тот же файл
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1139--1140
+Underfull \hbox (badness 10000) in paragraph at lines 1154--1155
 []\TU/TimesNewRoman(2)/m/n/14.4 Анализатор регулярных выражений реализован в кл
 ассе
  []
 
 
-Underfull \hbox (badness 4467) in paragraph at lines 1139--1140
+Underfull \hbox (badness 4467) in paragraph at lines 1154--1155
 \TU/TimesNewRoman(2)/m/n/14.4 RegexAnalyzer. Он является самым простым и быстры
 м из режимов
  []
 
 
-LaTeX Warning: Reference `lst:regex' on page 56 undefined on input line 1141.
-
-
-
-[56]
-
-[57]
-
-LaTeX Warning: Reference `lst:ast-stage1' on page 58 undefined on input line 12
-00.
-
-
 
 [58]
 
-LaTeX Warning: Reference `lst:ast-stage2' on page 59 undefined on input line 12
-27.
-
-
-
 [59]
-
-LaTeX Warning: Reference `lst:ast-stage31' on page 60 undefined on input line 1
-258.
-
-
-LaTeX Warning: Reference `lst:ast-stage32' on page 60 undefined on input line 1
-270.
-
-
 
 [60]
 
-LaTeX Warning: Reference `lst:ast-stage4' on page 61 undefined on input line 12
-83.
+[61]
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 1305--1306
+[62]
+Underfull \hbox (badness 10000) in paragraph at lines 1320--1321
 []\TU/TimesNewRoman(2)/m/n/14.4 Событие Mutation означает изменение состояния о
 бъекта, а
  []
 
 
-Underfull \hbox (badness 1360) in paragraph at lines 1305--1306
+Underfull \hbox (badness 1360) in paragraph at lines 1320--1321
 \TU/TimesNewRoman(2)/m/n/14.4 IntraClassCall означает вызов другого метода того
  же класса. Это нуж-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1305--1306
+Underfull \hbox (badness 10000) in paragraph at lines 1320--1321
 \TU/TimesNewRoman(2)/m/n/14.4 но для восстановления точной последовательности д
 ействий внутри
- []
-
-
-LaTeX Warning: Reference `lst:ast-stage5' on page 61 undefined on input line 13
-11.
-
-
-
-[61]
-
-LaTeX Warning: Reference `lst:ast-stage6' on page 62 undefined on input line 13
-25.
-
-
-
-[62]
-
-LaTeX Warning: Reference `fig:arg' on page 63 undefined on input line 1347.
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 1382--1383
-[]\TU/TimesNewRoman(2)/m/n/14.4 Такой механизм особенно важен для вызовов вида
- []
-
-
-Underfull \hbox (badness 4927) in paragraph at lines 1382--1383
-\TU/TimesNewRoman(2)/m/n/14.4 EVP_PKEY_CTX_new_from_name. В этом случае сама фу
-нкция явля-
- []
-
-
-Underfull \hbox (badness 5741) in paragraph at lines 1382--1383
-\TU/TimesNewRoman(2)/m/n/14.4 ется универсальной, а конкретный алгоритм определ
-яется строковым
- []
-
-
-Underfull \hbox (badness 3098) in paragraph at lines 1382--1383
-\TU/TimesNewRoman(2)/m/n/14.4 аргументом. Если ASTAnalyzer может разрешить этот
- аргумент, отчет
  []
 
 
 
 [63]
 
-LaTeX Warning: Reference `lst:ast-stage7' on page 64 undefined on input line 13
-86.
-
-
-LaTeX Warning: Reference `fig:cert-a' on page 64 undefined on input line 1401.
-
+[64]
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 
-LaTeX Warning: Reference `lst:cert-lib' on page 64 undefined on input line 1433
-.
+Underfull \hbox (badness 10000) in paragraph at lines 1397--1398
+[]\TU/TimesNewRoman(2)/m/n/14.4 Такой механизм особенно важен для вызовов вида
+ []
 
 
+Underfull \hbox (badness 4927) in paragraph at lines 1397--1398
+\TU/TimesNewRoman(2)/m/n/14.4 EVP_PKEY_CTX_new_from_name. В этом случае сама фу
+нкция явля-
+ []
 
-[64]
-Underfull \hbox (badness 1845) in paragraph at lines 1447--1448
-\TU/TimesNewRoman(2)/m/n/14.4 крытого ключа и алгоритму подписи. RSA, ECDSA, EC
-DH, DSA, EC,
+
+Underfull \hbox (badness 5741) in paragraph at lines 1397--1398
+\TU/TimesNewRoman(2)/m/n/14.4 ется универсальной, а конкретный алгоритм определ
+яется строковым
+ []
+
+
+Underfull \hbox (badness 3098) in paragraph at lines 1397--1398
+\TU/TimesNewRoman(2)/m/n/14.4 аргументом. Если ASTAnalyzer может разрешить этот
+ аргумент, отчет
  []
 
 
 
 [65]
 
-LaTeX Warning: Reference `lst:risk-context' on page 66 undefined on input line 
-1464.
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+Underfull \hbox (badness 1845) in paragraph at lines 1462--1463
+\TU/TimesNewRoman(2)/m/n/14.4 крытого ключа и алгоритму подписи. RSA, ECDSA, EC
+DH, DSA, EC,
+ []
 
 
 
 [66]
 
-LaTeX Warning: Reference `tab:factors' on page 67 undefined on input line 1479.
-
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 1493--1493
+[67]
+Underfull \hbox (badness 10000) in paragraph at lines 1508--1508
 []|\TU/TimesNewRoman(2)/m/n/14.4 Частота вызова
  []
-
-
-LaTeX Warning: Reference `lst:final-score' on page 67 undefined on input line 1
-497.
-
-
-LaTeX Warning: Reference `lst:risk-logic' on page 67 undefined on input line 15
-05.
-
-
-
-[67]
-
-LaTeX Warning: Reference `lst:final-risk' on page 68 undefined on input line 15
-49.
 
 
 
 [68]
 
-LaTeX Warning: Reference `lst:migration1' on page 69 undefined on input line 15
-59.
-
-
-
 [69]
-
-LaTeX Warning: Reference `lst:migration2' on page 70 undefined on input line 15
-89.
-
-
 
 [70]
 
-LaTeX Warning: Reference `lst:cbom' on page 71 undefined on input line 1613.
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 1613--1614
+[71]
+Underfull \hbox (badness 10000) in paragraph at lines 1628--1629
 []\TU/TimesNewRoman(2)/m/n/14.4 Структура CBOM описана классами Cbom, CbomCompo
 nent и
  []
 
 
 
-[71]
-
-LaTeX Warning: Reference `tab:report_structure' on page 72 undefined on input l
-ine 1660.
-
-
-Underfull \hbox (badness 1325) in paragraph at lines 1676--1676
+[72]
+Underfull \hbox (badness 1325) in paragraph at lines 1691--1691
 []|\TU/TimesNewRoman(2)/m/n/14.4 Примечания и соответствующие рекоменда-
  []
 
 
-Underfull \hbox (badness 3271) in paragraph at lines 1677--1678
+Underfull \hbox (badness 3271) in paragraph at lines 1692--1693
 []|\TU/TimesNewRoman(2)/m/n/14.4 Криптографическая ведомость в отдельном
  []
 
-[72]
-
-LaTeX Warning: Reference `lst:reg-gen' on page 73 undefined on input line 1680.
-
-
-
-LaTeX Warning: Reference `fig:pipeline' on page 73 undefined on input line 1714
-.
-
-
-
 [73]
-Overfull \hbox (2.9039pt too wide) in paragraph at lines 1727--1727
+
+[74]
+Overfull \hbox (2.9039pt too wide) in paragraph at lines 1742--1742
  [][]\TU/TimesNewRoman(2)/b/n/12 3/6\TU/TimesNewRoman(2)/m/n/12 Инвентаризация 
 
  []
 
 
-LaTeX Warning: Reference `tab:test_suites' on page 74 undefined on input line 1
-772.
+LaTeX Warning: `h' float specifier changed to `ht'.
 
 
-Underfull \hbox (badness 4416) in paragraph at lines 1777--1777
+Underfull \hbox (badness 4416) in paragraph at lines 1792--1792
 []|\TU/TimesNewRoman(2)/m/n/14.4 Набор тестов (кол-
  []
 
 
-Underfull \hbox (badness 4416) in paragraph at lines 1780--1780
+Underfull \hbox (badness 4416) in paragraph at lines 1795--1795
 []|\TU/TimesNewRoman(2)/m/n/14.4 Набор тестов (кол-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1787--1789
+Underfull \hbox (badness 10000) in paragraph at lines 1802--1804
 []|\TU/TimesNewRoman(2)/m/n/14.4 Загрузка JSON,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1787--1789
+Underfull \hbox (badness 10000) in paragraph at lines 1802--1804
 \TU/TimesNewRoman(2)/m/n/14.4 поиск по имени
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1787--1789
+Underfull \hbox (badness 10000) in paragraph at lines 1802--1804
 \TU/TimesNewRoman(2)/m/n/14.4 и псевдониму,
  []
 
 
-Underfull \hbox (badness 7186) in paragraph at lines 1787--1789
+Underfull \hbox (badness 7186) in paragraph at lines 1802--1804
 \TU/TimesNewRoman(2)/m/n/14.4 слияние с допол-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1787--1789
+Underfull \hbox (badness 10000) in paragraph at lines 1802--1804
 \TU/TimesNewRoman(2)/m/n/14.4 нительной базой,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1789--1790
+Underfull \hbox (badness 10000) in paragraph at lines 1804--1805
 []|\TU/TimesNewRoman(2)/m/n/14.4 Поиск по псевдониму,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1789--1790
+Underfull \hbox (badness 10000) in paragraph at lines 1804--1805
 \TU/TimesNewRoman(2)/m/n/14.4 миграции, подключение
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1793--1795
+Underfull \hbox (badness 10000) in paragraph at lines 1808--1810
 []|\TU/TimesNewRoman(2)/m/n/14.4 Обход файло-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1793--1795
+Underfull \hbox (badness 10000) in paragraph at lines 1808--1810
 \TU/TimesNewRoman(2)/m/n/14.4 вой системы,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1793--1795
+Underfull \hbox (badness 10000) in paragraph at lines 1808--1810
 \TU/TimesNewRoman(2)/m/n/14.4 классификация
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1793--1795
+Underfull \hbox (badness 10000) in paragraph at lines 1808--1810
 \TU/TimesNewRoman(2)/m/n/14.4 по категориям,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1793--1795
+Underfull \hbox (badness 10000) in paragraph at lines 1808--1810
 \TU/TimesNewRoman(2)/m/n/14.4 статистика язы-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1793--1795
+Underfull \hbox (badness 10000) in paragraph at lines 1808--1810
 \TU/TimesNewRoman(2)/m/n/14.4 ков, метаданные
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1795--1796
+Underfull \hbox (badness 10000) in paragraph at lines 1810--1811
 []|\TU/TimesNewRoman(2)/m/n/14.4 Обнаружение C++-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1795--1796
+Underfull \hbox (badness 10000) in paragraph at lines 1810--1811
 \TU/TimesNewRoman(2)/m/n/14.4 файлов, формирование
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1795--1796
+Underfull \hbox (badness 10000) in paragraph at lines 1810--1811
 \TU/TimesNewRoman(2)/m/n/14.4 метаданных CBOM,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1799--1801
+Underfull \hbox (badness 10000) in paragraph at lines 1814--1816
 []|\TU/TimesNewRoman(2)/m/n/14.4 Обнаружение
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1799--1801
+Underfull \hbox (badness 10000) in paragraph at lines 1814--1816
 \TU/TimesNewRoman(2)/m/n/14.4 находки (строка,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1799--1801
+Underfull \hbox (badness 10000) in paragraph at lines 1814--1816
 \TU/TimesNewRoman(2)/m/n/14.4 NIST), отсутствие
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1799--1801
+Underfull \hbox (badness 10000) in paragraph at lines 1814--1816
 \TU/TimesNewRoman(2)/m/n/14.4 срабатываний на
  []
 
 
-Underfull \hbox (badness 3872) in paragraph at lines 1801--1802
+Underfull \hbox (badness 3872) in paragraph at lines 1816--1817
 \TU/TimesNewRoman(2)/m/n/14.4 в файле фикстур, отсут-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1801--1802
+Underfull \hbox (badness 10000) in paragraph at lines 1816--1817
 \TU/TimesNewRoman(2)/m/n/14.4 ствие срабатываний на
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1805--1807
+Underfull \hbox (badness 10000) in paragraph at lines 1820--1822
 []|\TU/TimesNewRoman(2)/m/n/14.4 Обнаружение
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1805--1807
+Underfull \hbox (badness 10000) in paragraph at lines 1820--1822
 \TU/TimesNewRoman(2)/m/n/14.4 уязвимостей,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1805--1807
+Underfull \hbox (badness 10000) in paragraph at lines 1820--1822
 \TU/TimesNewRoman(2)/m/n/14.4 извлечение кон-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1805--1807
+Underfull \hbox (badness 10000) in paragraph at lines 1820--1822
 \TU/TimesNewRoman(2)/m/n/14.4 текста функции
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1805--1807
+Underfull \hbox (badness 10000) in paragraph at lines 1820--1822
 \TU/TimesNewRoman(2)/m/n/14.4 и класса, исклю-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1805--1807
+Underfull \hbox (badness 10000) in paragraph at lines 1820--1822
 \TU/TimesNewRoman(2)/m/n/14.4 чение системных
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1807--1808
+Underfull \hbox (badness 10000) in paragraph at lines 1822--1823
 []|\TU/TimesNewRoman(2)/m/n/14.4 Извлечение объемлющей
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1807--1808
+Underfull \hbox (badness 10000) in paragraph at lines 1822--1823
 \TU/TimesNewRoman(2)/m/n/14.4 функции, извлечение
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1807--1808
+Underfull \hbox (badness 10000) in paragraph at lines 1822--1823
 \TU/TimesNewRoman(2)/m/n/14.4 объемлющего класса,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1807--1808
+Underfull \hbox (badness 10000) in paragraph at lines 1822--1823
 \TU/TimesNewRoman(2)/m/n/14.4 исключение системных
  []
 
 
-Underfull \hbox (badness 7907) in paragraph at lines 1811--1813
+Underfull \hbox (badness 7907) in paragraph at lines 1826--1828
 \TU/TimesNewRoman(2)/m/n/14.4 чие рекомендаций
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1813--1814
+Underfull \hbox (badness 10000) in paragraph at lines 1828--1829
 []|\TU/TimesNewRoman(2)/m/n/14.4 Повышение оценки для
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1813--1814
+Underfull \hbox (badness 10000) in paragraph at lines 1828--1829
 \TU/TimesNewRoman(2)/m/n/14.4 для тестового, наличие
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1817--1819
+Underfull \hbox (badness 10000) in paragraph at lines 1832--1834
 []|\TU/TimesNewRoman(2)/m/n/14.4 Вычисление TP,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1817--1819
+Underfull \hbox (badness 10000) in paragraph at lines 1832--1834
 \TU/TimesNewRoman(2)/m/n/14.4 строки; точность,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1823--1826
+Underfull \hbox (badness 10000) in paragraph at lines 1838--1841
 []|\TU/TimesNewRoman(2)/m/n/14.4 Полный конвейер
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1823--1826
+Underfull \hbox (badness 10000) in paragraph at lines 1838--1841
 \TU/TimesNewRoman(2)/m/n/14.4 в режимах regex
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1823--1826
+Underfull \hbox (badness 10000) in paragraph at lines 1838--1841
 \TU/TimesNewRoman(2)/m/n/14.4 и AST; []\TU/TimesNewRoman(0)/m/n/14.4 preci-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1823--1826
+Underfull \hbox (badness 10000) in paragraph at lines 1838--1841
 \TU/TimesNewRoman(0)/m/n/14.4 sion[]\TU/TimesNewRoman(2)/m/n/14.4 /[]\TU/TimesN
 ewRoman(0)/m/n/14.4 recall$\OMS/cmsy/m/n/14.4 ^^U$[]\TU/TimesNewRoman(2)/m/n/14
 .4 50%;
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1823--1826
+Underfull \hbox (badness 10000) in paragraph at lines 1838--1841
 \TU/TimesNewRoman(2)/m/n/14.4 наличие ссылок
  []
 
-
-
-[74] [75]
-Underfull \hbox (badness 10000) in paragraph at lines 1836--1844
+[75] [76]
+Underfull \hbox (badness 10000) in paragraph at lines 1851--1859
 []\TU/TimesNewRoman(2)/m/n/14.4 Основным тестовым файлом является \TU/TimesNewR
 oman(2)/m/it/14.4 tests/fixtures/
  []
 
 
-LaTeX Warning: Reference `tab:fixture_sections' on page 76 undefined on input l
-ine 1846.
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 1862--1863
+Underfull \hbox (badness 10000) in paragraph at lines 1877--1878
 []|\TU/TimesNewRoman(2)/m/it/14.4 crypto::tls::
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1863--1865
+Underfull \hbox (badness 10000) in paragraph at lines 1878--1880
 []|\TU/TimesNewRoman(2)/m/n/14.4 RSA-ключ сервера: \TU/TimesNewRoman(2)/m/it/14
 .4 RSA_new\TU/TimesNewRoman(2)/m/n/14.4 ,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1863--1865
+Underfull \hbox (badness 10000) in paragraph at lines 1878--1880
 \TU/TimesNewRoman(2)/m/it/14.4 RSA_generate_key_ex\TU/TimesNewRoman(2)/m/n/14.4
  ; EC-ключ
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1863--1865
+Underfull \hbox (badness 10000) in paragraph at lines 1878--1880
 \TU/TimesNewRoman(2)/m/it/14.4 ECDH_compute_key\TU/TimesNewRoman(2)/m/n/14.4 ; 
 под-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1868--1869
+Underfull \hbox (badness 10000) in paragraph at lines 1883--1884
 []|\TU/TimesNewRoman(2)/m/it/14.4 crypto::storage::
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1869--1870
+Underfull \hbox (badness 10000) in paragraph at lines 1884--1885
 []|\TU/TimesNewRoman(2)/m/n/14.4 RSA-шифрование:
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1869--1870
+Underfull \hbox (badness 10000) in paragraph at lines 1884--1885
 \TU/TimesNewRoman(2)/m/it/14.4 RSA_public_encrypt\TU/TimesNewRoman(2)/m/n/14.4 
 ; под-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1874--1875
+Underfull \hbox (badness 10000) in paragraph at lines 1889--1890
 []|\TU/TimesNewRoman(2)/m/n/14.4 Параметры Диффи–Хеллмана:
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1874--1875
+Underfull \hbox (badness 10000) in paragraph at lines 1889--1890
 \TU/TimesNewRoman(2)/m/it/14.4 DH_new\TU/TimesNewRoman(2)/m/n/14.4 , \TU/TimesN
 ewRoman(2)/m/it/14.4 DH_generate_
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1882--1883
+Underfull \hbox (badness 10000) in paragraph at lines 1897--1898
 []|\TU/TimesNewRoman(2)/m/it/14.4 crypto::evp::
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1883--1887
+Underfull \hbox (badness 10000) in paragraph at lines 1898--1902
 []|\TU/TimesNewRoman(2)/m/n/14.4 EVP-API высокого уров-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1883--1887
+Underfull \hbox (badness 10000) in paragraph at lines 1898--1902
 \TU/TimesNewRoman(2)/m/n/14.4 ня: \TU/TimesNewRoman(2)/m/it/14.4 EVP_PKEY_CTX_n
 ew_
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1883--1887
+Underfull \hbox (badness 10000) in paragraph at lines 1898--1902
 \TU/TimesNewRoman(2)/m/it/14.4 from_name \TU/TimesNewRoman(2)/m/n/14.4 с класси
 ческим
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1883--1887
+Underfull \hbox (badness 10000) in paragraph at lines 1898--1902
 \TU/TimesNewRoman(2)/m/n/14.4 аргументом \TU/TimesNewRoman(2)/m/it/14.4 ”RSA”\T
 U/TimesNewRoman(2)/m/n/14.4 ; цепочка
  []
 
 
-Underfull \hbox (badness 5147) in paragraph at lines 1883--1887
+Underfull \hbox (badness 5147) in paragraph at lines 1898--1902
 \TU/TimesNewRoman(2)/m/n/14.4 подписи и верификации \TU/TimesNewRoman(2)/m/it/1
 4.4 EVP_
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1883--1887
+Underfull \hbox (badness 10000) in paragraph at lines 1898--1902
 \TU/TimesNewRoman(2)/m/it/14.4 DigestSign*\TU/TimesNewRoman(2)/m/n/14.4 /\TU/Ti
 mesNewRoman(2)/m/it/14.4 EVP_DigestVerify*\TU/TimesNewRoman(2)/m/n/14.4 ;
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1883--1887
+Underfull \hbox (badness 10000) in paragraph at lines 1898--1902
 \TU/TimesNewRoman(2)/m/n/14.4 ECDH-согласование через
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1890--1891
+Underfull \hbox (badness 10000) in paragraph at lines 1905--1906
 []|\TU/TimesNewRoman(2)/m/it/14.4 crypto::dsa_legacy::
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1895--1896
+Underfull \hbox (badness 10000) in paragraph at lines 1910--1911
 []|\TU/TimesNewRoman(2)/m/it/14.4 crypto::ec_ops::
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1896--1898
+Underfull \hbox (badness 10000) in paragraph at lines 1911--1913
 []|\TU/TimesNewRoman(2)/m/n/14.4 Низкоуровневые EC-операции:
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1896--1898
+Underfull \hbox (badness 10000) in paragraph at lines 1911--1913
 \TU/TimesNewRoman(2)/m/it/14.4 EC_GROUP_new_by_
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1896--1898
+Underfull \hbox (badness 10000) in paragraph at lines 1911--1913
 \TU/TimesNewRoman(2)/m/it/14.4 curve_name\TU/TimesNewRoman(2)/m/n/14.4 , \TU/Ti
 mesNewRoman(2)/m/it/14.4 EC_KEY_new\TU/TimesNewRoman(2)/m/n/14.4 ,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1901--1902
+Underfull \hbox (badness 10000) in paragraph at lines 1916--1917
 []|\TU/TimesNewRoman(2)/m/it/14.4 crypto::bn_ops::
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1902--1903
+Underfull \hbox (badness 10000) in paragraph at lines 1917--1918
 []|\TU/TimesNewRoman(2)/m/n/14.4 BN-операции как инди-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1902--1903
+Underfull \hbox (badness 10000) in paragraph at lines 1917--1918
 \TU/TimesNewRoman(2)/m/n/14.4 катор ручной реализации
  []
 
 
-Underfull \hbox (badness 1168) in paragraph at lines 1902--1903
+Underfull \hbox (badness 1168) in paragraph at lines 1917--1918
 \TU/TimesNewRoman(2)/m/n/14.4 RSA/DH: \TU/TimesNewRoman(2)/m/it/14.4 BN_generat
 e_prime_ex\TU/TimesNewRoman(2)/m/n/14.4 ,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1906--1907
+Underfull \hbox (badness 10000) in paragraph at lines 1921--1922
 []|\TU/TimesNewRoman(2)/m/n/14.4 безопасные функции-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1907--1914
+Underfull \hbox (badness 10000) in paragraph at lines 1922--1929
 []|\TU/TimesNewRoman(2)/m/n/14.4 AES-256-GCM через
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1907--1914
+Underfull \hbox (badness 10000) in paragraph at lines 1922--1929
 \TU/TimesNewRoman(2)/m/it/14.4 EVP_EncryptInit_ex\TU/TimesNewRoman(2)/m/n/14.4 
 : симмет-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1907--1914
+Underfull \hbox (badness 10000) in paragraph at lines 1922--1929
 \TU/TimesNewRoman(2)/m/it/14.4 EVP_PKEY_CTX_new_
  []
 
 
-Underfull \hbox (badness 3657) in paragraph at lines 1907--1914
+Underfull \hbox (badness 3657) in paragraph at lines 1922--1929
 \TU/TimesNewRoman(2)/m/it/14.4 from_name \TU/TimesNewRoman(2)/m/n/14.4 с аргуме
 нтом \TU/TimesNewRoman(2)/m/it/14.4 ”ML-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1907--1914
+Underfull \hbox (badness 10000) in paragraph at lines 1922--1929
 \TU/TimesNewRoman(2)/m/it/14.4 KEM-768”\TU/TimesNewRoman(2)/m/n/14.4 : посткван
 товый
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1907--1914
+Underfull \hbox (badness 10000) in paragraph at lines 1922--1929
 \TU/TimesNewRoman(2)/m/n/14.4 алгоритм, подавляется AST-
  []
 
 
-Underfull \hbox (badness 3623) in paragraph at lines 1907--1914
+Underfull \hbox (badness 3623) in paragraph at lines 1922--1929
 \TU/TimesNewRoman(2)/m/n/14.4 анализатором через отслежива-
  []
 
 
 
-[76] [77]
+[77] [78]
 
-LaTeX Warning: Reference `app:ground_truth' on page 78 undefined on input line 
-1923.
-
-
-LaTeX Warning: Reference `lst:gt-entry-example' on page 78 undefined on input l
-ine 1925.
-
-
-
-[78]
-
-LaTeX Warning: Reference `lst:db-find-alias' on page 79 undefined on input line
- 1950.
-
-
-LaTeX Warning: Reference `app:tests_db' on page 79 undefined on input line 1988
-.
+LaTeX Warning: Reference `app:ground_truth' on page 79 undefined on input line 
+1938.
 
 
 
 [79]
 
-LaTeX Warning: Reference `lst:regex-safe' on page 80 undefined on input line 20
-16.
+LaTeX Warning: Reference `app:tests_db' on page 80 undefined on input line 2003
+.
 
 
 
 [80]
 
-LaTeX Warning: Reference `lst:ast-ctx-class' on page 81 undefined on input line
- 2043.
-
-
-LaTeX Warning: Reference `lst:risk-order' on page 81 undefined on input line 20
-74.
-
-
-
 [81]
-
-LaTeX Warning: Reference `lst:metrics-tol' on page 82 undefined on input line 2
-109.
-
-
 
 [82]
 
-LaTeX Warning: Reference `lst:itest-regex' on page 83 undefined on input line 2
-147.
-
-
-
 [83]
 
-LaTeX Warning: Reference `lst:itest-metrics' on page 84 undefined on input line
- 2173.
-
-
-LaTeX Warning: Reference `tab:test_results_summary' on page 84 undefined on inp
-ut line 2213.
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 2233--2233
+[84]
+Underfull \hbox (badness 10000) in paragraph at lines 2248--2248
 []|\TU/TimesNewRoman(2)/m/it/14.4 FullPipeline \TU/TimesNewRoman(2)/m/n/14.4 (и
 нтеграци-
  []
 
 
 
-[84]
-
-LaTeX Warning: Reference `sec:analysis_comparison' on page 85 undefined on inpu
-t line 2243.
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 2238--2244
+[85]
+Underfull \hbox (badness 10000) in paragraph at lines 2253--2259
 []\TU/TimesNewRoman(2)/m/n/14.4 Регрессионный тест метрик качества зафиксировал
  финальные
  []
 
 
-Underfull \hbox (badness 4316) in paragraph at lines 2238--2244
+Underfull \hbox (badness 4316) in paragraph at lines 2253--2259
 \TU/TimesNewRoman(2)/m/n/14.4 показатели на эталонном наборе из 32 записей: для
  regex-режима –
  []
 
 
-Underfull \hbox (badness 2772) in paragraph at lines 2238--2244
+Underfull \hbox (badness 2772) in paragraph at lines 2253--2259
 []\TU/TimesNewRoman(0)/m/n/14.4 precision[]\TU/TimesNewRoman(2)/m/n/14.4 =80,0%
 , []\TU/TimesNewRoman(0)/m/n/14.4 recall[]\TU/TimesNewRoman(2)/m/n/14.4 =100,0%
 , F1=88,9%; для AST-режима – []\TU/TimesNewRoman(0)/m/n/14.4 preci-
  []
 
 
-Underfull \hbox (badness 1728) in paragraph at lines 2238--2244
+Underfull \hbox (badness 1728) in paragraph at lines 2253--2259
 \TU/TimesNewRoman(0)/m/n/14.4 sion[]\TU/TimesNewRoman(2)/m/n/14.4 =94,1%, []\TU
 /TimesNewRoman(0)/m/n/14.4 recall[]\TU/TimesNewRoman(2)/m/n/14.4 =100,0%, F1=97
 ,0%. Детальный анализ приведён в
  []
 
 
-LaTeX Warning: Reference `tab:req_compliance' on page 85 undefined on input lin
-e 2254.
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 2269--2270
+Underfull \hbox (badness 10000) in paragraph at lines 2284--2285
 []|\TU/TimesNewRoman(2)/m/n/14.4 Обнаружение квантово-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2269--2270
+Underfull \hbox (badness 10000) in paragraph at lines 2284--2285
 \TU/TimesNewRoman(2)/m/n/14.4 уязвимых функций в
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2270--2271
+Underfull \hbox (badness 10000) in paragraph at lines 2285--2286
 []|\TU/TimesNewRoman(2)/m/n/14.4 Два анализатора:
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2270--2271
+Underfull \hbox (badness 10000) in paragraph at lines 2285--2286
 \TU/TimesNewRoman(2)/m/it/14.4 RegexAnalyzer \TU/TimesNewRoman(2)/m/n/14.4 и
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2273--2274
+Underfull \hbox (badness 10000) in paragraph at lines 2288--2289
 []|\TU/TimesNewRoman(2)/m/n/14.4 Поддержка OpenSSL,
  []
 
 
-Underfull \hbox (badness 3088) in paragraph at lines 2274--2275
+Underfull \hbox (badness 3088) in paragraph at lines 2289--2290
 []|\TU/TimesNewRoman(2)/m/n/14.4 Три секции базы
  []
 
 
-Underfull \hbox (badness 1622) in paragraph at lines 2274--2275
+Underfull \hbox (badness 1622) in paragraph at lines 2289--2290
 \TU/TimesNewRoman(2)/m/n/14.4 данных уязвимых
  []
 
 
-Underfull \hbox (badness 1418) in paragraph at lines 2275--2275
+Underfull \hbox (badness 1418) in paragraph at lines 2290--2290
 []|\TU/TimesNewRoman(2)/m/n/14.4 Тест наличия записей
  []
 
 
-Underfull \hbox (badness 1478) in paragraph at lines 2277--2278
+Underfull \hbox (badness 1478) in paragraph at lines 2292--2293
 []|\TU/TimesNewRoman(2)/m/n/14.4 Условная уязвимость на
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2278--2280
+Underfull \hbox (badness 10000) in paragraph at lines 2293--2295
 []|\TU/TimesNewRoman(2)/m/it/14.4 ASTAnalyzer\TU/TimesNewRoman(2)/m/n/14.4 :
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2278--2280
+Underfull \hbox (badness 10000) in paragraph at lines 2293--2295
 \TU/TimesNewRoman(2)/m/n/14.4 отслеживание
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2278--2280
+Underfull \hbox (badness 10000) in paragraph at lines 2293--2295
 \TU/TimesNewRoman(2)/m/n/14.4 провенанса аргу-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2278--2280
+Underfull \hbox (badness 10000) in paragraph at lines 2293--2295
 \TU/TimesNewRoman(2)/m/n/14.4 ментов с филь-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2278--2280
+Underfull \hbox (badness 10000) in paragraph at lines 2293--2295
 \TU/TimesNewRoman(2)/m/n/14.4 тром алгоритмов
  []
 
 
-Underfull \hbox (badness 2903) in paragraph at lines 2280--2280
+Underfull \hbox (badness 2903) in paragraph at lines 2295--2295
 []|\TU/TimesNewRoman(2)/m/n/14.4 FP=0 на посткванто-
  []
 
 
-Underfull \hbox (badness 6236) in paragraph at lines 2282--2283
+Underfull \hbox (badness 6236) in paragraph at lines 2297--2298
 []|\TU/TimesNewRoman(2)/m/n/14.4 Расчёт риска с учётом
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2283--2284
+Underfull \hbox (badness 10000) in paragraph at lines 2298--2299
 []|\TU/TimesNewRoman(2)/m/it/14.4 RiskAssessor\TU/TimesNewRoman(2)/m/n/14.4 :
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2283--2284
+Underfull \hbox (badness 10000) in paragraph at lines 2298--2299
 \TU/TimesNewRoman(2)/m/n/14.4 6 контекстных
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2284--2285
+Underfull \hbox (badness 10000) in paragraph at lines 2299--2300
 []|\TU/TimesNewRoman(2)/m/n/14.4 Тесты повышения
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2284--2285
+Underfull \hbox (badness 10000) in paragraph at lines 2299--2300
 \TU/TimesNewRoman(2)/m/n/14.4 и снижения оценки
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2284--2285
+Underfull \hbox (badness 10000) in paragraph at lines 2299--2300
 \TU/TimesNewRoman(2)/m/n/14.4 в зависимости от
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2287--2288
+Underfull \hbox (badness 10000) in paragraph at lines 2302--2303
 []|\TU/TimesNewRoman(2)/m/n/14.4 Приоритизированный
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2288--2290
+Underfull \hbox (badness 10000) in paragraph at lines 2303--2305
 []|\TU/TimesNewRoman(2)/m/n/14.4 Метод оцен-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2288--2290
+Underfull \hbox (badness 10000) in paragraph at lines 2303--2305
 \TU/TimesNewRoman(2)/m/n/14.4 ки риска
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2288--2290
+Underfull \hbox (badness 10000) in paragraph at lines 2303--2305
 \TU/TimesNewRoman(2)/m/it/14.4 RiskAssessor\TU/TimesNewRoman(2)/m/n/14.4 :
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2288--2290
+Underfull \hbox (badness 10000) in paragraph at lines 2303--2305
 \TU/TimesNewRoman(2)/m/n/14.4 сортировка по
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2290--2290
+Underfull \hbox (badness 10000) in paragraph at lines 2305--2305
 []|\TU/TimesNewRoman(2)/m/n/14.4 Тест упорядочения
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2290--2290
+Underfull \hbox (badness 10000) in paragraph at lines 2305--2305
 \TU/TimesNewRoman(2)/m/n/14.4 плана по убыванию
  []
 
 
-Underfull \hbox (badness 1033) in paragraph at lines 2292--2293
+Underfull \hbox (badness 1033) in paragraph at lines 2307--2308
 []|\TU/TimesNewRoman(2)/m/n/14.4 Рекомендации с ссылка-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2293--2294
+Underfull \hbox (badness 10000) in paragraph at lines 2308--2309
 []|\TU/TimesNewRoman(2)/m/n/14.4 Поля ссы-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2293--2294
+Underfull \hbox (badness 10000) in paragraph at lines 2308--2309
 \TU/TimesNewRoman(2)/m/n/14.4 лок в записях
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2297--2298
+Underfull \hbox (badness 10000) in paragraph at lines 2312--2313
 []|\TU/TimesNewRoman(2)/m/n/14.4 CBOM в формате
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2298--2300
+Underfull \hbox (badness 10000) in paragraph at lines 2313--2315
 []|\TU/TimesNewRoman(2)/m/n/14.4 Класс \TU/TimesNewRoman(2)/m/it/14.4 Cbom\TU/T
 imesNewRoman(2)/m/n/14.4 ,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2298--2300
+Underfull \hbox (badness 10000) in paragraph at lines 2313--2315
 \TU/TimesNewRoman(2)/m/n/14.4 метод форми-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2298--2300
+Underfull \hbox (badness 10000) in paragraph at lines 2313--2315
 \TU/TimesNewRoman(2)/m/n/14.4 рования отчёта
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2302--2303
+Underfull \hbox (badness 10000) in paragraph at lines 2317--2318
 []|\TU/TimesNewRoman(2)/m/n/14.4 Расширяемость пользо-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2303--2304
+Underfull \hbox (badness 10000) in paragraph at lines 2318--2319
 []|\TU/TimesNewRoman(2)/m/n/14.4 Метод расшире-
  []
 
 
-Underfull \hbox (badness 1824) in paragraph at lines 2303--2304
+Underfull \hbox (badness 1824) in paragraph at lines 2318--2319
 \TU/TimesNewRoman(2)/m/n/14.4 ния базы данных
  []
 
 
-Underfull \hbox (badness 2229) in paragraph at lines 2306--2307
+Underfull \hbox (badness 2229) in paragraph at lines 2321--2322
 []|\TU/TimesNewRoman(2)/m/n/14.4 Измерение []\TU/TimesNewRoman(0)/m/n/14.4 prec
 ision[]\TU/TimesNewRoman(2)/m/n/14.4 , []\TU/TimesNewRoman(0)/m/n/14.4 re-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2307--2308
+Underfull \hbox (badness 10000) in paragraph at lines 2322--2323
 []|\TU/TimesNewRoman(2)/m/it/14.4 MetricsCalculator\TU/TimesNewRoman(2)/m/n/14.
 4 ,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2307--2308
+Underfull \hbox (badness 10000) in paragraph at lines 2322--2323
 \TU/TimesNewRoman(2)/m/n/14.4 флаг запуска
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2308--2309
+Underfull \hbox (badness 10000) in paragraph at lines 2323--2324
 []|\TU/TimesNewRoman(2)/m/n/14.4 Регрессионный тест
  []
 
 
 
-[85] [86]
-
-LaTeX Warning: Reference `tab:mode_comparison' on page 87 undefined on input li
-ne 2318.
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 2332--2332
+[86] [87]
+Underfull \hbox (badness 10000) in paragraph at lines 2347--2347
 []|\TU/TimesNewRoman(2)/m/n/14.4 Эталонных записей
  []
 
 
-Underfull \hbox (badness 1661) in paragraph at lines 2333--2333
+Underfull \hbox (badness 1661) in paragraph at lines 2348--2348
 []|\TU/TimesNewRoman(2)/m/n/14.4 Верно обнаруженные
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2334--2334
+Underfull \hbox (badness 10000) in paragraph at lines 2349--2349
 []|\TU/TimesNewRoman(2)/m/n/14.4 Ложные срабатыва-
  []
 
 
-Package longtable Warning: Column widths have changed
-(longtable)                in table 6.2 on input line 2341.
 
-
-
-[87]
-Underfull \hbox (badness 1067) in paragraph at lines 2361--2371
+[88]
+Underfull \hbox (badness 1067) in paragraph at lines 2376--2386
 []\TU/TimesNewRoman(2)/m/it/14.4 Regex (8 ложных срабатываний). \TU/TimesNewRom
 an(2)/m/n/14.4 Помимо тех же двух BIGNUM-
  []
 
 
-Underfull \hbox (badness 1406) in paragraph at lines 2393--2399
+Underfull \hbox (badness 1406) in paragraph at lines 2408--2414
 []\TU/TimesNewRoman(2)/m/it/14.4 CBOM-файл \TU/TimesNewRoman(2)/m/n/14.4 в форм
 ате CycloneDX – стандартизованный инвен-
  []
 
 
-Underfull \hbox (badness 2150) in paragraph at lines 2393--2399
+Underfull \hbox (badness 2150) in paragraph at lines 2408--2414
 \TU/TimesNewRoman(2)/m/n/14.4 sha1 и др.), категории криптографических операций
  (генерация
  []
 
 
 
-[88]
-Underfull \hbox (badness 7888) in paragraph at lines 2435--2440
+[89]
+Underfull \hbox (badness 7888) in paragraph at lines 2450--2455
 \TU/TimesNewRoman(2)/m/it/14.4 Покрытие базы данных. \TU/TimesNewRoman(2)/m/n/1
 4.4 Текущая база охватывает три библиотеки:
  []
 
 
 
-[89]
-Underfull \hbox (badness 1205) in paragraph at lines 2470--2477
+[90]
+Underfull \hbox (badness 1205) in paragraph at lines 2485--2492
 \TU/TimesNewRoman(2)/m/it/14.4 Расширение базы данных. \TU/TimesNewRoman(2)/m/n
 /14.4 Добавление функций из wolfSSL, mbedTLS,
  []
 
 
-Underfull \hbox (badness 1762) in paragraph at lines 2478--2484
+Underfull \hbox (badness 1762) in paragraph at lines 2493--2499
 \TU/TimesNewRoman(2)/m/it/14.4 Интеграция в CI/CD. \TU/TimesNewRoman(2)/m/n/14.
 4 Добавление режима выхода с ненулевым кодом
  []
 
 
 
-[90]
-
 [91]
 
 [92]
-Underfull \hbox (badness 2269) in paragraph at lines 2515--2515
+
+[93]
+Underfull \hbox (badness 2269) in paragraph at lines 2528--2528
 []\TU/TimesNewRoman(2)/m/it/14.4 Shor P. W. \TU/TimesNewRoman(2)/m/n/14.4 Algor
 ithms for quantum computation: discrete logarithms
  []
 
 
-Underfull \hbox (badness 1590) in paragraph at lines 2515--2515
+Underfull \hbox (badness 1590) in paragraph at lines 2528--2528
 \TU/TimesNewRoman(2)/m/n/14.4 Global Risk Institute ; evolutionQ Inc. — 2026. —
  URL: []$[][][][][] [] [] []
  []
 
 
-Underfull \hbox (badness 1221) in paragraph at lines 2515--2515
+Underfull \hbox (badness 1221) in paragraph at lines 2528--2528
 []\TU/TimesNewRoman(2)/m/it/14.4 Swayne M. \TU/TimesNewRoman(2)/m/n/14.4 Google
  Paves a Two-Lane Quantum Roadmap by Adding
  []
 
 
 Package biblatex Warning: No driver for 'standard'.
-(biblatex)                Using fallback driver on input line 2514.
+(biblatex)                Using fallback driver on input line 2527.
 
 
 Package biblatex Warning: No driver for 'standard'.
-(biblatex)                Using fallback driver on input line 2514.
+(biblatex)                Using fallback driver on input line 2527.
 
 
 Package biblatex Warning: No driver for 'standard'.
-(biblatex)                Using fallback driver on input line 2514.
+(biblatex)                Using fallback driver on input line 2527.
 
 
 
-[93]
-Underfull \hbox (badness 1320) in paragraph at lines 2515--2515
+[94]
+Underfull \hbox (badness 1320) in paragraph at lines 2528--2528
 []\TU/TimesNewRoman(2)/m/it/14.4 IBM Institute for Business Value\TU/TimesNewRo
 man(2)/m/n/14.4 , \TU/TimesNewRoman(2)/m/it/14.4 Cloud Security Alliance\TU/Tim
 esNewRoman(2)/m/n/14.4 . Secure the
  []
 
 
+Underfull \hbox (badness 1789) in paragraph at lines 2528--2528
+[]\TU/TimesNewRoman(2)/m/it/14.4 Straits Research\TU/TimesNewRoman(2)/m/n/14.4 
+. Embedded Software Market Size and Share Report,
+ []
+
+
 Package biblatex Warning: No driver for 'standard'.
-(biblatex)                Using fallback driver on input line 2514.
+(biblatex)                Using fallback driver on input line 2527.
 
 
-Underfull \hbox (badness 1845) in paragraph at lines 2515--2515
+Underfull \hbox (badness 1845) in paragraph at lines 2528--2528
 []\TU/TimesNewRoman(2)/m/it/14.4 National Institute of Standards and Technology
 \TU/TimesNewRoman(2)/m/n/14.4 . FIPS 197. Advanced
  []
 
 
-Underfull \hbox (badness 1107) in paragraph at lines 2515--2515
+Underfull \hbox (badness 1107) in paragraph at lines 2528--2528
 []\TU/TimesNewRoman(2)/m/it/14.4 Rivest R. L.\TU/TimesNewRoman(2)/m/n/14.4 , \T
 U/TimesNewRoman(2)/m/it/14.4 Shamir A.\TU/TimesNewRoman(2)/m/n/14.4 , \TU/Times
 NewRoman(2)/m/it/14.4 Adleman L. \TU/TimesNewRoman(2)/m/n/14.4 A Method for Obt
@@ -3147,64 +2901,204 @@ aining Digital
  []
 
 
-Underfull \hbox (badness 3977) in paragraph at lines 2515--2515
+Underfull \hbox (badness 3977) in paragraph at lines 2528--2528
 \TU/TimesNewRoman(2)/m/n/14.4 Signatures and Public-Key Cryptosystems [] Commun
 ications of the
  []
 
 
 
-[94]
+[95]
 
 Package biblatex Warning: No driver for 'standard'.
-(biblatex)                Using fallback driver on input line 2514.
+(biblatex)                Using fallback driver on input line 2527.
 
 
-Underfull \hbox (badness 2932) in paragraph at lines 2515--2515
+Underfull \hbox (badness 2932) in paragraph at lines 2528--2528
 []\TU/TimesNewRoman(2)/m/it/14.4 National Institute of Standards and Technology
 \TU/TimesNewRoman(2)/m/n/14.4 . FIPS 186-5. Digital
  []
 
 
-Underfull \hbox (badness 1412) in paragraph at lines 2515--2515
+Underfull \hbox (badness 1412) in paragraph at lines 2528--2528
 []\TU/TimesNewRoman(2)/m/it/14.4 Iceberg Quantum\TU/TimesNewRoman(2)/m/n/14.4 .
  Pinnacle: A Quantum LDPC-based Architecture for
  []
 
 
-Underfull \hbox (badness 2073) in paragraph at lines 2515--2515
+
+[96]
+Underfull \hbox (badness 2073) in paragraph at lines 2528--2528
 []\TU/TimesNewRoman(2)/m/n/14.4 Experimental realization of Shor’s quantum fact
 oring algorithm using
  []
 
 
-Underfull \hbox (badness 3579) in paragraph at lines 2515--2515
+Underfull \hbox (badness 3579) in paragraph at lines 2528--2528
 []\TU/TimesNewRoman(2)/m/n/14.4 Quantum Resource Estimates for Computing Ellipt
 ic Curve Discrete
  []
 
 
-
-[95]
-Underfull \hbox (badness 10000) in paragraph at lines 2515--2515
+Underfull \hbox (badness 10000) in paragraph at lines 2528--2528
 []\TU/TimesNewRoman(2)/m/it/14.4 National Security Agency\TU/TimesNewRoman(2)/m
 /n/14.4 . Quantum Computing and Post-Quantum
  []
 
 
 
-[96]
-Underfull \hbox (badness 1189) in paragraph at lines 2521--2522
-\TU/TimesNewRoman(2)/m/n/14.4 ходок для интеграционного тестирования. Каждая за
-пись включает имя
+[97]
+Underfull \hbox (badness 3780) in paragraph at lines 2532--2532
+ |[]\TU/TimesNewRoman(2)/b/n/14.4 КРИПТОГРАФИЧЕСКИЙ ПЕРЕЧЕНЬ АКТИВОВ (CBOM,
  []
 
 
-Package longtable Warning: Table widths have changed. Rerun LaTeX.
+
+[98]
+
+[99]
+
+[100]
+
+[101]
+
+[102]
+
+[103]
+
+[104]
+
+[105]
+
+[106]
+
+[107]
+
+[108]
+
+[109]
+
+[110]
+
+[111]
+
+[112]
+
+[113]
+
+[114]
+
+[115]
+
+[116]
+
+[117]
+
+[118]
+Underfull \hbox (badness 3601) in paragraph at lines 3373--3374
+[]\TU/TimesNewRoman(2)/m/n/14.4 Ниже представлен полный JSON-отчёт, сформирован
+ный инстру-
+ []
 
 
 
-[97] (./ВКР.aux)
+[119]
+
+[120]
+
+[121]
+
+[122]
+
+[123]
+
+[124]
+
+[125]
+
+[126]
+
+[127]
+
+[128]
+
+[129]
+
+[130]
+
+[131]
+
+[132]
+
+[133]
+
+[134]
+
+[135]
+
+[136]
+
+[137]
+
+[138]
+
+[139]
+
+[140]
+
+[141]
+
+[142]
+
+[143]
+
+[144]
+
+[145]
+
+[146]
+
+[147]
+
+[148]
+
+[149]
+
+[150]
+
+[151]
+
+[152]
+
+[153]
+
+[154]
+
+[155]
+
+[156]
+
+[157]
+
+[158]
+
+[159]
+
+[160]
+
+[161]
+
+[162]
+
+[163]
+
+[164]
+
+[165]
+
+[166]
+
+[167] (./ВКР.aux)
  ***********
 LaTeX2e <2025-06-01> patch level 1
 L3 programming layer <2025-10-09>
@@ -3214,32 +3108,21 @@ L3 programming layer <2025-10-09>
 LaTeX Warning: There were undefined references.
 
 
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+LaTeX Warning: There were multiply-defined labels.
 
-
-Package rerunfilecheck Warning: File `ВКР.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `ВКР.out':
-(rerunfilecheck)             Before: <no file>
-(rerunfilecheck)             After:  12FC828105F3DD53DA2175270010298E;22027.
-
-Package biblatex Warning: Please (re)run Biber on the file:
-(biblatex)                ВКР
-(biblatex)                and rerun LaTeX afterwards.
-
+Package rerunfilecheck Info: File `ВКР.out' has not changed.
+(rerunfilecheck)             Checksum: CCA9760A2C89A6EB683236E61E10A1CC;22357.
 Package logreq Info: Writing requests to 'ВКР.run.xml'.
 \openout1 = `ВКР.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 38690 strings out of 468388
- 787705 string characters out of 5440602
- 2001747 words of memory out of 5000000
- 66619 multiletter control sequences out of 15000+600000
+ 38719 strings out of 468388
+ 788278 string characters out of 5440602
+ 2125813 words of memory out of 5000000
+ 66642 multiletter control sequences out of 15000+600000
  635773 words of font info for 126 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  88i,12n,126p,2258b,5491s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on ВКР.pdf (97 pages).
+Output written on ВКР.pdf (167 pages).

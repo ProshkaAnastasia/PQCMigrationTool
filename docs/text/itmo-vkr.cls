@@ -290,8 +290,8 @@
 	backgroundcolor=\color{codebg},
 	captionpos=b,  
 	frame=single,
-	framexleftmargin=8pt,                   % место под номера внутри рамки
-	xleftmargin=8pt,                        % сдвиг блока
+	framexleftmargin=14pt,                   % место под номера внутри рамки
+	xleftmargin=14pt,                        % сдвиг блока
 	rulecolor=\color{codeframe},
 	breaklines=true,
 	tabsize=4,
