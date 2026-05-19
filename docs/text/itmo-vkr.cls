@@ -49,8 +49,9 @@
 \RequirePackage{setspace}
 \onehalfspacing
 
-% Абзацный отступ 1.25 см
+% Абзацный отступ 1.25 см, без интервала между абзацами
 \setlength{\parindent}{1.25cm}
+\setlength{\parskip}{0pt}
 
 % === НУМЕРАЦИЯ СТРАНИЦ ===
 % Номер страницы в центре нижней части
@@ -78,7 +79,7 @@
 % Раздел (глава) - нумерованный, прописной, полужирный,
 % с абзацным отступом, без центрирования
 \titleformat{\section}
-{\normalfont\bfseries}
+{\clearpage\normalfont\bfseries}
 {\thesection\quad}
 {0pt}
 {\uppercase}
@@ -235,7 +236,7 @@
 \newenvironment{termlist}{%
   \setlength{\LTpre}{0pt}%
   \setlength{\LTpost}{0pt}%
-  \begin{longtable}{|>{\bfseries\raggedright\arraybackslash}p{6.2cm}|>{\raggedright\arraybackslash}p{\dimexpr\linewidth-6.2cm-4\tabcolsep-3\arrayrulewidth\relax}|}
+  \begin{longtable}{|>{\raggedright\arraybackslash}p{6.2cm}|>{\raggedright\arraybackslash}p{\dimexpr\linewidth-6.2cm-4\tabcolsep-3\arrayrulewidth\relax}|}
   \hline
   \endfirsthead
   \hline

@@ -1,5 +1,23 @@
 **/.DS_Store
 build/
-*.txt
 script.sh
+*.txt
 *.json
+
+# Logs
+*.log
+
+# LaTeX build artifacts (keep only .tex, .cls, .bib)
+docs/text/*.aux
+docs/text/*.bbl
+docs/text/*.bcf
+docs/text/*.blg
+docs/text/*.fdb_latexmk
+docs/text/*.fls
+docs/text/*.out
+docs/text/*.pdf
+docs/text/*.run.xml
+docs/text/*.synctex.gz
+docs/text/*.toc
+docs/text/*.docx
+docs/text/~$*
