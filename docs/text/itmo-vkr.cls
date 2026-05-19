@@ -463,4 +463,22 @@
 % Устранение переполнения строк (overfull \hbox)
 \sloppy
 
+% === ПРИЛОЖЕНИЯ ===
+% Добавляем к \appendix: заголовок раздела становится двухстрочным
+% «ПРИЛОЖЕНИЕ А» / «НАЗВАНИЕ», в оглавлении — «ПРИЛОЖЕНИЕ А  Название»
+\apptocmd{\appendix}{%
+  \pretocmd{\section}{\clearpage}{}{}%
+  \titleformat{\section}[display]
+    {\normalfont\bfseries\centering}
+    {ПРИЛОЖЕНИЕ~\thesection}
+    {4pt}
+    {\uppercase}
+  \titlespacing{\section}
+    {0pt}{12pt plus 4pt minus 2pt}{12pt plus 4pt minus 2pt}
+  \addtocontents{toc}{%
+    \protect\renewcommand{\protect\cftsecpresnum}{Приложение~}%
+    \protect\setlength{\protect\cftsecnumwidth}{7.5em}%
+  }%
+}{}{}
+
 \endinput

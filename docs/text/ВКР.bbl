@@ -923,6 +923,37 @@
       \verb https://cyberleninka.ru/article/n/osnovy-kvantovyh-vychisleniy-i-kvantovoy-kriptografii
       \endverb
     \endentry
+    \entry{bukashkin2023quantum}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=548caed48974052a37292647a4a8a6c1}{%
+           family={Букашкин},
+           familyi={Б\bibinitperiod},
+           given={С.\bibnamedelimi А.},
+           giveni={С\bibinitperiod\bibinitdelim А\bibinitperiod}}}%
+        {{hash=fd235b9167d0685c84033de7d902f543}{%
+           family={Черепнев},
+           familyi={Ч\bibinitperiod},
+           given={М.\bibnamedelimi А.},
+           giveni={М\bibinitperiod\bibinitdelim А\bibinitperiod}}}%
+      }
+      \strng{namehash}{07c3da0f041e83bb581047de50ab326b}
+      \strng{fullhash}{07c3da0f041e83bb581047de50ab326b}
+      \strng{fullhashraw}{07c3da0f041e83bb581047de50ab326b}
+      \strng{bibnamehash}{07c3da0f041e83bb581047de50ab326b}
+      \strng{authorbibnamehash}{07c3da0f041e83bb581047de50ab326b}
+      \strng{authornamehash}{07c3da0f041e83bb581047de50ab326b}
+      \strng{authorfullhash}{07c3da0f041e83bb581047de50ab326b}
+      \strng{authorfullhashraw}{07c3da0f041e83bb581047de50ab326b}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{International Journal of Open Information Technologies}
+      \field{langid}{russian}
+      \field{note}{Входит в перечень ВАК}
+      \field{title}{Квантовые устройства в криптографии}
+      \field{year}{2023}
+    \endentry
     \entry{kvantovye-algoritmy-shor-grover}{article}{}{}
       \field{sortinit}{3}
       \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
@@ -940,6 +971,58 @@
       \endverb
       \verb{url}
       \verb https://cyberleninka.ru/article/n/kvantovye-algoritmy-algoritm-shora-i-algoritm-grovera
+      \endverb
+    \endentry
+    \entry{borisova2023shor}{article}{useauthor=false}{}
+      \name{author}{6}{}{%
+        {{hash=6455af3a99841502b61a952d6b94b08c}{%
+           family={Борисова},
+           familyi={Б\bibinitperiod},
+           given={В.\bibnamedelimi В.},
+           giveni={В\bibinitperiod\bibinitdelim В\bibinitperiod}}}%
+        {{hash=df1b8d614d656a0e41fce849343fafdf}{%
+           family={Дегтярев},
+           familyi={Д\bibinitperiod},
+           given={Д.\bibnamedelimi В.},
+           giveni={Д\bibinitperiod\bibinitdelim В\bibinitperiod}}}%
+        {{hash=a43162a3e4b1c9d3bdd97e014a6904c8}{%
+           family={Макаров},
+           familyi={М\bibinitperiod},
+           given={А.\bibnamedelimi Г.},
+           giveni={А\bibinitperiod\bibinitdelim Г\bibinitperiod}}}%
+        {{hash=3e02106bfcff25409b6265a4efa51acf}{%
+           family={Боршевников},
+           familyi={Б\bibinitperiod},
+           given={А.\bibnamedelimi Е.},
+           giveni={А\bibinitperiod\bibinitdelim Е\bibinitperiod}}}%
+        {{hash=219c1e57d0546055a93e92174eb1e820}{%
+           family={Солдатов},
+           familyi={С\bibinitperiod},
+           given={К.\bibnamedelimi С.},
+           giveni={К\bibinitperiod\bibinitdelim С\bibinitperiod}}}%
+        {{hash=a5b427b5d8b98505b4904948064bff29}{%
+           family={Нефедев},
+           familyi={Н\bibinitperiod},
+           given={К.\bibnamedelimi В.},
+           giveni={К\bibinitperiod\bibinitdelim В\bibinitperiod}}}%
+      }
+      \strng{authorbibnamehash}{f6c20765fba2626ffecd91cc8b423008}
+      \strng{authornamehash}{f6c20765fba2626ffecd91cc8b423008}
+      \strng{authorfullhash}{ec12c0112352d5f4e921d8655c850ad4}
+      \strng{authorfullhashraw}{ec12c0112352d5f4e921d8655c850ad4}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labeltitlesource}{title}
+      \field{internalsortvolume}{103}
+      \field{journaltitle}{Вестник Амурского государственного университета. Серия: Естественные и экономические науки}
+      \field{langid}{russian}
+      \field{note}{Входит в перечень ВАК}
+      \field{title}{Реализация алгоритма квантовой факторизации Шора}
+      \field{year}{2023}
+      \field{volume}{103}
+      \range{volume}{1}
+      \verb{doi}
+      \verb 10.22250/20730268_2023_103_3
       \endverb
     \endentry
     \entry{kvantovyj-kompyuter-kriptostoykost}{article}{}{}
@@ -1203,6 +1286,44 @@
       \verb 10.1038/s41598-024-69188-8
       \endverb
     \endentry
+    \entry{moiseyevsky2025saes}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=eed6ffe15b02bd2f8cf9c2e59a58f6b8}{%
+           family={Моисеевский},
+           familyi={М\bibinitperiod},
+           given={А.\bibnamedelimi Д.},
+           giveni={А\bibinitperiod\bibinitdelim Д\bibinitperiod}}}%
+        {{hash=e404d5bc4f0d13fe489aba37969e942c}{%
+           family={Манько},
+           familyi={М\bibinitperiod},
+           given={С.\bibnamedelimi Д.},
+           giveni={С\bibinitperiod\bibinitdelim Д\bibinitperiod}}}%
+      }
+      \strng{namehash}{67ec3fe712e3b08623b21c22ad1c5402}
+      \strng{fullhash}{67ec3fe712e3b08623b21c22ad1c5402}
+      \strng{fullhashraw}{67ec3fe712e3b08623b21c22ad1c5402}
+      \strng{bibnamehash}{67ec3fe712e3b08623b21c22ad1c5402}
+      \strng{authorbibnamehash}{67ec3fe712e3b08623b21c22ad1c5402}
+      \strng{authornamehash}{67ec3fe712e3b08623b21c22ad1c5402}
+      \strng{authorfullhash}{67ec3fe712e3b08623b21c22ad1c5402}
+      \strng{authorfullhashraw}{67ec3fe712e3b08623b21c22ad1c5402}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Вопросы кибербезопасности}
+      \field{langid}{russian}
+      \field{note}{Входит в перечень ВАК}
+      \field{title}{Квантово-усиленный симметричный криптоанализ {S-AES}}
+      \field{year}{2025}
+      \field{number}{3}
+      \range{number}{1}
+      \field{pages}{55\bibrangedash 62}
+      \range{pages}{8}
+      \verb{doi}
+      \verb 10.21681/2311-3456-2025-3-55-62
+      \endverb
+    \endentry
     \entry{fedfed2025hndl}{report}{}{}
       \name{author}{1}{}{%
         {{hash=3cd2bc76777b6930ba38f494b40da914}{%
@@ -1239,6 +1360,44 @@
       \endverb
       \verb{url}
       \verb https://www.federalreserve.gov/econres/feds/files/2025093pap.pdf
+      \endverb
+    \endentry
+    \entry{petrenko2022blockchain}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=071972e0b258f42065b03855d2d2c11b}{%
+           family={Петренко},
+           familyi={П\bibinitperiod},
+           given={А.\bibnamedelimi С.},
+           giveni={А\bibinitperiod\bibinitdelim С\bibinitperiod}}}%
+        {{hash=5cb59c202a5c016cbefb9d64f23d51df}{%
+           family={Петренко},
+           familyi={П\bibinitperiod},
+           given={С.\bibnamedelimi А.},
+           giveni={С\bibinitperiod\bibinitdelim А\bibinitperiod}}}%
+      }
+      \strng{namehash}{741a101f35c36819cd6eee5cfb02b3dc}
+      \strng{fullhash}{741a101f35c36819cd6eee5cfb02b3dc}
+      \strng{fullhashraw}{741a101f35c36819cd6eee5cfb02b3dc}
+      \strng{bibnamehash}{741a101f35c36819cd6eee5cfb02b3dc}
+      \strng{authorbibnamehash}{741a101f35c36819cd6eee5cfb02b3dc}
+      \strng{authornamehash}{741a101f35c36819cd6eee5cfb02b3dc}
+      \strng{authorfullhash}{741a101f35c36819cd6eee5cfb02b3dc}
+      \strng{authorfullhashraw}{741a101f35c36819cd6eee5cfb02b3dc}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Вопросы кибербезопасности}
+      \field{langid}{russian}
+      \field{note}{Входит в перечень ВАК}
+      \field{title}{Метод оценивания квантовой устойчивости блокчейн-платформ}
+      \field{year}{2022}
+      \field{number}{3}
+      \range{number}{1}
+      \field{pages}{2\bibrangedash 22}
+      \range{pages}{21}
+      \verb{doi}
+      \verb 10.21681/2311-3456-2022-3-2-22
       \endverb
     \endentry
     \entry{ncsc2023annual}{report}{}{}
@@ -1351,6 +1510,202 @@
       \verb https://media.defense.gov/2022/Sep/07/2003071834/-1/-1/0/CSA_CNSA_2.0_ALGORITHMS_.PDF
       \endverb
     \endentry
+    \entry{komarova2019pqsig}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=df2ca41e25a46b4753fef9edec05a4b4}{%
+           family={Комарова},
+           familyi={К\bibinitperiod},
+           given={А.\bibnamedelimi В.},
+           giveni={А\bibinitperiod\bibinitdelim В\bibinitperiod}}}%
+        {{hash=18f9ab1609a48f6226ddb18893d08fa7}{%
+           family={Коробейников},
+           familyi={К\bibinitperiod},
+           given={А.\bibnamedelimi Г.},
+           giveni={А\bibinitperiod\bibinitdelim Г\bibinitperiod}}}%
+      }
+      \strng{namehash}{b3f2b18af068a834297ac0d88aaa9d71}
+      \strng{fullhash}{b3f2b18af068a834297ac0d88aaa9d71}
+      \strng{fullhashraw}{b3f2b18af068a834297ac0d88aaa9d71}
+      \strng{bibnamehash}{b3f2b18af068a834297ac0d88aaa9d71}
+      \strng{authorbibnamehash}{b3f2b18af068a834297ac0d88aaa9d71}
+      \strng{authornamehash}{b3f2b18af068a834297ac0d88aaa9d71}
+      \strng{authorfullhash}{b3f2b18af068a834297ac0d88aaa9d71}
+      \strng{authorfullhashraw}{b3f2b18af068a834297ac0d88aaa9d71}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Вопросы кибербезопасности}
+      \field{langid}{russian}
+      \field{note}{Входит в перечень ВАК}
+      \field{title}{Анализ основных существующих пост-квантовых подходов и схем электронной подписи}
+      \field{year}{2019}
+      \field{number}{2}
+      \range{number}{1}
+      \field{pages}{58\bibrangedash 68}
+      \range{pages}{11}
+      \verb{doi}
+      \verb 10.21681/2311-3456-2019-2-58-68
+      \endverb
+    \endentry
+    \entry{razumov2019ntru}{article}{useauthor=false}{}
+      \name{author}{5}{}{%
+        {{hash=1ab7ccfb3b20b9fc579ab8ca2267efdc}{%
+           family={Разумов},
+           familyi={Р\bibinitperiod},
+           given={П.\bibnamedelimi В.},
+           giveni={П\bibinitperiod\bibinitdelim В\bibinitperiod}}}%
+        {{hash=1a31807cd0911f3e0c768040928b8d3f}{%
+           family={Смирнов},
+           familyi={С\bibinitperiod},
+           given={И.\bibnamedelimi А.},
+           giveni={И\bibinitperiod\bibinitdelim А\bibinitperiod}}}%
+        {{hash=f70d699bf24ce4b62d7909eba214a1a2}{%
+           family={Пилипенко},
+           familyi={П\bibinitperiod},
+           given={И.\bibnamedelimi А.},
+           giveni={И\bibinitperiod\bibinitdelim А\bibinitperiod}}}%
+        {{hash=145f5514acc857864e9732e6f86c5f01}{%
+           family={Селёва},
+           familyi={С\bibinitperiod},
+           given={А.\bibnamedelimi В.},
+           giveni={А\bibinitperiod\bibinitdelim В\bibinitperiod}}}%
+        {{hash=b6266c66b786fe58a67a51f5cfee504b}{%
+           family={Черкесова},
+           familyi={Ч\bibinitperiod},
+           given={Л.\bibnamedelimi В.},
+           giveni={Л\bibinitperiod\bibinitdelim В\bibinitperiod}}}%
+      }
+      \strng{authorbibnamehash}{5086a6b2f3d9e38dd41477782f1deb8e}
+      \strng{authornamehash}{5086a6b2f3d9e38dd41477782f1deb8e}
+      \strng{authorfullhash}{207d7d9d8fe6dcb506ad8f409cb3c64d}
+      \strng{authorfullhashraw}{207d7d9d8fe6dcb506ad8f409cb3c64d}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labeltitlesource}{title}
+      \field{internalsortvolume}{19}
+      \field{journaltitle}{Advanced Engineering Research}
+      \field{langid}{russian}
+      \field{note}{Входит в перечень ВАК}
+      \field{title}{Сравнительный анализ модифицированной постквантовой криптографической системы {NTRUEncrypt} и общепринятой криптосистемы {RSA}}
+      \field{year}{2019}
+      \field{number}{2}
+      \range{number}{1}
+      \field{pages}{185\bibrangedash 194}
+      \range{pages}{10}
+      \field{volume}{19}
+      \range{volume}{1}
+      \verb{doi}
+      \verb 10.23947/1992-5980-2019-19-2-185-194
+      \endverb
+    \endentry
+    \entry{bakharev2022oracle}{article}{}{}
+      \name{author}{1}{}{%
+        {{hash=af1cbcf741feac7d86642c951d3f8ebf}{%
+           family={Бахарев},
+           familyi={Б\bibinitperiod},
+           given={А.\bibnamedelimi О.},
+           giveni={А\bibinitperiod\bibinitdelim О\bibinitperiod}}}%
+      }
+      \strng{namehash}{af1cbcf741feac7d86642c951d3f8ebf}
+      \strng{fullhash}{af1cbcf741feac7d86642c951d3f8ebf}
+      \strng{fullhashraw}{af1cbcf741feac7d86642c951d3f8ebf}
+      \strng{bibnamehash}{af1cbcf741feac7d86642c951d3f8ebf}
+      \strng{authorbibnamehash}{af1cbcf741feac7d86642c951d3f8ebf}
+      \strng{authornamehash}{af1cbcf741feac7d86642c951d3f8ebf}
+      \strng{authorfullhash}{af1cbcf741feac7d86642c951d3f8ebf}
+      \strng{authorfullhashraw}{af1cbcf741feac7d86642c951d3f8ebf}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{internalsortvolume}{15}
+      \field{journaltitle}{Прикладная дискретная математика. Приложение}
+      \field{langid}{russian}
+      \field{note}{Входит в перечень ВАК}
+      \field{title}{Разработка и сравнение моделей квантового оракула для гибридной атаки на постквантовые криптосистемы, основанные на решётках}
+      \field{year}{2022}
+      \field{volume}{15}
+      \range{volume}{1}
+      \verb{doi}
+      \verb 10.17223/2226308X/15/11
+      \endverb
+    \endentry
+    \entry{kirshanova2020pqsig}{article}{useauthor=false}{}
+      \name{author}{4}{}{%
+        {{hash=8e122c1dbf9b87503326c1831ebdb8f0}{%
+           family={Киршанова},
+           familyi={К\bibinitperiod},
+           given={Е.\bibnamedelimi В.},
+           giveni={Е\bibinitperiod\bibinitdelim В\bibinitperiod}}}%
+        {{hash=7b2d37a701ab7e164cce8f63f58ef21d}{%
+           family={Колесников},
+           familyi={К\bibinitperiod},
+           given={Н.\bibnamedelimi С.},
+           giveni={Н\bibinitperiod\bibinitdelim С\bibinitperiod}}}%
+        {{hash=831f7b358c09da494cd70b33887f4354}{%
+           family={Малыгина},
+           familyi={М\bibinitperiod},
+           given={Е.\bibnamedelimi С.},
+           giveni={Е\bibinitperiod\bibinitdelim С\bibinitperiod}}}%
+        {{hash=d396abf62d37827710d5ac9efcc64f2c}{%
+           family={Новосёлов},
+           familyi={Н\bibinitperiod},
+           given={С.\bibnamedelimi А.},
+           giveni={С\bibinitperiod\bibinitdelim А\bibinitperiod}}}%
+      }
+      \strng{authorbibnamehash}{fc7b998e993c91fb6ca67fe02992f346}
+      \strng{authornamehash}{fc7b998e993c91fb6ca67fe02992f346}
+      \strng{authorfullhash}{b9a90dfa85e6a550930c8dd6cffc3579}
+      \strng{authorfullhashraw}{b9a90dfa85e6a550930c8dd6cffc3579}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labeltitlesource}{title}
+      \field{internalsortvolume}{13}
+      \field{journaltitle}{Прикладная дискретная математика. Приложение}
+      \field{langid}{russian}
+      \field{note}{Входит в перечень ВАК}
+      \field{title}{Проект стандартизации постквантовой цифровой подписи}
+      \field{year}{2020}
+      \field{volume}{13}
+      \range{volume}{1}
+      \verb{doi}
+      \verb 10.17223/2226308X/13/14
+      \endverb
+    \endentry
+    \entry{panasenko2025slhdsa}{article}{}{}
+      \name{author}{1}{}{%
+        {{hash=65635395a55b3d4176672b79d1f33c34}{%
+           family={Панасенко},
+           familyi={П\bibinitperiod},
+           given={С.\bibnamedelimi П.},
+           giveni={С\bibinitperiod\bibinitdelim П\bibinitperiod}}}%
+      }
+      \strng{namehash}{65635395a55b3d4176672b79d1f33c34}
+      \strng{fullhash}{65635395a55b3d4176672b79d1f33c34}
+      \strng{fullhashraw}{65635395a55b3d4176672b79d1f33c34}
+      \strng{bibnamehash}{65635395a55b3d4176672b79d1f33c34}
+      \strng{authorbibnamehash}{65635395a55b3d4176672b79d1f33c34}
+      \strng{authornamehash}{65635395a55b3d4176672b79d1f33c34}
+      \strng{authorfullhash}{65635395a55b3d4176672b79d1f33c34}
+      \strng{authorfullhashraw}{65635395a55b3d4176672b79d1f33c34}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Вопросы кибербезопасности}
+      \field{langid}{russian}
+      \field{note}{Входит в перечень ВАК}
+      \field{title}{О применимости постквантового стандарта электронной подписи {SLH-DSA} в смарт-картах}
+      \field{year}{2025}
+      \field{number}{3}
+      \range{number}{1}
+      \field{pages}{29\bibrangedash 37}
+      \range{pages}{9}
+      \verb{doi}
+      \verb 10.21681/2311-3456-2025-3-29-37
+      \endverb
+    \endentry
     \entry{nist-hqc2025}{online}{}{}
       \name{author}{1}{}{%
         {{hash=ef9cb61878e61d434507444346b29d1a}{%
@@ -1398,8 +1753,8 @@
       \strng{authornamehash}{d96c1d7379b0dfd895310a94d47250ed}
       \strng{authorfullhash}{d96c1d7379b0dfd895310a94d47250ed}
       \strng{authorfullhashraw}{d96c1d7379b0dfd895310a94d47250ed}
-      \field{sortinit}{6}
-      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{sortinit}{7}
+      \field{sortinithash}{108d0be1b1bee9773a1173443802c0a3}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{langid}{russian}
@@ -1431,8 +1786,8 @@
       \strng{authorfullhash}{0a8ba0f5bd77c94ff7d7a21a7a5ae5b6}
       \strng{authorfullhashraw}{0a8ba0f5bd77c94ff7d7a21a7a5ae5b6}
       \field{extraname}{2}
-      \field{sortinit}{6}
-      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{sortinit}{7}
+      \field{sortinithash}{108d0be1b1bee9773a1173443802c0a3}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{langid}{russian}
@@ -1487,6 +1842,42 @@
       \endverb
       \verb{url}
       \verb https://ntv.elpub.ru/jour/article/view/468
+      \endverb
+    \endentry
+    \entry{larina2025platform}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=d8592bad48a56783945c56761932bbe3}{%
+           family={Ларина},
+           familyi={Л\bibinitperiod},
+           given={М.\bibnamedelimi В.},
+           giveni={М\bibinitperiod\bibinitdelim В\bibinitperiod}}}%
+        {{hash=051fd0a0014303afad2612cc75351da6}{%
+           family={Скиба},
+           familyi={С\bibinitperiod},
+           given={В.\bibnamedelimi Ю.},
+           giveni={В\bibinitperiod\bibinitdelim Ю\bibinitperiod}}}%
+      }
+      \strng{namehash}{e6ac576874fb008bd692b97ffba61b28}
+      \strng{fullhash}{e6ac576874fb008bd692b97ffba61b28}
+      \strng{fullhashraw}{e6ac576874fb008bd692b97ffba61b28}
+      \strng{bibnamehash}{e6ac576874fb008bd692b97ffba61b28}
+      \strng{authorbibnamehash}{e6ac576874fb008bd692b97ffba61b28}
+      \strng{authornamehash}{e6ac576874fb008bd692b97ffba61b28}
+      \strng{authorfullhash}{e6ac576874fb008bd692b97ffba61b28}
+      \strng{authorfullhashraw}{e6ac576874fb008bd692b97ffba61b28}
+      \field{sortinit}{7}
+      \field{sortinithash}{108d0be1b1bee9773a1173443802c0a3}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Правовая информатика}
+      \field{langid}{russian}
+      \field{note}{Входит в перечень ВАК}
+      \field{title}{Модель цифровой платформы для анализа устойчивости к квантовым угрозам}
+      \field{year}{2025}
+      \field{number}{3}
+      \range{number}{1}
+      \verb{doi}
+      \verb 10.24412/1994-1404-2025-3-00-02
       \endverb
     \endentry
   \enddatalist

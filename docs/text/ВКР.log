@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.10.24)  18 MAY 2026 21:42
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.10.24)  19 MAY 2026 11:04
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1925,7 +1925,7 @@ Overfull \hbox (1.8309pt too wide) in alignment at lines 980--988
  [] [] [] 
  []
 
-
+[53]
 Underfull \hbox (badness 10000) in paragraph at lines 991--992
 \TU/TimesNewRoman(2)/m/n/14.4 GOST_R3410_keypair, VKO_cryptopro_2001, VKO_crypt
 opro_2012,
@@ -1938,8 +1938,6 @@ Underfull \hbox (badness 1953) in paragraph at lines 991--992
  []
 
 
-
-[53]
 
 [54]
 
@@ -1982,6 +1980,8 @@ Underfull \hbox (badness 4467) in paragraph at lines 1154--1155
 [61]
 
 [62]
+
+[63]
 Underfull \hbox (badness 10000) in paragraph at lines 1320--1321
 []\TU/TimesNewRoman(2)/m/n/14.4 Событие Mutation означает изменение состояния о
 бъекта, а
@@ -2001,13 +2001,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 1320--1321
 
 
 
-[63]
-
 [64]
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-
 Underfull \hbox (badness 10000) in paragraph at lines 1397--1398
 []\TU/TimesNewRoman(2)/m/n/14.4 Такой механизм особенно важен для вызовов вида
  []
@@ -2034,9 +2028,11 @@ Underfull \hbox (badness 3098) in paragraph at lines 1397--1398
 
 [65]
 
-LaTeX Warning: `h' float specifier changed to `ht'.
+[66]
 
+[67]
 
+[68]
 Underfull \hbox (badness 1845) in paragraph at lines 1462--1463
 \TU/TimesNewRoman(2)/m/n/14.4 крытого ключа и алгоритму подписи. RSA, ECDSA, EC
 DH, DSA, EC,
@@ -2044,22 +2040,20 @@ DH, DSA, EC,
 
 
 
-[66]
-
-[67]
+[69]
 Underfull \hbox (badness 10000) in paragraph at lines 1508--1508
 []|\TU/TimesNewRoman(2)/m/n/14.4 Частота вызова
  []
 
 
 
-[68]
-
-[69]
-
 [70]
 
 [71]
+
+[72]
+
+[73]
 Underfull \hbox (badness 10000) in paragraph at lines 1628--1629
 []\TU/TimesNewRoman(2)/m/n/14.4 Структура CBOM описана классами Cbom, CbomCompo
 nent и
@@ -2067,7 +2061,7 @@ nent и
 
 
 
-[72]
+[74]
 Underfull \hbox (badness 1325) in paragraph at lines 1691--1691
 []|\TU/TimesNewRoman(2)/m/n/14.4 Примечания и соответствующие рекоменда-
  []
@@ -2077,18 +2071,17 @@ Underfull \hbox (badness 3271) in paragraph at lines 1692--1693
 []|\TU/TimesNewRoman(2)/m/n/14.4 Криптографическая ведомость в отдельном
  []
 
-[73]
+[75]
 
-[74]
+[76]
 Overfull \hbox (2.9039pt too wide) in paragraph at lines 1742--1742
  [][]\TU/TimesNewRoman(2)/b/n/12 3/6\TU/TimesNewRoman(2)/m/n/12 Инвентаризация 
 
  []
 
 
-LaTeX Warning: `h' float specifier changed to `ht'.
 
-
+[77]
 Underfull \hbox (badness 4416) in paragraph at lines 1792--1792
 []|\TU/TimesNewRoman(2)/m/n/14.4 Набор тестов (кол-
  []
@@ -2310,13 +2303,15 @@ Underfull \hbox (badness 10000) in paragraph at lines 1838--1841
 \TU/TimesNewRoman(2)/m/n/14.4 наличие ссылок
  []
 
-[75] [76]
+[78]
 Underfull \hbox (badness 10000) in paragraph at lines 1851--1859
 []\TU/TimesNewRoman(2)/m/n/14.4 Основным тестовым файлом является \TU/TimesNewR
 oman(2)/m/it/14.4 tests/fixtures/
  []
 
 
+
+[79]
 Underfull \hbox (badness 10000) in paragraph at lines 1877--1878
 []|\TU/TimesNewRoman(2)/m/it/14.4 crypto::tls::
  []
@@ -2501,39 +2496,37 @@ Underfull \hbox (badness 3623) in paragraph at lines 1922--1929
 \TU/TimesNewRoman(2)/m/n/14.4 анализатором через отслежива-
  []
 
+[80]
 
-
-[77] [78]
-
-LaTeX Warning: Reference `app:ground_truth' on page 79 undefined on input line 
+LaTeX Warning: Reference `app:ground_truth' on page 81 undefined on input line 
 1938.
 
 
-
-[79]
-
-LaTeX Warning: Reference `app:tests_db' on page 80 undefined on input line 2003
-.
-
-
-
-[80]
 
 [81]
 
 [82]
 
+LaTeX Warning: Reference `app:tests_db' on page 83 undefined on input line 2003
+.
+
+
+
 [83]
 
 [84]
+
+[85]
+
+[86]
+
+[87]
 Underfull \hbox (badness 10000) in paragraph at lines 2248--2248
 []|\TU/TimesNewRoman(2)/m/it/14.4 FullPipeline \TU/TimesNewRoman(2)/m/n/14.4 (и
 нтеграци-
  []
 
 
-
-[85]
 Underfull \hbox (badness 10000) in paragraph at lines 2253--2259
 []\TU/TimesNewRoman(2)/m/n/14.4 Регрессионный тест метрик качества зафиксировал
  финальные
@@ -2560,6 +2553,8 @@ Underfull \hbox (badness 1728) in paragraph at lines 2253--2259
  []
 
 
+
+[88]
 Underfull \hbox (badness 10000) in paragraph at lines 2284--2285
 []|\TU/TimesNewRoman(2)/m/n/14.4 Обнаружение квантово-
  []
@@ -2772,9 +2767,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 2323--2324
 []|\TU/TimesNewRoman(2)/m/n/14.4 Регрессионный тест
  []
 
-
-
-[86] [87]
+[89]
 Underfull \hbox (badness 10000) in paragraph at lines 2347--2347
 []|\TU/TimesNewRoman(2)/m/n/14.4 Эталонных записей
  []
@@ -2789,15 +2782,15 @@ Underfull \hbox (badness 10000) in paragraph at lines 2349--2349
 []|\TU/TimesNewRoman(2)/m/n/14.4 Ложные срабатыва-
  []
 
-
-
-[88]
+[90]
 Underfull \hbox (badness 1067) in paragraph at lines 2376--2386
 []\TU/TimesNewRoman(2)/m/it/14.4 Regex (8 ложных срабатываний). \TU/TimesNewRom
 an(2)/m/n/14.4 Помимо тех же двух BIGNUM-
  []
 
 
+
+[91]
 Underfull \hbox (badness 1406) in paragraph at lines 2408--2414
 []\TU/TimesNewRoman(2)/m/it/14.4 CBOM-файл \TU/TimesNewRoman(2)/m/n/14.4 в форм
 ате CycloneDX – стандартизованный инвен-
@@ -2811,7 +2804,7 @@ Underfull \hbox (badness 2150) in paragraph at lines 2408--2414
 
 
 
-[89]
+[92]
 Underfull \hbox (badness 7888) in paragraph at lines 2450--2455
 \TU/TimesNewRoman(2)/m/it/14.4 Покрытие базы данных. \TU/TimesNewRoman(2)/m/n/1
 4.4 Текущая база охватывает три библиотеки:
@@ -2819,7 +2812,7 @@ Underfull \hbox (badness 7888) in paragraph at lines 2450--2455
 
 
 
-[90]
+[93]
 Underfull \hbox (badness 1205) in paragraph at lines 2485--2492
 \TU/TimesNewRoman(2)/m/it/14.4 Расширение базы данных. \TU/TimesNewRoman(2)/m/n
 /14.4 Добавление функций из wolfSSL, mbedTLS,
@@ -2833,11 +2826,9 @@ Underfull \hbox (badness 1762) in paragraph at lines 2493--2499
 
 
 
-[91]
+[94]
 
-[92]
-
-[93]
+[95]
 Underfull \hbox (badness 2269) in paragraph at lines 2528--2528
 []\TU/TimesNewRoman(2)/m/it/14.4 Shor P. W. \TU/TimesNewRoman(2)/m/n/14.4 Algor
 ithms for quantum computation: discrete logarithms
@@ -2869,7 +2860,7 @@ Package biblatex Warning: No driver for 'standard'.
 
 
 
-[94]
+[96]
 Underfull \hbox (badness 1320) in paragraph at lines 2528--2528
 []\TU/TimesNewRoman(2)/m/it/14.4 IBM Institute for Business Value\TU/TimesNewRo
 man(2)/m/n/14.4 , \TU/TimesNewRoman(2)/m/it/14.4 Cloud Security Alliance\TU/Tim
@@ -2908,7 +2899,7 @@ ications of the
 
 
 
-[95]
+[97]
 
 Package biblatex Warning: No driver for 'standard'.
 (biblatex)                Using fallback driver on input line 2527.
@@ -2927,7 +2918,7 @@ Underfull \hbox (badness 1412) in paragraph at lines 2528--2528
 
 
 
-[96]
+[98]
 Underfull \hbox (badness 2073) in paragraph at lines 2528--2528
 []\TU/TimesNewRoman(2)/m/n/14.4 Experimental realization of Shor’s quantum fact
 oring algorithm using
@@ -2940,6 +2931,8 @@ ic Curve Discrete
  []
 
 
+
+[99]
 Underfull \hbox (badness 10000) in paragraph at lines 2528--2528
 []\TU/TimesNewRoman(2)/m/it/14.4 National Security Agency\TU/TimesNewRoman(2)/m
 /n/14.4 . Quantum Computing and Post-Quantum
@@ -2947,24 +2940,15 @@ Underfull \hbox (badness 10000) in paragraph at lines 2528--2528
 
 
 
-[97]
-Underfull \hbox (badness 3780) in paragraph at lines 2532--2532
- |[]\TU/TimesNewRoman(2)/b/n/14.4 КРИПТОГРАФИЧЕСКИЙ ПЕРЕЧЕНЬ АКТИВОВ (CBOM,
- []
-
-
-
-[98]
-
-[99]
-
 [100]
 
 [101]
 
 [102]
 
-[103]
+[103
+
+]
 
 [104]
 
@@ -2995,12 +2979,6 @@ Underfull \hbox (badness 3780) in paragraph at lines 2532--2532
 [117]
 
 [118]
-Underfull \hbox (badness 3601) in paragraph at lines 3373--3374
-[]\TU/TimesNewRoman(2)/m/n/14.4 Ниже представлен полный JSON-отчёт, сформирован
-ный инстру-
- []
-
-
 
 [119]
 
@@ -3011,8 +2989,16 @@ Underfull \hbox (badness 3601) in paragraph at lines 3373--3374
 [122]
 
 [123]
+Underfull \hbox (badness 3601) in paragraph at lines 3373--3374
+[]\TU/TimesNewRoman(2)/m/n/14.4 Ниже представлен полный JSON-отчёт, сформирован
+ный инстру-
+ []
 
-[124]
+
+
+[124
+
+]
 
 [125]
 
@@ -3060,7 +3046,9 @@ Underfull \hbox (badness 3601) in paragraph at lines 3373--3374
 
 [147]
 
-[148]
+[148
+
+]
 
 [149]
 
@@ -3098,7 +3086,11 @@ Underfull \hbox (badness 3601) in paragraph at lines 3373--3374
 
 [166]
 
-[167] (./ВКР.aux)
+[167]
+
+[168]
+
+[169] (./ВКР.aux)
  ***********
 LaTeX2e <2025-06-01> patch level 1
 L3 programming layer <2025-10-09>
@@ -3111,18 +3103,18 @@ LaTeX Warning: There were undefined references.
 LaTeX Warning: There were multiply-defined labels.
 
 Package rerunfilecheck Info: File `ВКР.out' has not changed.
-(rerunfilecheck)             Checksum: CCA9760A2C89A6EB683236E61E10A1CC;22357.
+(rerunfilecheck)             Checksum: BBF23D4AC8B839A3B2A2C14E6432C646;22232.
 Package logreq Info: Writing requests to 'ВКР.run.xml'.
 \openout1 = `ВКР.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 38719 strings out of 468388
- 788278 string characters out of 5440602
- 2125813 words of memory out of 5000000
- 66642 multiletter control sequences out of 15000+600000
+ 38749 strings out of 468388
+ 789877 string characters out of 5440602
+ 2123683 words of memory out of 5000000
+ 66672 multiletter control sequences out of 15000+600000
  635773 words of font info for 126 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  88i,12n,126p,2258b,5491s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on ВКР.pdf (167 pages).
+Output written on ВКР.pdf (169 pages).

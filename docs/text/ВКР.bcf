@@ -3573,8 +3573,10 @@
     <bcf:citekey order="35" intorder="1">mosca2025timeline</bcf:citekey>
     <bcf:citekey order="36" intorder="1">projecteleven2025qday</bcf:citekey>
     <bcf:citekey order="37" intorder="1">klucharyov-osnovy-kvantovyh</bcf:citekey>
+    <bcf:citekey order="37" intorder="2">bukashkin2023quantum</bcf:citekey>
     <bcf:citekey order="38" intorder="1">1994Shor</bcf:citekey>
     <bcf:citekey order="39" intorder="1">kvantovye-algoritmy-shor-grover</bcf:citekey>
+    <bcf:citekey order="39" intorder="2">borisova2023shor</bcf:citekey>
     <bcf:citekey order="40" intorder="1">kvantovyj-kompyuter-kriptostoykost</bcf:citekey>
     <bcf:citekey order="41" intorder="1">vandersypen2001experimental</bcf:citekey>
     <bcf:citekey order="42" intorder="1">roetteler2017ecc</bcf:citekey>
@@ -3588,26 +3590,34 @@
     <bcf:citekey order="49" intorder="1">nist-ir8547</bcf:citekey>
     <bcf:citekey order="50" intorder="1">nist-ir8547</bcf:citekey>
     <bcf:citekey order="51" intorder="1">saha2024grover</bcf:citekey>
+    <bcf:citekey order="51" intorder="2">moiseyevsky2025saes</bcf:citekey>
     <bcf:citekey order="52" intorder="1">nist-ir8547</bcf:citekey>
     <bcf:citekey order="53" intorder="1">fedfed2025hndl</bcf:citekey>
-    <bcf:citekey order="54" intorder="1">ncsc2023annual</bcf:citekey>
-    <bcf:citekey order="55" intorder="1">nsa-quantum-faq2021</bcf:citekey>
-    <bcf:citekey order="56" intorder="1">nist-ir8547</bcf:citekey>
-    <bcf:citekey order="57" intorder="1">nsa-cnsa2</bcf:citekey>
-    <bcf:citekey order="58" intorder="1">nist-fips203</bcf:citekey>
+    <bcf:citekey order="54" intorder="1">petrenko2022blockchain</bcf:citekey>
+    <bcf:citekey order="55" intorder="1">ncsc2023annual</bcf:citekey>
+    <bcf:citekey order="56" intorder="1">nsa-quantum-faq2021</bcf:citekey>
+    <bcf:citekey order="57" intorder="1">nist-ir8547</bcf:citekey>
+    <bcf:citekey order="58" intorder="1">nsa-cnsa2</bcf:citekey>
     <bcf:citekey order="59" intorder="1">nist-fips203</bcf:citekey>
-    <bcf:citekey order="60" intorder="1">nist-fips204</bcf:citekey>
-    <bcf:citekey order="61" intorder="1">nist-fips205</bcf:citekey>
-    <bcf:citekey order="62" intorder="1">nist-hqc2025</bcf:citekey>
-    <bcf:citekey order="63" intorder="1">nist-ir8547</bcf:citekey>
-    <bcf:citekey order="64" intorder="1">nsa-cnsa2</bcf:citekey>
-    <bcf:citekey order="65" intorder="1">nist-ir8547</bcf:citekey>
-    <bcf:citekey order="66" intorder="1">tc26-postquantum</bcf:citekey>
-    <bcf:citekey order="67" intorder="1">kryptonite-shipovnik</bcf:citekey>
-    <bcf:citekey order="68" intorder="1">qapp-hypericum</bcf:citekey>
-    <bcf:citekey order="69" intorder="1">kryptonite-codiaeum</bcf:citekey>
-    <bcf:citekey order="70" intorder="1">razdelenie-sekreta-postkvantovoe</bcf:citekey>
-    <bcf:citekey order="71" intorder="1">kryptonite-shipovnik</bcf:citekey>
+    <bcf:citekey order="60" intorder="1">komarova2019pqsig</bcf:citekey>
+    <bcf:citekey order="60" intorder="2">razumov2019ntru</bcf:citekey>
+    <bcf:citekey order="61" intorder="1">nist-fips203</bcf:citekey>
+    <bcf:citekey order="62" intorder="1">bakharev2022oracle</bcf:citekey>
+    <bcf:citekey order="63" intorder="1">nist-fips204</bcf:citekey>
+    <bcf:citekey order="64" intorder="1">kirshanova2020pqsig</bcf:citekey>
+    <bcf:citekey order="65" intorder="1">nist-fips205</bcf:citekey>
+    <bcf:citekey order="66" intorder="1">panasenko2025slhdsa</bcf:citekey>
+    <bcf:citekey order="67" intorder="1">nist-hqc2025</bcf:citekey>
+    <bcf:citekey order="68" intorder="1">nist-ir8547</bcf:citekey>
+    <bcf:citekey order="69" intorder="1">nsa-cnsa2</bcf:citekey>
+    <bcf:citekey order="70" intorder="1">nist-ir8547</bcf:citekey>
+    <bcf:citekey order="71" intorder="1">tc26-postquantum</bcf:citekey>
+    <bcf:citekey order="72" intorder="1">kryptonite-shipovnik</bcf:citekey>
+    <bcf:citekey order="73" intorder="1">qapp-hypericum</bcf:citekey>
+    <bcf:citekey order="74" intorder="1">kryptonite-codiaeum</bcf:citekey>
+    <bcf:citekey order="75" intorder="1">razdelenie-sekreta-postkvantovoe</bcf:citekey>
+    <bcf:citekey order="76" intorder="1">kryptonite-shipovnik</bcf:citekey>
+    <bcf:citekey order="77" intorder="1">larina2025platform</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="none">
