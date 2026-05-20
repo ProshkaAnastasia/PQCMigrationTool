@@ -264,6 +264,10 @@
 \RequirePackage{needspace}
 \RequirePackage{float} % для плавающих окружений на базе figure [web:6]
 
+% Отступы вокруг плавающих объектов (h-флоты и верх/низ страницы)
+\setlength{\intextsep}{4pt plus 2pt minus 2pt}
+\setlength{\textfloatsep}{10pt plus 2pt minus 4pt}
+
 % базовые цвета для кода
 \definecolor{codebg}{RGB}{248,248,248}
 \definecolor{codeframe}{RGB}{180,180,180}
@@ -308,7 +312,10 @@
 	stepnumber=1,
 	firstnumber=1,
 	morekeywords={если,иначе,пока,для,возврат,функция,тип,структура},
-	aboveskip=10pt
+	aboveskip=10pt,
+	belowskip=2pt,
+	abovecaptionskip=0pt,
+	belowcaptionskip=10pt
 }
 
 % ГОСТ-подобная подпись: "Листинг N -- Название"
@@ -323,11 +330,15 @@
 	justification=raggedright,
 	position=top,
 	font={singlespacing},
-	skip=14pt
+	skip=18pt
 }
 
 % --- Неплавающий листинг ---
+% \begin{itmolisting}[Python]{Название}{lst:метка}
+%   код
+% \end{itmolisting}
 \lstnewenvironment{itmolisting}[3][]{%
+	\begingroup\onehalfspacing%
 	\needspace{4\baselineskip}%
 	\lstset{
 		style=itmoListing,
@@ -336,7 +347,7 @@
 		label={#3},
 		resetmargins=true
 	}%
-}{}
+}{\endgroup}
 
 
 % --- Плавающий листинг ---
@@ -344,6 +355,7 @@
 %   код
 % \end{itmolistingfloat}
 \lstnewenvironment{itmolistingfloat}[3][]{%
+	\begingroup\onehalfspacing%
 	\lstset{
 		style=itmoListing,
 		language=#1,
@@ -352,7 +364,7 @@
 		float=htbp,
 		resetmargins=true
 	}%
-}{}
+}{\endgroup}
 
 
 

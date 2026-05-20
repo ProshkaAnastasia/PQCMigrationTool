@@ -771,7 +771,16 @@
 		std::vector<std::string> include_dirs;
 	};
 \end{itmolisting}
-	
+
+\begin{itmolistingfloat}[C++]{Пример плавающего листинга: AppConfig (float)}{lst:appconfig-float}
+	struct AppConfig {
+		std::string source_path;
+		std::string output_path;
+		AnalysisMode analysis_mode;
+		bool verbose;
+	};
+\end{itmolistingfloat}
+
 	Такое централизованное хранение параметров исключает ситуацию, когда отдельные модули самостоятельно читают аргументы командной строки. Это повышает связность конфигурации и делает поведение инструмента предсказуемым.
 
 	
