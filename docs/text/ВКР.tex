@@ -709,6 +709,28 @@
 
 	Сам процесс обработки можно представить как последовательность вызовов (рисунок~\ref{fig:pipeline}). Сначала main.cpp вызывает разбор конфигурации. Затем загружается база уязвимостей. Далее выполняется сканирование проекта. После этого выбирается режим анализа кода: regex или AST. Затем при необходимости анализируются сертификаты. Далее выполняется оценка рисков. Последним этапом создаются отчеты.
 
+	Внутренние структуры данных были спроектированы так, чтобы каждая из них соответствовала определенному уровню обработки. AppConfig описывает параметры запуска. ProjectInventory описывает структуру проекта. Finding описывает обнаруженный криптографический вызов. CertInfo описывает сертификат. RiskReport описывает результаты оценки риска. MigrationAction описывает одно действие плана миграции. Cbom описывает человекочитаемый криптографический инвентарь.
+	
+	AppConfig является конфигурационным объектом всего приложения. Он создается в самом начале работы из аргументов командной строки и далее передается тем модулям, которым нужны параметры запуска. Основные поля структуры представлены в листинге~\ref{lst:appconfig-brief}.
+	
+\begin{itmolistingfloat}[C++]{Основные поля структуры AppConfig}{lst:appconfig-brief}
+struct AppConfig {
+    std::string source_path;
+    std::string cert_path;
+    std::string db_path;
+    std::string output_path;
+    std::string cbom_output_path;
+    AnalysisMode analysis_mode;
+    bool verbose;
+    bool cbom_only;
+    bool skip_cert;
+    bool run_metrics;
+    std::string ground_truth_path;
+    std::vector<std::string> extra_db_paths;
+    std::vector<std::string> include_dirs;
+};
+\end{itmolistingfloat}
+
 \begin{figure}[ht]
 \centering
 \begin{tikzpicture}[
@@ -751,28 +773,6 @@
 \caption{Конвейер обработки данных}
 \label{fig:pipeline}
 \end{figure}
-
-	Внутренние структуры данных были спроектированы так, чтобы каждая из них соответствовала определенному уровню обработки. AppConfig описывает параметры запуска. ProjectInventory описывает структуру проекта. Finding описывает обнаруженный криптографический вызов. CertInfo описывает сертификат. RiskReport описывает результаты оценки риска. MigrationAction описывает одно действие плана миграции. Cbom описывает человекочитаемый криптографический инвентарь.
-	
-	AppConfig является конфигурационным объектом всего приложения. Он создается в самом начале работы из аргументов командной строки и далее передается тем модулям, которым нужны параметры запуска. Основные поля структуры представлены в листинге~\ref{lst:appconfig-brief}.
-	
-\begin{itmolisting}[C++]{Основные поля структуры AppConfig}{lst:appconfig-brief}
-struct AppConfig {
-    std::string source_path;
-    std::string cert_path;
-    std::string db_path;
-    std::string output_path;
-    std::string cbom_output_path;
-    AnalysisMode analysis_mode;
-    bool verbose;
-    bool cbom_only;
-    bool skip_cert;
-    bool run_metrics;
-    std::string ground_truth_path;
-    std::vector<std::string> extra_db_paths;
-    std::vector<std::string> include_dirs;
-};
-\end{itmolisting}
 
 	Такое централизованное хранение параметров исключает ситуацию, когда отдельные модули самостоятельно читают аргументы командной строки. Это повышает связность конфигурации и делает поведение инструмента предсказуемым.
 
