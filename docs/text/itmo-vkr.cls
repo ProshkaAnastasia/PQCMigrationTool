@@ -365,8 +365,9 @@
 		language=#1,
 		caption={#2},
 		label={#3},
-		float=htbp,
-		resetmargins=true
+		float=ht,
+		resetmargins=true,
+		basicstyle={\linespread{1.25}\itmoListingFont\small}
 	}%
 }{\endgroup}
 
