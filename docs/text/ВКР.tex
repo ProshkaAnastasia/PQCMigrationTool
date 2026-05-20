@@ -755,31 +755,22 @@
 	AppConfig является конфигурационным объектом всего приложения. Он создается в самом начале работы из аргументов командной строки и далее передается тем модулям, которым нужны параметры запуска. Основные поля структуры представлены в листинге~\ref{lst:appconfig-brief}.
 	
 \begin{itmolisting}[C++]{Основные поля структуры AppConfig}{lst:appconfig-brief}
-	struct AppConfig {
-		std::string source_path;
-		std::string cert_path;
-		std::string db_path;
-		std::string output_path;
-		std::string cbom_output_path;
-		AnalysisMode analysis_mode;
-		bool verbose;
-		bool cbom_only;
-		bool skip_cert;
-		bool run_metrics;
-		std::string ground_truth_path;
-		std::vector<std::string> extra_db_paths;
-		std::vector<std::string> include_dirs;
-	};
+struct AppConfig {
+    std::string source_path;
+    std::string cert_path;
+    std::string db_path;
+    std::string output_path;
+    std::string cbom_output_path;
+    AnalysisMode analysis_mode;
+    bool verbose;
+    bool cbom_only;
+    bool skip_cert;
+    bool run_metrics;
+    std::string ground_truth_path;
+    std::vector<std::string> extra_db_paths;
+    std::vector<std::string> include_dirs;
+};
 \end{itmolisting}
-
-\begin{itmolistingfloat}[C++]{Пример плавающего листинга: AppConfig (float)}{lst:appconfig-float}
-	struct AppConfig {
-		std::string source_path;
-		std::string output_path;
-		AnalysisMode analysis_mode;
-		bool verbose;
-	};
-\end{itmolistingfloat}
 
 	Такое централизованное хранение параметров исключает ситуацию, когда отдельные модули самостоятельно читают аргументы командной строки. Это повышает связность конфигурации и делает поведение инструмента предсказуемым.
 
@@ -791,30 +782,30 @@
 	Критически значимый фрагмент структуры Finding приведен в листинге~\ref{lst:finding}.
 
 \begin{itmolisting}[C++]{Структура обнаружения Finding}{lst:finding}
-	struct Finding {
-		std::string file_path;
-		std::string function_name;
-		std::string library;
-		std::string algorithm;
-		std::string category;
-		std::string quantum_vulnerability;
-		
-		std::string context_function;
-		std::string context_class;
-		std::string context_namespace;
-		
-		std::string raw_line;
-		std::string analyzer_mode;
-		std::string vuln_id;
-		std::string nist_reference;
-		std::string tc26_reference;
-		
-		int line_number;
-		int column;
-		double base_risk_score;
-		
-		std::vector<std::string> arguments;
-	};
+struct Finding {
+    std::string file_path;
+    std::string function_name;
+    std::string library;
+    std::string algorithm;
+    std::string category;
+    std::string quantum_vulnerability;
+    
+    std::string context_function;
+    std::string context_class;
+    std::string context_namespace;
+    
+    std::string raw_line;
+    std::string analyzer_mode;
+    std::string vuln_id;
+    std::string nist_reference;
+    std::string tc26_reference;
+    
+    int line_number;
+    int column;
+    double base_risk_score;
+    
+    std::vector<std::string> arguments;
+};
 \end{itmolisting}
 	
 	Этот фрагмент важен для понимания всей архитектуры. Поля \textit{file\_path}, \textit{line\_number} и \textit{column} определяют место находки. Поля \textit{function\_name}, \textit{library}, \textit{algorithm} и \textit{category} описывают криптографическую сущность. Поля \textit{context\_function}, \textit{context\_class} и \textit{context\_namespace} делают результат объяснимым для разработчика. Поле \textit{base\_risk\_score} связывает находку с оценкой риска. Поле \textit{arguments} необходимо для более точного \textit{AST}-анализа, особенно для универсальных API OpenSSL.
@@ -1004,31 +995,31 @@ struct AppConfig {
 Класс VulnDatabase отвечает за загрузку базы, объединение основной и дополнительных баз, построение индекса имен и поиск функций. Его интерфейс приведен в листинге~\ref{lst:vulndb-class}.
 
 \begin{itmolisting}[C++]{Интерфейс класса VulnDatabase}{lst:vulndb-class}
-	class VulnDatabase {
-		public:
-		void load(const std::string& path);
-		void merge_json(const nlohmann::json& j);
+class VulnDatabase {
+    public:
+    void load(const std::string& path);
+    void merge_json(const nlohmann::json& j);
 
-		std::optional<VulnerableFunction> find_by_name(
-		const std::string& name
-		) const;
-		
-		const std::vector<VulnerableFunction>& all() const;
-		std::vector<VulnerableFunction> by_library(
-		const std::string& library
-		) const;
-		
-		std::string db_version() const;
-		std::string last_updated() const;
-		std::size_t size() const;
-		
-		private:
-		std::vector<VulnerableFunction> functions_;
-		std::unordered_map<std::string, std::size_t> name_index_;
-		
-		void rebuild_index();
-		static std::string to_lower(std::string s);
-	};
+    std::optional<VulnerableFunction> find_by_name(
+    const std::string& name
+    ) const;
+    
+    const std::vector<VulnerableFunction>& all() const;
+    std::vector<VulnerableFunction> by_library(
+    const std::string& library
+    ) const;
+    
+    std::string db_version() const;
+    std::string last_updated() const;
+    std::size_t size() const;
+    
+    private:
+    std::vector<VulnerableFunction> functions_;
+    std::unordered_map<std::string, std::size_t> name_index_;
+    
+    void rebuild_index();
+    static std::string to_lower(std::string s);
+};
 \end{itmolisting}
 
 Ключевой технический момент состоит в методе rebuild\_index. После загрузки база строит индекс по имени функции и по всем псевдонимам. Поиск выполняется без учета регистра. Это позволяет анализатору не перебирать весь массив функций при каждой находке, а быстро получать описание уязвимой функции по имени.
@@ -1061,37 +1052,37 @@ class ILanguagePlugin {
 В текущей реализации предусмотрены плагины для C/C++-файлов, CMake-файлов и сертификатов. Плагин C++ распознает исходные и заголовочные файлы по расширениям. Плагин CMake относит CMakeLists.txt и похожие файлы к сборочным. Плагин сертификатов определяет файлы сертификатов по расширениям, характерным для PEM, CRT, CER и DER. Фрагмент логики сканирования описан в листинге~\ref{lst:inv2}.
 
 \begin{itmolisting}[C++]{Метод сканирования ProjectScanner}{lst:inv2}
-	ProjectInventory ProjectScanner::scan(
-	const std::string& root_path
-	) const {
-		ProjectInventory inventory;
-		inventory.project_path = root_path;
-		inventory.project_name =
-		std::filesystem::path(root_path).filename().string();
-		
-		for (const auto& entry :
-		std::filesystem::recursive_directory_iterator(root_path)) {
-			if (!entry.is_regular_file()) {
-				continue;
-			}
-			
-			if (should_skip(entry.path())) {
-				continue;
-			}
-			
-			FileEntry file;
-			file.path = entry.path().string();
-			file.size_bytes = entry.file_size();
-			file.category = detect_category(entry.path());
-			file.language = detect_language(entry.path());
-			file.line_count = count_lines(entry.path());
-			
-			inventory.files.push_back(file);
-			inventory.language_stats[file.language]++;
-		}
-		
-		return inventory;
-	}
+ProjectInventory ProjectScanner::scan(
+const std::string& root_path
+) const {
+    ProjectInventory inventory;
+    inventory.project_path = root_path;
+    inventory.project_name =
+    std::filesystem::path(root_path).filename().string();
+    
+    for (const auto& entry :
+    std::filesystem::recursive_directory_iterator(root_path)) {
+        if (!entry.is_regular_file()) {
+            continue;
+        }
+        
+        if (should_skip(entry.path())) {
+            continue;
+        }
+        
+        FileEntry file;
+        file.path = entry.path().string();
+        file.size_bytes = entry.file_size();
+        file.category = detect_category(entry.path());
+        file.language = detect_language(entry.path());
+        file.line_count = count_lines(entry.path());
+        
+        inventory.files.push_back(file);
+        inventory.language_stats[file.language]++;
+    }
+    
+    return inventory;
+}
 \end{itmolisting}
 
 В реальном коде сканер также исключает служебные каталоги: анализ каталогов сборки, зависимостей или истории Git увеличил бы число ложных срабатываний и замедлил бы работу. Например, каталог build может содержать сгенерированные файлы, а .git содержит служебные объекты, которые не должны рассматриваться как исходный код проекта.
@@ -1283,13 +1274,13 @@ struct FunctionSummary {
 
 На второй фазе анализатор заполняет тела функций. Одной из ключевых задач является сбор значений локальных переменных. Для этого используется структура LocalValue (листинг~\ref{lst:ast-stage31}):
 
-\begin{itmolisting}[C++]{Структура значения локальной переменной}{lst:ast-stage31}
+\begin{itmolistingfloat}[C++]{Структура значения локальной переменной}{lst:ast-stage31}
 struct LocalValue {
-	std::string text;
-	unsigned line = 0;
-	bool known = false;
+    std::string text;
+    unsigned line = 0;
+    bool known = false;
 };
-\end{itmolisting}
+\end{itmolistingfloat}
 
 Значения хранятся как история, а не как одно последнее значение: при наличии нескольких присваиваний для разрешения аргумента выбирается то значение, которое было актуально до строки вызова.
 
@@ -1337,11 +1328,11 @@ struct MethodEvent {
 Недостижимые функции не исключаются из отчета полностью. Вместо этого для них применяется понижающий коэффициент риска (листинг~\ref{lst:ast-stage5}).
 
 \begin{itmolisting}[C++]{Коэффициент риска для недостижимых функций}{lst:ast-stage5}
-static constexpr double kUnreachableRiskFactor = 0.3;
+    static constexpr double kUnreachableRiskFactor = 0.3;
 
-f.base_risk_score = pc.reachable_from_root
-? opt->risk_score
-: opt->risk_score * kUnreachableRiskFactor;
+    f.base_risk_score = pc.reachable_from_root
+    ? opt->risk_score
+    : opt->risk_score * kUnreachableRiskFactor;
 \end{itmolisting}
 
 Такое решение принципиально: если полностью исключить недостижимые функции, можно пропустить реальный риск, потому что анализ выполняется в пределах одной translation unit и может не видеть внешние точки входа. Если же не учитывать достижимость вообще, то мертвый или вспомогательный код будет получать такой же приоритет, как реально исполняемый. Использование коэффициента 0,3 является компромиссом: находка сохраняется, но ее приоритет заметно снижается.
@@ -1352,22 +1343,22 @@ f.base_risk_score = pc.reachable_from_root
 
 	
 \begin{itmolisting}[C++]{Контекст разрешения аргументов ResolutionContext}{lst:ast-stage6}
-	struct ResolutionContext {
-		FunctionFrame* frame;
-		
-		const std::unordered_map<std::string, FunctionSummary>* summaries;
-		
-		std::unordered_map<std::string, std::string> param_bindings;
-		
-		std::unordered_set<std::string> active_functions;
-		
-		const ClassFieldRegistry* field_registry;
-		
-		std::string current_class_qualified;
-		std::string current_class_simple;
-		
-		const FieldStateMap* dynamic_field_state;
-	};
+struct ResolutionContext {
+    FunctionFrame* frame;
+    
+    const std::unordered_map<std::string, FunctionSummary>* summaries;
+    
+    std::unordered_map<std::string, std::string> param_bindings;
+    
+    std::unordered_set<std::string> active_functions;
+    
+    const ClassFieldRegistry* field_registry;
+    
+    std::string current_class_qualified;
+    std::string current_class_simple;
+    
+    const FieldStateMap* dynamic_field_state;
+};
 \end{itmolisting}
 
 Схема процесса разрешения аргумента представлена на рисунке~\ref{fig:arg}.
@@ -1414,10 +1405,10 @@ f.base_risk_score = pc.reachable_from_root
 Несмотря на большую глубину анализа, AST-анализатор имеет значительные ограничения. Он анализирует единицы трансляции отдельно и не выполняет полноценный межмодульный анализ. Заголовочные файлы не анализируются как самостоятельные файлы с исходным кодом, хотя могут попадать в анализ через механизм включения. Вызовы через указатели на функции не разрешаются полностью. Глубина разрешения выражений, подстановки функций и обхода графа вызовов ограничена константами (листинг~\ref{lst:ast-stage7}):
 
 \begin{itmolisting}[C++]{Константы глубины анализа}{lst:ast-stage7}
-static constexpr int kMaxResolveDepth = 12;
-static constexpr int kMaxInlineExpansionDepth = 6;
-static constexpr int kMaxCallGraphDepth = 8;
-static constexpr std::size_t kMaxResolvedText = 512;
+    static constexpr int kMaxResolveDepth = 12;
+    static constexpr int kMaxInlineExpansionDepth = 6;
+    static constexpr int kMaxCallGraphDepth = 8;
+    static constexpr std::size_t kMaxResolvedText = 512;
 \end{itmolisting}
 
 Эти ограничения необходимы для предотвращения бесконечной рекурсии и чрезмерного роста времени анализа. Они также задают границы применимости инструмента: AST-анализатор повышает точность по сравнению с регулярными выражениями, но не является полноценным компиляторным анализатором всех возможных путей выполнения.
@@ -1462,15 +1453,15 @@ static constexpr std::size_t kMaxResolvedText = 512;
 Ключевые операции извлечения данных выполняются через OpenSSL API (листинг~\ref{lst:cert-lib}):
 
 \begin{itmolisting}[C++]{Вызовы OpenSSL API при разборе сертификата}{lst:cert-lib}
-X509_NAME_print_ex(...);
-ASN1_INTEGER_to_BN(...);
-BN_bn2hex(...);
-ASN1_TIME_print(...);
-ASN1_TIME_diff(...);
-X509_get0_signature(...);
-X509_get0_pubkey(...);
-EVP_PKEY_base_id(...);
-EVP_PKEY_bits(...);
+    X509_NAME_print_ex(...);
+    ASN1_INTEGER_to_BN(...);
+    BN_bn2hex(...);
+    ASN1_TIME_print(...);
+    ASN1_TIME_diff(...);
+    X509_get0_signature(...);
+    X509_get0_pubkey(...);
+    EVP_PKEY_base_id(...);
+    EVP_PKEY_bits(...);
 \end{itmolisting}
 
 Оценка квантового риска сертификата выполняется по алгоритму открытого ключа и алгоритму подписи. RSA, ECDSA, ECDH, DSA, EC, Ed25519, Ed448 и ГОСТ классифицируются как высокий риск в рамках постквантовой модели. MD5 также получает высокий риск, но по причине классической криптографической слабости. SHA-1 получает средний риск. SHA-384 и SHA-512 получают низкий риск.
@@ -1707,12 +1698,12 @@ struct Cbom {
 	\hspace{0pt}Сводки по файлам & \hspace{0pt}Количество находок и риск по каждому файлу. \\ \hline
 	\hspace{0pt}Раздел NIST & \hspace{0pt}Состояние готовности к миграции. \\ \hline
 	\hspace{0pt}Раздел ТК 26 & \hspace{0pt}Примечания и соответствующие рекомендации. \\ \hline
-	\hspace{0pt}CBOM & \hspace{0pt}Криптографическая ведомость в отдельном JSON-файле. \\ \hline
+	\hspace{0pt}CBOM & \hspace{0pt}Криптографическая ведомость в отдельном JSON-файле. \\ 
 \end{longtable}
 
 Код генерации отчета представлен в листинге~\ref{lst:reg-gen}.
 
-\begin{itmolisting}[C++]{Метод формирования полного JSON-отчета}{lst:reg-gen}
+\begin{itmolistingfloat}[C++]{Метод формирования полного JSON-отчета}{lst:reg-gen}
 nlohmann::json ReportGenerator::build_full_report(
 const ProjectInventory& inventory,
 const std::vector<Finding>& findings,
@@ -1733,7 +1724,7 @@ const RiskReport& risk_report
 	
 	return report;
 }
-\end{itmolisting}
+\end{itmolistingfloat}
 
 Отдельное формирование CBOM важно потому, что криптографическая ведомость может использоваться независимо от полного отчета. Например, ее можно загрузить в систему управления составом программного обеспечения, хранить как артефакт сборки или сравнивать между версиями проекта.
 	

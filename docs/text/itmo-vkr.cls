@@ -147,6 +147,10 @@
 \RequirePackage{longtable}  % Для многостраничных таблиц
 \RequirePackage{etoolbox}   % Необходим для автоматизации шапок на уровне шаблона
 
+% Отступы вокруг longtable (по умолчанию \bigskipamount ≈ 12pt)
+\setlength{\LTpre}{6pt}
+\setlength{\LTpost}{6pt}
+
 % ГЛОБАЛЬНЫЕ ВНУТРЕННИЕ ОТСТУПЫ В ЯЧЕЙКАХ
 \setlength{\extrarowheight}{4pt} % Дополнительный отступ сверху текста
 \renewcommand{\arraystretch}{1.2} % Пропорциональное увеличение высоты для отступа снизу
@@ -265,8 +269,8 @@
 \RequirePackage{float} % для плавающих окружений на базе figure [web:6]
 
 % Отступы вокруг плавающих объектов (h-флоты и верх/низ страницы)
-\setlength{\intextsep}{4pt plus 2pt minus 2pt}
-\setlength{\textfloatsep}{10pt plus 2pt minus 4pt}
+\setlength{\intextsep}{10pt plus 2pt minus 2pt}
+\setlength{\textfloatsep}{14pt plus 2pt minus 4pt}
 
 % базовые цвета для кода
 \definecolor{codebg}{RGB}{248,248,248}
@@ -330,7 +334,7 @@
 	justification=raggedright,
 	position=top,
 	font={singlespacing},
-	skip=18pt
+	skip=10pt
 }
 
 % --- Неплавающий листинг ---
@@ -339,7 +343,7 @@
 % \end{itmolisting}
 \lstnewenvironment{itmolisting}[3][]{%
 	\begingroup\onehalfspacing%
-	\needspace{4\baselineskip}%
+	\needspace{2\baselineskip}%
 	\lstset{
 		style=itmoListing,
 		language=#1,
