@@ -320,7 +320,12 @@
 	\subsection{Квантовые вычисления как новый вектор угроз для современной криптографии}
 	
 	Современная криптографическая инфраструктура строится на предположении о вычислительной сложности определенных математических задач. 
-	Асимметричные алгоритмы  --  RSA, протокол Диффи–Хеллмана (DH), алгоритмы на эллиптических кривых (ECDSA, ECDH, ГОСТ Р 34.10-2012)  --  обязаны своей безопасностью тому, что задачи целочисленной факторизации и дискретного логарифмирования вычислительно неразрешимы на обычном компьютере за разумное время. Лучший классический алгоритм -- метод решета числового поля -- работает за субэкспоненциальное время порядка $e^{O\left((\log N)^{1/3} (\log \log N)^{2/3}\right)}$~\cite{menezes1996handbook}, что делает прямые атаки практически невозможными в обозримом будущем при использовании стандартных вычислителей.
+	Асимметричные алгоритмы  --  RSA, протокол Диффи–Хеллмана (DH), алгоритмы на эллиптических кривых (ECDSA, ECDH, ГОСТ Р 34.10-2012)  --  обязаны своей безопасностью тому, что задачи целочисленной факторизации и дискретного логарифмирования вычислительно неразрешимы на обычном компьютере за разумное время. Лучший классический алгоритм -- метод решета числового поля -- работает за субэкспоненциальное время порядка~(формула~\ref{eq:gnfs})~\cite{menezes1996handbook}:
+\begin{equation}
+	e^{O\left((\log N)^{1/3} (\log \log N)^{2/3}\right)},
+	\label{eq:gnfs}
+\end{equation}
+что делает прямые атаки практически невозможными в обозримом будущем при использовании стандартных вычислителей.
 	
 	Квантовые компьютеры принципиально нарушают этот баланс. В отличие от классических машин, они оперируют кубитами -- квантовыми битами, способными находиться в суперпозиции состояний. Квантовый параллелизм и явление запутанности позволяют реализовать алгоритмы, которые решают задачи факторизации и дискретного логарифмирования за полиномиальное время. На практике это означает, что весь класс задач, лежащих в основе современной асимметричной криптографии, становится критически уязвимым для достаточно мощного квантового компьютера~\cite{krivtsun2023kvantovye}.
 	
@@ -674,7 +679,7 @@
 	
 	Общая архитектура инструмента изображена на рисунке~\ref{fig:structure}.
 
-\begin{figure}[h]
+\begin{figure}[ht]
 \centering
 \begin{tikzpicture}[
   node distance=0.5cm and 0.4cm,
@@ -702,7 +707,7 @@
 
 	Сам процесс обработки можно представить как последовательность вызовов (рисунок~\ref{fig:pipeline}). Сначала main.cpp вызывает разбор конфигурации. Затем загружается база уязвимостей. Далее выполняется сканирование проекта. После этого выбирается режим анализа кода: regex или AST. Затем при необходимости анализируются сертификаты. Далее выполняется оценка рисков. Последним этапом создаются отчеты.
 
-\begin{figure}[htbp]
+\begin{figure}[ht]
 \centering
 \begin{tikzpicture}[
   stage/.style={rectangle, draw, thick, rounded corners=5pt,
@@ -726,15 +731,15 @@
 
 % Разветвление
 \draw[arr] (s3.south west)
-    -- node[midway, left, lbl]{ProjectInventory\\+ сигнатуры} (s4.north);
+    -- node[left, lbl]{ProjectInventory\\+ сигнатуры} (s4.north);
 \draw[arr] (s3.south east)
-    -- node[midway, right, lbl]{путь к\\сертификатам} (s5.north);
+    -- node[right, lbl]{путь к\\сертификатам} (s5.north);
 
 % Слияние
-\draw[arr] (s4.south east)
-    -- node[midway, above left=-0.05cm and 0.05cm, lbl]{[Finding]} (s6.north west);
-\draw[arr] (s5.south west)
-    -- node[midway, above right=-0.05cm and 0.05cm, lbl]{[CertInfo]} (s6.north east);
+\draw[arr] (s4.south)
+    -- node[sloped, below, lbl]{[Finding]} (s6.north west);
+\draw[arr] (s5.south)
+    -- node[sloped, below, lbl]{[CertInfo]} (s6.north east);
 
 % Продолжение
 \draw[arr] (s6) -- node[right, lbl]{RiskReport} (s7);
@@ -747,7 +752,7 @@
 
 	Внутренние структуры данных были спроектированы так, чтобы каждая из них соответствовала определенному уровню обработки. AppConfig описывает параметры запуска. ProjectInventory описывает структуру проекта. Finding описывает обнаруженный криптографический вызов. CertInfo описывает сертификат. RiskReport описывает результаты оценки риска. MigrationAction описывает одно действие плана миграции. Cbom описывает человекочитаемый криптографический инвентарь.
 	
-	AppConfig является конфигурационным объектом всего приложения. Он создается в самом начале работы из аргументов командной строки и далее передается тем модулям, которым нужны параметры запуска.
+	AppConfig является конфигурационным объектом всего приложения. Он создается в самом начале работы из аргументов командной строки и далее передается тем модулям, которым нужны параметры запуска. Основные поля структуры представлены в листинге~\ref{lst:appconfig-brief}.
 	
 \begin{itmolisting}[C++]{Основные поля структуры AppConfig}{lst:appconfig-brief}
 	struct AppConfig {
@@ -815,7 +820,7 @@
 	
 	Общая структура проекта изображена на рисунке~\ref{fig:dir}.
 
-\begin{figure}[htbp]
+\begin{figure}[ht]
   \centering
   \small\ttfamily
   \begin{tabular}{@{}l@{\hspace{1cm}}l@{}}
@@ -834,7 +839,7 @@
 	
 	Внутренний поток данных показан на рисунке~\ref{fig:data-flow}.
 
-\begin{figure}[htbp]
+\begin{figure}[ht]
   \centering
   \begin{tikzpicture}[
     box/.style={draw, rounded corners=3pt, minimum width=2.1cm,
@@ -863,38 +868,7 @@
 	\subsection{Реализация конфигурации и командного интерфейса}
 	
 	Командный интерфейс реализован в модуле config.cpp и описан структурой AppConfig. Пользователь управляет работой инструмента через параметры запуска. Основным обязательным параметром является путь к анализируемому проекту.
-	В таблице~\ref{tab:cli-impl} описаны основные параметры запуска.
-
-	\begin{longtable}{|p{5.5cm}|p{10.0cm}|}
-		% Заголовок подхватит стиль itmo автоматически из преамбулы
-		\caption{Параметры и флаги командной строки} \label{tab:cli-impl} \\
-		\hline
-		Флаг & Описание \\ \hline
-		\endfirsthead
-		
-		% Шапка на последующих страницах
-		\multicolumn{2}{r}{\textit{Продолжение таблицы \thetable}} \\ \hline
-		Флаг & Описание \\ \hline
-		\endhead
-		
-		\hline
-		\endlastfoot
-		
-		% Данные таблицы 
-		\texttt{-s}, \texttt{--source <path>} & путь к исходному коду проекта \\ \hline
-		\texttt{-c}, \texttt{--cert <path>} & путь к файлу или директории сертификатов \\ \hline
-		\texttt{-d}, \texttt{--db <path>} & путь к JSON-базе уязвимых функций \\ \hline
-		\texttt{-m}, \texttt{--mode <regex|ast>} & режим анализа кода \\ \hline
-		\texttt{-I}, \texttt{--include <dir>} & include-директория для AST-анализа \\ \hline
-		\texttt{-o}, \texttt{--output <path>} & путь к полному JSON-отчету \\ \hline
-		\texttt{--cbom-output <path>} & путь к CBOM-отчету \\ \hline
-		\texttt{--extra-db <path>} & дополнительная база сигнатур \\ \hline
-		\texttt{--metrics} & включение расчета precision/recall/F1 \\ \hline
-		\texttt{--ground-truth <path>} & файл эталонной разметки \\ \hline
-		\texttt{--cbom-only} & генерация только CBOM \\ \hline
-		\texttt{--skip-cert} & пропуск анализа сертификатов \\ \hline
-		\texttt{-v}, \texttt{--verbose} & подробный режим вывода
-	\end{longtable}
+	Полный перечень поддерживаемых параметров приведен в таблице~\ref{tab:input_params}.
 	
 	
 	Структура конфигурации приведена в листинге~\ref{lst:appconfig}: все параметры сведены в один объект, передаваемый через конвейер.
@@ -1117,7 +1091,7 @@ class ILanguagePlugin {
 
 Внутренняя логика инвентаризации схематично представлена на рисунке~\ref{fig:inv}.
 
-\begin{figure}[htbp]
+\begin{figure}[ht]
   \centering
   \begin{tikzpicture}[
     block/.style={draw, rounded corners=3pt, minimum width=4.5cm,
@@ -1389,8 +1363,9 @@ f.base_risk_score = pc.reachable_from_root
 
 Схема процесса разрешения аргумента представлена на рисунке~\ref{fig:arg}.
 
-\begin{figure}[htbp]
+\begin{figure}[ht]
 \centering
+\scalebox{0.8}{%
 \begin{tikzpicture}[
   node distance=1.2cm and 0.6cm,
   box/.style={rectangle, draw, rounded corners=3pt, text width=3.5cm, align=center, minimum height=0.8cm, font=\small},
@@ -1417,7 +1392,8 @@ f.base_risk_score = pc.reachable_from_root
 \draw[arr] (d3) -- node[left,font=\small]{нет} (d4);
 \draw[arr] (d4) -- node[above,font=\small]{да} (ret4);
 \draw[arr] (d4) -- node[left,font=\small]{нет} (unresp);
-\end{tikzpicture}
+\end{tikzpicture}%
+}
 \caption{Схема разрешения аргумента вызова в AST-анализаторе}
 \label{fig:arg}
 \end{figure}
@@ -1443,31 +1419,32 @@ static constexpr std::size_t kMaxResolvedText = 512;
 
 Алгоритм анализа сертификата состоит из нескольких этапов (рисунок~\ref{fig:cert-a}). Сначала файл открывается и анализатор пытается прочитать его как PEM. Если PEM-чтение не удалось, выполняется попытка чтения DER. Такой порядок выбран потому, что PEM часто используется в репозиториях и может содержать цепочку сертификатов, а DER представляет бинарный формат одного сертификата.
 
-\begin{figure}[htbp]
+\begin{figure}[ht]
 \centering
 \begin{tikzpicture}[
-  node distance=1.1cm and 0.5cm,
+  node distance=1.3cm and 0.5cm,
   box/.style={rectangle, draw, rounded corners=3pt, text width=3.8cm, align=center, minimum height=0.75cm, font=\small},
-  decision/.style={diamond, draw, aspect=2.6, text width=3.2cm, align=center, font=\small},
+  decision/.style={diamond, draw, aspect=2.5, text width=3.0cm, align=center, font=\small},
   arr/.style={-Stealth, thick}
 ]
-\node[box] (open)  {Открыть файл};
-\node[decision, below=of open]  (pem)   {Чтение PEM\\успешно?};
-\node[box, right=2.4cm of pem] (chain) {Обработать цепочку\\сертификатов};
-\node[decision, below=of pem]   (der)   {Чтение DER\\успешно?};
-\node[box, right=2.4cm of der] (single){Обработать один\\сертификат};
-\node[box, below=of der]       (skip)  {Файл пропущен};
-\node[box, below=3.6cm of pem, xshift=2.4cm] (extract) {Извлечь атрибуты:\\алгоритм, размер ключа,\\даты, подпись};
-\node[box, below=of extract]   (risk)  {Вычислить квантовый\\риск сертификата};
+\node[box]                        (open)    {Открыть файл};
+\node[decision, below=of open]    (pem)     {Чтение PEM\\успешно?};
+\node[box, right=2.5cm of pem]    (chain)   {Обработать цепочку\\сертификатов};
+\node[decision, below=of pem]     (der)     {Чтение DER\\успешно?};
+\node[box, right=2.5cm of der]    (single)  {Обработать один\\сертификат};
+\node[box, below=of der]          (skip)    {Файл пропущен};
+\node[box, below=1.4cm of single] (extract) {Извлечь атрибуты:\\алгоритм, размер ключа,\\даты, подпись};
+\node[box, below=of extract]      (risk)    {Вычислить квантовый\\риск сертификата};
 
-\draw[arr] (open)  -- (pem);
-\draw[arr] (pem)   -- node[above,font=\small]{да}  (chain);
-\draw[arr] (pem)   -- node[left,font=\small]{нет}  (der);
-\draw[arr] (der)   -- node[above,font=\small]{да}  (single);
-\draw[arr] (der)   -- node[left,font=\small]{нет}  (skip);
-\draw[arr] (chain) -- (extract);
+\draw[arr] (open)   -- (pem);
+\draw[arr] (pem)    -- node[above,font=\small]{да}  (chain);
+\draw[arr] (pem)    -- node[left, font=\small]{нет} (der);
+\draw[arr] (der)    -- node[above,font=\small]{да}  (single);
+\draw[arr] (der)    -- node[left, font=\small]{нет} (skip);
 \draw[arr] (single) -- (extract);
-\draw[arr] (extract)-- (risk);
+% стрелка chain→extract обходит single по правому краю
+\draw[arr] (chain.east) -- ++(0.7,0) |- (extract.east);
+\draw[arr] (extract)    -- (risk);
 \end{tikzpicture}
 \caption{Алгоритм чтения и анализа сертификата}
 \label{fig:cert-a}
@@ -1703,12 +1680,16 @@ struct Cbom {
 В реализации есть функции сопоставления. Например, primitive\_for() преобразует внутреннее имя алгоритма в тип криптографического примитива. RSA, ECDH, ECDSA, DH, DSA, SHA-1, SHA-256, MD5 и ГОСТ-механизмы приводятся к соответствующим категориям. Для классического уровня стойкости используются приближенные значения: RSA соответствует 112 битам, эллиптические алгоритмы 128 битам, SHA-256 также 128 битам, SHA-1 80 битам, MD5 64 битам. Для квантового уровня в текущей реализации применяются условные значения: высокий риск дает 0, средний 50, низкий 128. Формат самого отчета отражен в таблице~\ref{tab:report_structure}.
 
 \begin{longtable}{|p{4.5cm}|p{10.0cm}|}
-	% Заголовок подхватит стиль itmo автоматически из преамбулы
 	\caption{Структура разделов отчета анализа безопасности} \label{tab:report_structure} \\
 	\hline
 	Раздел отчета & Содержимое \\ \hline
-	
-	% Данные таблицы 
+	\endfirsthead
+	\multicolumn{2}{r}{\textit{Продолжение таблицы \thetable}} \\ \hline
+	Раздел отчета & Содержимое \\ \hline
+	\endhead
+	\hline
+	\endlastfoot
+
 	\hspace{0pt}Метаданные проекта & \hspace{0pt}Имя проекта, путь, статистика файлов. \\ \hline
 	\hspace{0pt}Находки & \hspace{0pt}Все найденные вызовы уязвимых функций. \\ \hline
 	\hspace{0pt}Сертификаты & \hspace{0pt}Сведения о сертификатах и их рисках. \\ \hline
@@ -1717,7 +1698,7 @@ struct Cbom {
 	\hspace{0pt}Сводки по файлам & \hspace{0pt}Количество находок и риск по каждому файлу. \\ \hline
 	\hspace{0pt}Раздел NIST & \hspace{0pt}Состояние готовности к миграции. \\ \hline
 	\hspace{0pt}Раздел ТК 26 & \hspace{0pt}Примечания и соответствующие рекомендации. \\ \hline
-	\hspace{0pt}CBOM & \hspace{0pt}Криптографическая ведомость в отдельном JSON-файле. \\
+	\hspace{0pt}CBOM & \hspace{0pt}Криптографическая ведомость в отдельном JSON-файле. \\ \hline
 \end{longtable}
 
 Код генерации отчета представлен в листинге~\ref{lst:reg-gen}.
@@ -2227,7 +2208,7 @@ TEST(FullPipeline, regex_precision_recall_gt50pct) {
   \code{RiskAssessor}               & 7  & 7  \\ \hline
   \code{MetricsCalculator}          & 5  & 5  \\ \hline
   \code{FullPipeline} (интеграционные) & 6 & 6 \\ \hline
-  Итого                               & 47           & 47           \\ \hline
+  Итого                               & 47           & 47           \\ 
 
 \end{longtable}
 

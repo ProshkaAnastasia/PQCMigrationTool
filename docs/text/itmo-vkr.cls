@@ -21,7 +21,7 @@
 \renewcommand{\contentsname}{\uppercase{СОДЕРЖАНИЕ}}
 
 % Центрирование и размер заголовка "СОДЕРЖАНИЕ"
-\renewcommand{\cfttoctitlefont}{\hfill\Large\bfseries}
+\renewcommand{\cfttoctitlefont}{\hfill\normalfont\bfseries}
 \renewcommand{\cftaftertoctitle}{\hfill}
 
 
@@ -129,14 +129,15 @@
 \RequirePackage[font=normalsize,labelfont=bf]{caption}
 \RequirePackage{chngcntr}
 
-% Нумерация по разделам (убери эту строку, если нужна сквозная)
-\counterwithin{figure}{section}
+% Нумерация по подразделам
+\counterwithin{figure}{subsection}
 
 % Формат подписи: "Рисунок <номер> – <Название>"
 \captionsetup[figure]{
 	name=Рисунок,
 	labelsep=endash,
-	justification=centering
+	justification=centering,
+	font={singlespacing}
 }
 
 
@@ -260,6 +261,7 @@
 \RequirePackage{xcolor}
 \RequirePackage{caption}
 \RequirePackage{fontspec}
+\RequirePackage{needspace}
 \RequirePackage{float} % для плавающих окружений на базе figure [web:6]
 
 % базовые цвета для кода
@@ -289,7 +291,7 @@
 \lstdefinestyle{itmoListing}{
 	basicstyle=\itmoListingFont\small,      % Menlo
 	backgroundcolor=\color{codebg},
-	captionpos=b,  
+	captionpos=t,
 	frame=single,
 	framexleftmargin=14pt,                   % место под номера внутри рамки
 	xleftmargin=14pt,                        % сдвиг блока
@@ -318,22 +320,20 @@
 	labelfont=bf,
 	textfont=normalsize,
 	singlelinecheck=false,
-	justification=centering,
-	position=bottom,                        
-	skip=5pt
+	justification=raggedright,
+	position=top,
+	font={singlespacing},
+	skip=14pt
 }
 
 % --- Неплавающий листинг ---
-% \begin{itmolisting}[Python]{Название}
-	%   код
-	%   \label{lst:метка}
-	% \end{itmolisting}
 \lstnewenvironment{itmolisting}[3][]{%
+	\needspace{4\baselineskip}%
 	\lstset{
 		style=itmoListing,
 		language=#1,
 		caption={#2},
-		label={#3},       % ← метка передаётся напрямую в lstset
+		label={#3},
 		resetmargins=true
 	}%
 }{}
@@ -341,21 +341,18 @@
 
 % --- Плавающий листинг ---
 % \begin{itmolistingfloat}[Python]{Название}{lst:label}
-	%   код
-	% \end{itmolistingfloat}
-\newenvironment{itmolistingfloat}[3][]{%
-	\begin{figure}[htbp]%
-		\captionsetup{type=lstlisting}%
-		\lstset{
-			style=itmoListing,
-			language=#1,
-			caption={#2},
-			label={#3},     % ← сюда, а не отдельным \label
-			resetmargins=true
-		}%
-	}{%
-	\end{figure}%
-}
+%   код
+% \end{itmolistingfloat}
+\lstnewenvironment{itmolistingfloat}[3][]{%
+	\lstset{
+		style=itmoListing,
+		language=#1,
+		caption={#2},
+		label={#3},
+		float=htbp,
+		resetmargins=true
+	}%
+}{}
 
 
 
