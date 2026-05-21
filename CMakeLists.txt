@@ -19,6 +19,14 @@ FetchContent_MakeAvailable(nlohmann_json)
 find_package(OpenSSL REQUIRED)
 message(STATUS "OpenSSL: ${OPENSSL_VERSION}")
 
+find_package(PkgConfig QUIET)
+if(PkgConfig_FOUND)
+    pkg_check_modules(LIBGCRYPT QUIET libgcrypt)
+    if(LIBGCRYPT_FOUND)
+        message(STATUS "libgcrypt: ${LIBGCRYPT_VERSION} @ ${LIBGCRYPT_INCLUDE_DIRS}")
+    endif()
+endif()
+
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 find_package(LibClang QUIET)
 if(LibClang_FOUND)
@@ -53,6 +61,19 @@ endif()
 target_compile_definitions(pqc_core PUBLIC
     PQC_OPENSSL_INCLUDE_DIR="${OPENSSL_INCLUDE_DIR}"
 )
+if(LIBGCRYPT_FOUND AND LIBGCRYPT_INCLUDE_DIRS)
+    list(GET LIBGCRYPT_INCLUDE_DIRS 0 _GCRYPT_FIRST_INCLUDE)
+    target_compile_definitions(pqc_core PUBLIC
+        PQC_LIBGCRYPT_INCLUDE_DIR="${_GCRYPT_FIRST_INCLUDE}"
+    )
+    list(LENGTH LIBGCRYPT_INCLUDE_DIRS _GCRYPT_NDIRS)
+    if(_GCRYPT_NDIRS GREATER 1)
+        list(GET LIBGCRYPT_INCLUDE_DIRS 1 _GCRYPT_SECOND_INCLUDE)
+        target_compile_definitions(pqc_core PUBLIC
+            PQC_LIBGCRYPT_INCLUDE_DIR2="${_GCRYPT_SECOND_INCLUDE}"
+        )
+    endif()
+endif()
 
 if(APPLE)
   execute_process(

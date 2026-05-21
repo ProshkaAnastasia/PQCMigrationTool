@@ -12,6 +12,7 @@
 #include "../unit/test_runner.hpp"
 #include <filesystem>
 #include <iostream>
+
 #ifndef PQC_TEST_FIXTURES_DIR
 #define PQC_TEST_FIXTURES_DIR "tests/fixtures"
 #endif
@@ -25,6 +26,7 @@ int main()
     std::cout << std::string(55, '=') << "\n";
     TestSuite ts("FullPipeline");
 
+    // ----------------------------------------------------------------
     ts.add("regex_pipeline_end_to_end", []() {
         pqc::VulnDatabase db;
         db.load(PQC_TEST_DATA_DIR "/vulnerable_functions.json");
@@ -41,6 +43,7 @@ int main()
         ASSERT_FALSE(rr.file_summaries.empty());
     });
 
+    // ----------------------------------------------------------------
     ts.add("ast_pipeline_end_to_end", []() {
         pqc::VulnDatabase db;
         db.load(PQC_TEST_DATA_DIR "/vulnerable_functions.json");
@@ -51,8 +54,15 @@ int main()
         ASSERT_NOT_EMPTY(findings);
         std::cout << "      [AST] " << findings.size() << " findings ("
                   << (aa.has_libclang() ? "libclang" : "token fallback") << ")\n";
+        pqc::RiskAssessor assessor(db);
+        auto rr = assessor.assess(findings, inv);
+        ASSERT_NOT_EMPTY(rr.migration_plan);
+        ASSERT_GT(rr.overall_risk_score, 0.0);
+        ASSERT_NOT_EMPTY(rr.nist_readiness);
+        ASSERT_FALSE(rr.file_summaries.empty());
     });
 
+    // ----------------------------------------------------------------
     ts.add("regex_precision_recall_gt50pct", []() {
         pqc::VulnDatabase db;
         db.load(PQC_TEST_DATA_DIR "/vulnerable_functions.json");
@@ -60,16 +70,37 @@ int main()
         auto inv = scanner.scan(PQC_TEST_FIXTURES_DIR);
         pqc::RegexAnalyzer ra(db);
         auto findings = ra.analyze(inv);
-        auto gt =
-            pqc::MetricsCalculator::load_from_json(PQC_TEST_FIXTURES_DIR "/ground_truth.json");
+        auto gt = pqc::MetricsCalculator::load_from_json(
+            PQC_TEST_FIXTURES_DIR "/ground_truth.json");
         pqc::MetricsCalculator calc;
         auto m = calc.compute(findings, gt);
+        std::cout << "      [Regex] ";
         m.print();
         ASSERT_GE(m.precision(), 0.5);
         ASSERT_GE(m.recall(), 0.5);
         ASSERT_GE(m.f1_score(), 0.5);
     });
 
+    // ----------------------------------------------------------------
+    ts.add("ast_precision_recall_gt50pct", []() {
+        pqc::VulnDatabase db;
+        db.load(PQC_TEST_DATA_DIR "/vulnerable_functions.json");
+        pqc::ProjectScanner scanner;
+        auto inv = scanner.scan(PQC_TEST_FIXTURES_DIR);
+        pqc::ASTAnalyzer aa(db);
+        auto findings = aa.analyze(inv);
+        auto gt = pqc::MetricsCalculator::load_from_json(
+            PQC_TEST_FIXTURES_DIR "/ground_truth.json");
+        pqc::MetricsCalculator calc;
+        auto m = calc.compute(findings, gt);
+        std::cout << "      [AST]   ";
+        m.print();
+        ASSERT_GE(m.precision(), 0.5);
+        ASSERT_GE(m.recall(), 0.5);
+        ASSERT_GE(m.f1_score(), 0.5);
+    });
+
+    // ----------------------------------------------------------------
     ts.add("risk_report_has_tc26_data", []() {
         pqc::VulnDatabase db;
         db.load(PQC_TEST_DATA_DIR "/vulnerable_functions.json");
@@ -88,6 +119,7 @@ int main()
         ASSERT_TRUE(has_tc26);
     });
 
+    // ----------------------------------------------------------------
     ts.add("migration_plan_has_fips_references", []() {
         pqc::VulnDatabase db;
         db.load(PQC_TEST_DATA_DIR "/vulnerable_functions.json");
@@ -106,6 +138,7 @@ int main()
         ASSERT_TRUE(has_fips);
     });
 
+    // ----------------------------------------------------------------
     ts.add("report_json_serialization", []() {
         pqc::VulnDatabase db;
         db.load(PQC_TEST_DATA_DIR "/vulnerable_functions.json");

@@ -3,14 +3,16 @@
   "last_updated": "2026-05-05",
   "description": "PQC Migration Tool — Quantum-Vulnerable Cryptographic Function Database. Libraries: openssl, cryptopp, gost_openssl.",
   "libraries": {
-    "openssl": { 
+    "openssl": {
       "version_range": ">=0.9.8",
       "description": "OpenSSL cryptographic library",
       "functions": [
         {
           "id": "ossl-rsa-generate-key",
           "name": "RSA_generate_key_ex",
-          "aliases": ["RSA_generate_key"],
+          "aliases": [
+            "RSA_generate_key"
+          ],
           "category": "asymmetric_key_generation",
           "algorithm": "RSA",
           "quantum_vulnerability": "high",
@@ -19,8 +21,16 @@
           "nist_reference": "NIST SP 800-131A Rev.2; NIST IR 8413 (NISTIR 8413)",
           "tc26_reference": "Рекомендации ТК 26 по переходу на постквантовые алгоритмы: RSA подлежит замене. См. методические рекомендации по применению ГОСТ Р 34.12.",
           "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/RSA_generate_key_ex.html",
-          "patterns": ["RSA_generate_key\\s*\\(", "RSA_generate_key_ex\\s*\\("],
-          "context_keywords": ["rsa", "key", "generate", "pkey"],
+          "patterns": [
+            "RSA_generate_key\\s*\\(",
+            "RSA_generate_key_ex\\s*\\("
+          ],
+          "context_keywords": [
+            "rsa",
+            "key",
+            "generate",
+            "pkey"
+          ],
           "replacements": [
             {
               "function_name": "EVP_PKEY_keygen",
@@ -36,7 +46,11 @@
         {
           "id": "ossl-rsa-public-encrypt",
           "name": "RSA_public_encrypt",
-          "aliases": ["RSA_private_decrypt", "RSA_public_decrypt", "RSA_private_encrypt"],
+          "aliases": [
+            "RSA_private_decrypt",
+            "RSA_public_decrypt",
+            "RSA_private_encrypt"
+          ],
           "category": "asymmetric_encryption",
           "algorithm": "RSA",
           "quantum_vulnerability": "high",
@@ -45,8 +59,18 @@
           "nist_reference": "NIST SP 800-131A Rev.2",
           "tc26_reference": "Согласно рекомендациям ТК 26, использование RSA для шифрования данных не соответствует требованиям постквантовой стойкости.",
           "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/RSA_public_encrypt.html",
-          "patterns": ["RSA_public_encrypt\\s*\\(", "RSA_private_decrypt\\s*\\(", "RSA_public_decrypt\\s*\\(", "RSA_private_encrypt\\s*\\("],
-          "context_keywords": ["rsa", "encrypt", "decrypt", "padding"],
+          "patterns": [
+            "RSA_public_encrypt\\s*\\(",
+            "RSA_private_decrypt\\s*\\(",
+            "RSA_public_decrypt\\s*\\(",
+            "RSA_private_encrypt\\s*\\("
+          ],
+          "context_keywords": [
+            "rsa",
+            "encrypt",
+            "decrypt",
+            "padding"
+          ],
           "replacements": [
             {
               "library": "liboqs / oqsprovider",
@@ -58,7 +82,9 @@
         {
           "id": "ossl-rsa-sign",
           "name": "RSA_sign",
-          "aliases": ["RSA_verify"],
+          "aliases": [
+            "RSA_verify"
+          ],
           "category": "digital_signature",
           "algorithm": "RSA",
           "quantum_vulnerability": "high",
@@ -67,8 +93,16 @@
           "nist_reference": "NIST FIPS 186-5 (deprecated RSA for post-quantum context); NISTIR 8413",
           "tc26_reference": "ТК 26 рекомендует замену RSA-подписи на ГОСТ Р 34.10-2012 (краткосрочно) и постквантовые схемы подписи (ML-DSA, SLH-DSA) в долгосрочной перспективе.",
           "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/RSA_sign.html",
-          "patterns": ["RSA_sign\\s*\\(", "RSA_verify\\s*\\("],
-          "context_keywords": ["rsa", "sign", "verify", "signature"],
+          "patterns": [
+            "RSA_sign\\s*\\(",
+            "RSA_verify\\s*\\("
+          ],
+          "context_keywords": [
+            "rsa",
+            "sign",
+            "verify",
+            "signature"
+          ],
           "replacements": [
             {
               "library": "liboqs / oqsprovider",
@@ -80,7 +114,11 @@
         {
           "id": "ossl-dsa-sign",
           "name": "DSA_sign",
-          "aliases": ["DSA_verify", "DSA_do_sign", "DSA_do_verify"],
+          "aliases": [
+            "DSA_verify",
+            "DSA_do_sign",
+            "DSA_do_verify"
+          ],
           "category": "digital_signature",
           "algorithm": "DSA",
           "quantum_vulnerability": "high",
@@ -89,8 +127,17 @@
           "nist_reference": "NIST FIPS 186-5 (DSA withdrawn); NISTIR 8413",
           "tc26_reference": "Алгоритм DSA не включён в перечень алгоритмов, рекомендованных ТК 26 для долгосрочного использования в условиях квантовых угроз.",
           "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/DSA_sign.html",
-          "patterns": ["\\bDSA_sign\\s*\\(", "\\bDSA_verify\\s*\\(", "DSA_do_sign\\s*\\(", "DSA_do_verify\\s*\\("],
-          "context_keywords": ["dsa", "sign", "verify"],
+          "patterns": [
+            "\\bDSA_sign\\s*\\(",
+            "\\bDSA_verify\\s*\\(",
+            "DSA_do_sign\\s*\\(",
+            "DSA_do_verify\\s*\\("
+          ],
+          "context_keywords": [
+            "dsa",
+            "sign",
+            "verify"
+          ],
           "replacements": [
             {
               "library": "liboqs / oqsprovider",
@@ -102,7 +149,11 @@
         {
           "id": "ossl-dh-generate-key",
           "name": "DH_generate_key",
-          "aliases": ["DH_compute_key", "DH_compute_key_padded", "DH_generate_parameters_ex"],
+          "aliases": [
+            "DH_compute_key",
+            "DH_compute_key_padded",
+            "DH_generate_parameters_ex"
+          ],
           "category": "key_exchange",
           "algorithm": "DH",
           "quantum_vulnerability": "high",
@@ -111,8 +162,19 @@
           "nist_reference": "NIST SP 800-56A Rev.3; NIST SP 800-131A Rev.2",
           "tc26_reference": "ТК 26: протокол Диффи-Хеллмана на конечных полях уязвим к квантовым атакам; рекомендуется переход на механизмы инкапсуляции ключей (КЕМ) на постквантовых схемах.",
           "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/DH_generate_key.html",
-          "patterns": ["DH_generate_key\\s*\\(", "\\bDH_compute_key\\s*\\(", "DH_compute_key_padded\\s*\\(", "DH_generate_parameters_ex\\s*\\("],
-          "context_keywords": ["dh", "diffie", "hellman", "key", "exchange"],
+          "patterns": [
+            "DH_generate_key\\s*\\(",
+            "\\bDH_compute_key\\s*\\(",
+            "DH_compute_key_padded\\s*\\(",
+            "DH_generate_parameters_ex\\s*\\("
+          ],
+          "context_keywords": [
+            "dh",
+            "diffie",
+            "hellman",
+            "key",
+            "exchange"
+          ],
           "replacements": [
             {
               "library": "liboqs / oqsprovider",
@@ -133,8 +195,16 @@
           "nist_reference": "NIST SP 800-56A Rev.3; NISTIR 8413",
           "tc26_reference": "ТК 26: ECDH и аналогичные протоколы на эллиптических кривых теряют стойкость при наличии квантового компьютера; замена на постквантовые КЕМ обязательна.",
           "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/ECDH_compute_key.html",
-          "patterns": ["ECDH_compute_key\\s*\\("],
-          "context_keywords": ["ecdh", "elliptic", "curve", "key", "exchange"],
+          "patterns": [
+            "ECDH_compute_key\\s*\\("
+          ],
+          "context_keywords": [
+            "ecdh",
+            "elliptic",
+            "curve",
+            "key",
+            "exchange"
+          ],
           "replacements": [
             {
               "library": "liboqs / oqsprovider",
@@ -146,7 +216,11 @@
         {
           "id": "ossl-ecdsa-sign",
           "name": "ECDSA_sign",
-          "aliases": ["ECDSA_verify", "ECDSA_do_sign", "ECDSA_do_verify"],
+          "aliases": [
+            "ECDSA_verify",
+            "ECDSA_do_sign",
+            "ECDSA_do_verify"
+          ],
           "category": "digital_signature",
           "algorithm": "ECDSA",
           "quantum_vulnerability": "high",
@@ -155,8 +229,19 @@
           "nist_reference": "NIST FIPS 186-5 (ECDSA retained for now but not quantum-safe); NISTIR 8413",
           "tc26_reference": "ТК 26: ECDSA (и аналог — ГОСТ Р 34.10-2012) не обеспечивает постквантовую стойкость; необходим переход на ML-DSA или SLH-DSA.",
           "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/ECDSA_sign.html",
-          "patterns": ["ECDSA_sign\\s*\\(", "ECDSA_verify\\s*\\(", "ECDSA_do_sign\\s*\\(", "ECDSA_do_verify\\s*\\("],
-          "context_keywords": ["ecdsa", "elliptic", "curve", "sign", "verify"],
+          "patterns": [
+            "ECDSA_sign\\s*\\(",
+            "ECDSA_verify\\s*\\(",
+            "ECDSA_do_sign\\s*\\(",
+            "ECDSA_do_verify\\s*\\("
+          ],
+          "context_keywords": [
+            "ecdsa",
+            "elliptic",
+            "curve",
+            "sign",
+            "verify"
+          ],
           "replacements": [
             {
               "library": "liboqs / oqsprovider",
@@ -177,8 +262,15 @@
           "nist_reference": "NISTIR 8413",
           "tc26_reference": "ТК 26: генерация ключей через EVP_PKEY_keygen для RSA/EC/DH не обеспечивает постквантовую стойкость; необходима замена на постквантовые алгоритмы через oqsprovider.",
           "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/EVP_PKEY_keygen.html",
-          "patterns": ["EVP_PKEY_keygen\\s*\\("],
-          "context_keywords": ["evp", "pkey", "keygen", "generate"],
+          "patterns": [
+            "EVP_PKEY_keygen\\s*\\("
+          ],
+          "context_keywords": [
+            "evp",
+            "pkey",
+            "keygen",
+            "generate"
+          ],
           "replacements": [
             {
               "library": "liboqs / oqsprovider",
@@ -190,7 +282,9 @@
         {
           "id": "ossl-evp-digest-sign-init",
           "name": "EVP_DigestSignInit",
-          "aliases": ["EVP_DigestSignInit_ex"],
+          "aliases": [
+            "EVP_DigestSignInit_ex"
+          ],
           "category": "digital_signature",
           "algorithm": "RSA/EC (EVP)",
           "quantum_vulnerability": "high",
@@ -199,8 +293,16 @@
           "nist_reference": "NISTIR 8413",
           "tc26_reference": "ТК 26: инициализация подписи через EVP_DigestSignInit с ключами RSA/EC/DSA не обеспечивает постквантовую стойкость.",
           "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/EVP_DigestSignInit.html",
-          "patterns": ["EVP_DigestSignInit\\s*\\(", "EVP_DigestSignInit_ex\\s*\\("],
-          "context_keywords": ["evp", "digest", "sign", "init"],
+          "patterns": [
+            "EVP_DigestSignInit\\s*\\(",
+            "EVP_DigestSignInit_ex\\s*\\("
+          ],
+          "context_keywords": [
+            "evp",
+            "digest",
+            "sign",
+            "init"
+          ],
           "replacements": [
             {
               "library": "liboqs / oqsprovider",
@@ -221,8 +323,15 @@
           "nist_reference": "NISTIR 8413",
           "tc26_reference": "ТК 26: создание контекста для квантово-уязвимых ключей (RSA/EC/DH/DSA) не соответствует требованиям постквантовой стойкости.",
           "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/EVP_PKEY_CTX_new.html",
-          "patterns": ["EVP_PKEY_CTX_new\\s*\\("],
-          "context_keywords": ["evp", "pkey", "ctx", "new"],
+          "patterns": [
+            "EVP_PKEY_CTX_new\\s*\\("
+          ],
+          "context_keywords": [
+            "evp",
+            "pkey",
+            "ctx",
+            "new"
+          ],
           "replacements": [
             {
               "library": "liboqs / oqsprovider",
@@ -234,7 +343,9 @@
         {
           "id": "ossl-dh-new",
           "name": "DH_new",
-          "aliases": ["DH_new_by_nid"],
+          "aliases": [
+            "DH_new_by_nid"
+          ],
           "category": "asymmetric_key_generation",
           "algorithm": "DH",
           "quantum_vulnerability": "high",
@@ -243,8 +354,15 @@
           "nist_reference": "NIST SP 800-56A Rev.3; NISTIR 8413",
           "tc26_reference": "ТК 26: структуры DH относятся к квантово-уязвимым примитивам; необходима замена на постквантовые КЕМ.",
           "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/DH_new.html",
-          "patterns": ["DH_new\\s*\\(", "DH_new_by_nid\\s*\\("],
-          "context_keywords": ["dh", "diffie", "hellman"],
+          "patterns": [
+            "DH_new\\s*\\(",
+            "DH_new_by_nid\\s*\\("
+          ],
+          "context_keywords": [
+            "dh",
+            "diffie",
+            "hellman"
+          ],
           "replacements": [
             {
               "library": "liboqs / oqsprovider",
@@ -253,7 +371,6 @@
             }
           ]
         },
-
         {
           "id": "ossl-evp-pkey-ctx-new-id",
           "name": "EVP_PKEY_CTX_new_id",
@@ -273,7 +390,16 @@
             "EVP_PKEY_CTX_new_id\\s*\\(\\s*EVP_PKEY_DH",
             "EVP_PKEY_CTX_new_id\\s*\\(\\s*EVP_PKEY_EC"
           ],
-          "context_keywords": ["evp", "pkey", "ctx", "nid", "rsa", "ec", "dh", "dsa"],
+          "context_keywords": [
+            "evp",
+            "pkey",
+            "ctx",
+            "nid",
+            "rsa",
+            "ec",
+            "dh",
+            "dsa"
+          ],
           "replacements": [
             {
               "library": "liboqs / oqsprovider",
@@ -282,7 +408,6 @@
             }
           ]
         },
-
         {
           "id": "ossl-evp-pkey-ctx-new-from-name",
           "name": "EVP_PKEY_CTX_new_from_name",
@@ -306,7 +431,17 @@
             "EVP_PKEY_CTX_new_from_name\\s*\\([^,]+,\\s*\"ED25519\"",
             "EVP_PKEY_CTX_new_from_name\\s*\\([^,]+,\\s*\"ED448\""
           ],
-          "context_keywords": ["evp", "pkey", "ctx", "name", "rsa", "ec", "dh", "dsa", "x25519"],
+          "context_keywords": [
+            "evp",
+            "pkey",
+            "ctx",
+            "name",
+            "rsa",
+            "ec",
+            "dh",
+            "dsa",
+            "x25519"
+          ],
           "replacements": [
             {
               "library": "liboqs / oqsprovider",
@@ -315,7 +450,6 @@
             }
           ]
         },
-
         {
           "id": "ossl-evp-digest-sign-update",
           "name": "EVP_DigestSignUpdate",
@@ -328,8 +462,15 @@
           "nist_reference": "NISTIR 8413",
           "tc26_reference": "ТК 26: EVP_DigestSignUpdate используется в составе механизма подписи; при использовании ключей RSA/EC/DSA операция является квантово-уязвимой.",
           "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/EVP_DigestSign.html",
-          "patterns": ["EVP_DigestSignUpdate\\s*\\("],
-          "context_keywords": ["evp", "digest", "sign", "update"],
+          "patterns": [
+            "EVP_DigestSignUpdate\\s*\\("
+          ],
+          "context_keywords": [
+            "evp",
+            "digest",
+            "sign",
+            "update"
+          ],
           "replacements": [
             {
               "library": "liboqs / oqsprovider",
@@ -338,11 +479,12 @@
             }
           ]
         },
-
         {
           "id": "ossl-evp-digest-sign-final",
           "name": "EVP_DigestSignFinal",
-          "aliases": ["EVP_DigestSign"],
+          "aliases": [
+            "EVP_DigestSign"
+          ],
           "category": "digital_signature",
           "algorithm": "RSA/EC (EVP)",
           "quantum_vulnerability": "high",
@@ -351,8 +493,16 @@
           "nist_reference": "NISTIR 8413",
           "tc26_reference": "ТК 26: EVP_DigestSignFinal завершает формирование подписи; при ключах RSA/EC/DSA результат является квантово-уязвимым.",
           "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/EVP_DigestSign.html",
-          "patterns": ["EVP_DigestSignFinal\\s*\\(", "EVP_DigestSign\\b\\s*\\("],
-          "context_keywords": ["evp", "digest", "sign", "final"],
+          "patterns": [
+            "EVP_DigestSignFinal\\s*\\(",
+            "EVP_DigestSign\\b\\s*\\("
+          ],
+          "context_keywords": [
+            "evp",
+            "digest",
+            "sign",
+            "final"
+          ],
           "replacements": [
             {
               "library": "liboqs / oqsprovider",
@@ -361,11 +511,12 @@
             }
           ]
         },
-
         {
           "id": "ossl-evp-digest-verify-init",
           "name": "EVP_DigestVerifyInit",
-          "aliases": ["EVP_DigestVerifyInit_ex"],
+          "aliases": [
+            "EVP_DigestVerifyInit_ex"
+          ],
           "category": "digital_signature",
           "algorithm": "RSA/EC (EVP)",
           "quantum_vulnerability": "high",
@@ -374,8 +525,16 @@
           "nist_reference": "NISTIR 8413",
           "tc26_reference": "ТК 26: инициализация проверки подписи EVP_DigestVerifyInit с ключами RSA/EC/DSA не обеспечивает постквантовую стойкость проверки.",
           "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/EVP_DigestVerifyInit.html",
-          "patterns": ["EVP_DigestVerifyInit\\s*\\(", "EVP_DigestVerifyInit_ex\\s*\\("],
-          "context_keywords": ["evp", "digest", "verify", "init"],
+          "patterns": [
+            "EVP_DigestVerifyInit\\s*\\(",
+            "EVP_DigestVerifyInit_ex\\s*\\("
+          ],
+          "context_keywords": [
+            "evp",
+            "digest",
+            "verify",
+            "init"
+          ],
           "replacements": [
             {
               "library": "liboqs / oqsprovider",
@@ -384,7 +543,6 @@
             }
           ]
         },
-
         {
           "id": "ossl-evp-digest-verify-update",
           "name": "EVP_DigestVerifyUpdate",
@@ -397,8 +555,15 @@
           "nist_reference": "NISTIR 8413",
           "tc26_reference": "ТК 26: EVP_DigestVerifyUpdate используется в составе процедуры верификации подписи; при ключах RSA/EC/DSA операция является квантово-уязвимой.",
           "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/EVP_DigestVerify.html",
-          "patterns": ["EVP_DigestVerifyUpdate\\s*\\("],
-          "context_keywords": ["evp", "digest", "verify", "update"],
+          "patterns": [
+            "EVP_DigestVerifyUpdate\\s*\\("
+          ],
+          "context_keywords": [
+            "evp",
+            "digest",
+            "verify",
+            "update"
+          ],
           "replacements": [
             {
               "library": "liboqs / oqsprovider",
@@ -407,11 +572,12 @@
             }
           ]
         },
-
         {
           "id": "ossl-evp-digest-verify-final",
           "name": "EVP_DigestVerifyFinal",
-          "aliases": ["EVP_DigestVerify"],
+          "aliases": [
+            "EVP_DigestVerify"
+          ],
           "category": "digital_signature",
           "algorithm": "RSA/EC (EVP)",
           "quantum_vulnerability": "high",
@@ -420,8 +586,16 @@
           "nist_reference": "NISTIR 8413",
           "tc26_reference": "ТК 26: EVP_DigestVerifyFinal завершает проверку подписи; при ключах RSA/EC/DSA результат является квантово-уязвимым.",
           "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/EVP_DigestVerify.html",
-          "patterns": ["EVP_DigestVerifyFinal\\s*\\(", "EVP_DigestVerify\\b\\s*\\("],
-          "context_keywords": ["evp", "digest", "verify", "final"],
+          "patterns": [
+            "EVP_DigestVerifyFinal\\s*\\(",
+            "EVP_DigestVerify\\b\\s*\\("
+          ],
+          "context_keywords": [
+            "evp",
+            "digest",
+            "verify",
+            "final"
+          ],
           "replacements": [
             {
               "library": "liboqs / oqsprovider",
@@ -430,7 +604,6 @@
             }
           ]
         },
-
         {
           "id": "ossl-evp-pkey-derive-init",
           "name": "EVP_PKEY_derive_init",
@@ -443,8 +616,17 @@
           "nist_reference": "NIST SP 800-56A Rev.3; NISTIR 8413",
           "tc26_reference": "ТК 26: EVP_PKEY_derive_init для ECDH/DH контекстов является квантово-уязвимой операцией; рекомендуется переход на ML-KEM.",
           "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/EVP_PKEY_derive.html",
-          "patterns": ["EVP_PKEY_derive_init\\s*\\("],
-          "context_keywords": ["evp", "pkey", "derive", "init", "ecdh", "dh"],
+          "patterns": [
+            "EVP_PKEY_derive_init\\s*\\("
+          ],
+          "context_keywords": [
+            "evp",
+            "pkey",
+            "derive",
+            "init",
+            "ecdh",
+            "dh"
+          ],
           "replacements": [
             {
               "library": "liboqs / oqsprovider",
@@ -453,7 +635,6 @@
             }
           ]
         },
-
         {
           "id": "ossl-evp-pkey-derive-set-peer",
           "name": "EVP_PKEY_derive_set_peer",
@@ -466,8 +647,17 @@
           "nist_reference": "NIST SP 800-56A Rev.3; NISTIR 8413",
           "tc26_reference": "ТК 26: установка ключа партнёра через EVP_PKEY_derive_set_peer для ECDH/DH является квантово-уязвимой операцией.",
           "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/EVP_PKEY_derive.html",
-          "patterns": ["EVP_PKEY_derive_set_peer\\s*\\("],
-          "context_keywords": ["evp", "pkey", "derive", "peer", "ecdh", "dh"],
+          "patterns": [
+            "EVP_PKEY_derive_set_peer\\s*\\("
+          ],
+          "context_keywords": [
+            "evp",
+            "pkey",
+            "derive",
+            "peer",
+            "ecdh",
+            "dh"
+          ],
           "replacements": [
             {
               "library": "liboqs / oqsprovider",
@@ -476,7 +666,6 @@
             }
           ]
         },
-
         {
           "id": "ossl-evp-pkey-derive",
           "name": "EVP_PKEY_derive",
@@ -489,8 +678,18 @@
           "nist_reference": "NIST SP 800-56A Rev.3; NISTIR 8413",
           "tc26_reference": "ТК 26: вычисление общего секрета через EVP_PKEY_derive для ECDH/DH является квантово-уязвимой операцией; замена на ML-KEM обязательна при долгосрочной защите данных.",
           "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/EVP_PKEY_derive.html",
-          "patterns": ["EVP_PKEY_derive\\s*\\("],
-          "context_keywords": ["evp", "pkey", "derive", "shared", "secret", "ecdh", "dh"],
+          "patterns": [
+            "EVP_PKEY_derive\\s*\\("
+          ],
+          "context_keywords": [
+            "evp",
+            "pkey",
+            "derive",
+            "shared",
+            "secret",
+            "ecdh",
+            "dh"
+          ],
           "replacements": [
             {
               "library": "liboqs / oqsprovider",
@@ -499,7 +698,6 @@
             }
           ]
         },
-
         {
           "id": "ossl-evp-pkey-paramgen-init",
           "name": "EVP_PKEY_paramgen_init",
@@ -512,8 +710,18 @@
           "nist_reference": "NISTIR 8413; NIST SP 800-131A Rev.2",
           "tc26_reference": "ТК 26: генерация параметров через EVP_PKEY_paramgen_init для DH/DSA/EC является квантово-уязвимой операцией.",
           "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/EVP_PKEY_paramgen.html",
-          "patterns": ["EVP_PKEY_paramgen_init\\s*\\("],
-          "context_keywords": ["evp", "pkey", "paramgen", "init", "dh", "dsa", "ec"],
+          "patterns": [
+            "EVP_PKEY_paramgen_init\\s*\\("
+          ],
+          "context_keywords": [
+            "evp",
+            "pkey",
+            "paramgen",
+            "init",
+            "dh",
+            "dsa",
+            "ec"
+          ],
           "replacements": [
             {
               "library": "liboqs / oqsprovider",
@@ -522,7 +730,6 @@
             }
           ]
         },
-
         {
           "id": "ossl-evp-pkey-paramgen",
           "name": "EVP_PKEY_paramgen",
@@ -535,8 +742,18 @@
           "nist_reference": "NISTIR 8413; NIST SP 800-56A Rev.3",
           "tc26_reference": "ТК 26: параметры, сгенерированные EVP_PKEY_paramgen для DH/DSA/EC, используются для квантово-уязвимых алгоритмов.",
           "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/EVP_PKEY_paramgen.html",
-          "patterns": ["EVP_PKEY_paramgen\\s*\\("],
-          "context_keywords": ["evp", "pkey", "paramgen", "dh", "dsa", "ec", "params"],
+          "patterns": [
+            "EVP_PKEY_paramgen\\s*\\("
+          ],
+          "context_keywords": [
+            "evp",
+            "pkey",
+            "paramgen",
+            "dh",
+            "dsa",
+            "ec",
+            "params"
+          ],
           "replacements": [
             {
               "library": "liboqs / oqsprovider",
@@ -545,7 +762,6 @@
             }
           ]
         },
-
         {
           "id": "ossl-evp-pkey-keygen-init",
           "name": "EVP_PKEY_keygen_init",
@@ -558,8 +774,15 @@
           "nist_reference": "NISTIR 8413",
           "tc26_reference": "ТК 26: инициализация генерации ключа EVP_PKEY_keygen_init для RSA/EC/DH/DSA является квантово-уязвимой операцией.",
           "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/EVP_PKEY_keygen.html",
-          "patterns": ["EVP_PKEY_keygen_init\\s*\\("],
-          "context_keywords": ["evp", "pkey", "keygen", "init"],
+          "patterns": [
+            "EVP_PKEY_keygen_init\\s*\\("
+          ],
+          "context_keywords": [
+            "evp",
+            "pkey",
+            "keygen",
+            "init"
+          ],
           "replacements": [
             {
               "library": "liboqs / oqsprovider",
@@ -568,11 +791,12 @@
             }
           ]
         },
-
         {
           "id": "ossl-bn-new",
           "name": "BN_new",
-          "aliases": ["BN_secure_new"],
+          "aliases": [
+            "BN_secure_new"
+          ],
           "category": "asymmetric_primitive",
           "algorithm": "BIGNUM (manual RSA/DH/DSA)",
           "quantum_vulnerability": "medium",
@@ -581,8 +805,18 @@
           "nist_reference": "NISTIR 8413",
           "tc26_reference": "ТК 26: использование структур BIGNUM является индикатором ручной реализации криптографических примитивов (RSA/DH/DSA), которые уязвимы к квантовым атакам.",
           "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/BN_new.html",
-          "patterns": ["BN_new\\s*\\(", "BN_secure_new\\s*\\("],
-          "context_keywords": ["bignum", "bn", "rsa", "dh", "dsa", "modular"],
+          "patterns": [
+            "BN_new\\s*\\(",
+            "BN_secure_new\\s*\\("
+          ],
+          "context_keywords": [
+            "bignum",
+            "bn",
+            "rsa",
+            "dh",
+            "dsa",
+            "modular"
+          ],
           "replacements": [
             {
               "library": "liboqs / oqsprovider",
@@ -591,11 +825,14 @@
             }
           ]
         },
-
         {
           "id": "ossl-bn-generate-prime-ex",
           "name": "BN_generate_prime_ex",
-          "aliases": ["BN_generate_prime_ex2", "BN_is_prime_ex", "BN_is_prime_fasttest_ex"],
+          "aliases": [
+            "BN_generate_prime_ex2",
+            "BN_is_prime_ex",
+            "BN_is_prime_fasttest_ex"
+          ],
           "category": "asymmetric_primitive",
           "algorithm": "BIGNUM (manual RSA/DH/DSA)",
           "quantum_vulnerability": "medium",
@@ -604,8 +841,19 @@
           "nist_reference": "NISTIR 8413; NIST SP 800-131A Rev.2",
           "tc26_reference": "ТК 26: генерация простых чисел через BN_generate_prime_ex характерна для ручной реализации RSA/DSA — алгоритмов, уязвимых к квантовым атакам.",
           "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/BN_generate_prime_ex.html",
-          "patterns": ["BN_generate_prime_ex\\s*\\(", "BN_generate_prime_ex2\\s*\\(", "BN_is_prime_ex\\s*\\(", "BN_is_prime_fasttest_ex\\s*\\("],
-          "context_keywords": ["bignum", "prime", "rsa", "dsa", "modular"],
+          "patterns": [
+            "BN_generate_prime_ex\\s*\\(",
+            "BN_generate_prime_ex2\\s*\\(",
+            "BN_is_prime_ex\\s*\\(",
+            "BN_is_prime_fasttest_ex\\s*\\("
+          ],
+          "context_keywords": [
+            "bignum",
+            "prime",
+            "rsa",
+            "dsa",
+            "modular"
+          ],
           "replacements": [
             {
               "library": "liboqs / oqsprovider",
@@ -614,11 +862,14 @@
             }
           ]
         },
-
         {
           "id": "ossl-bn-mod-exp",
           "name": "BN_mod_exp",
-          "aliases": ["BN_mod_exp_mont", "BN_mod_exp_mont_consttime", "BN_mod_exp_simple"],
+          "aliases": [
+            "BN_mod_exp_mont",
+            "BN_mod_exp_mont_consttime",
+            "BN_mod_exp_simple"
+          ],
           "category": "asymmetric_primitive",
           "algorithm": "BIGNUM (manual RSA/DH/DSA)",
           "quantum_vulnerability": "medium",
@@ -627,8 +878,21 @@
           "nist_reference": "NISTIR 8413",
           "tc26_reference": "ТК 26: модульное возведение в степень через BN_mod_exp является ключевой операцией RSA/DH/DSA — алгоритмов, уязвимых к атаке алгоритмом Шора.",
           "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/BN_mod_exp.html",
-          "patterns": ["BN_mod_exp\\s*\\(", "BN_mod_exp_mont\\s*\\(", "BN_mod_exp_mont_consttime\\s*\\(", "BN_mod_exp_simple\\s*\\("],
-          "context_keywords": ["bignum", "modexp", "rsa", "dh", "dsa", "modular", "exponentiation"],
+          "patterns": [
+            "BN_mod_exp\\s*\\(",
+            "BN_mod_exp_mont\\s*\\(",
+            "BN_mod_exp_mont_consttime\\s*\\(",
+            "BN_mod_exp_simple\\s*\\("
+          ],
+          "context_keywords": [
+            "bignum",
+            "modexp",
+            "rsa",
+            "dh",
+            "dsa",
+            "modular",
+            "exponentiation"
+          ],
           "replacements": [
             {
               "library": "liboqs / oqsprovider",
@@ -637,7 +901,6 @@
             }
           ]
         },
-
         {
           "id": "ossl-bn-mod-inverse",
           "name": "BN_mod_inverse",
@@ -650,8 +913,16 @@
           "nist_reference": "NISTIR 8413",
           "tc26_reference": "ТК 26: вычисление обратного элемента по модулю через BN_mod_inverse используется в ручных реализациях RSA/DSA — квантово-уязвимых алгоритмов.",
           "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/BN_mod_inverse.html",
-          "patterns": ["BN_mod_inverse\\s*\\("],
-          "context_keywords": ["bignum", "inverse", "rsa", "dsa", "modular"],
+          "patterns": [
+            "BN_mod_inverse\\s*\\("
+          ],
+          "context_keywords": [
+            "bignum",
+            "inverse",
+            "rsa",
+            "dsa",
+            "modular"
+          ],
           "replacements": [
             {
               "library": "liboqs / oqsprovider",
@@ -660,11 +931,14 @@
             }
           ]
         },
-
         {
           "id": "ossl-bn-gencb",
           "name": "BN_GENCB",
-          "aliases": ["BN_GENCB_new", "BN_GENCB_call", "BN_GENCB_set"],
+          "aliases": [
+            "BN_GENCB_new",
+            "BN_GENCB_call",
+            "BN_GENCB_set"
+          ],
           "category": "asymmetric_primitive",
           "algorithm": "BIGNUM (manual RSA/DH/DSA)",
           "quantum_vulnerability": "medium",
@@ -673,8 +947,22 @@
           "nist_reference": "NISTIR 8413",
           "tc26_reference": "ТК 26: использование BN_GENCB характерно для ручной генерации ключей RSA/DSA — квантово-уязвимых алгоритмов.",
           "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/BN_generate_prime_ex.html",
-          "patterns": ["BN_GENCB\\b", "BN_GENCB_new\\s*\\(", "BN_GENCB_free\\s*\\(", "BN_GENCB_call\\s*\\(", "BN_GENCB_set\\s*\\("],
-          "context_keywords": ["bignum", "gencb", "callback", "rsa", "dsa", "prime", "keygen"],
+          "patterns": [
+            "BN_GENCB\\b",
+            "BN_GENCB_new\\s*\\(",
+            "BN_GENCB_free\\s*\\(",
+            "BN_GENCB_call\\s*\\(",
+            "BN_GENCB_set\\s*\\("
+          ],
+          "context_keywords": [
+            "bignum",
+            "gencb",
+            "callback",
+            "rsa",
+            "dsa",
+            "prime",
+            "keygen"
+          ],
           "replacements": [
             {
               "library": "liboqs / oqsprovider",
@@ -683,7 +971,6 @@
             }
           ]
         },
-
         {
           "id": "ossl-rsa-new",
           "name": "RSA_new",
@@ -696,8 +983,14 @@
           "nist_reference": "NIST SP 800-131A Rev.2; NISTIR 8413",
           "tc26_reference": "ТК 26: выделение структуры RSA через RSA_new является индикатором использования квантово-уязвимого алгоритма RSA.",
           "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/RSA_new.html",
-          "patterns": ["RSA_new\\s*\\("],
-          "context_keywords": ["rsa", "new", "key"],
+          "patterns": [
+            "RSA_new\\s*\\("
+          ],
+          "context_keywords": [
+            "rsa",
+            "new",
+            "key"
+          ],
           "replacements": [
             {
               "library": "liboqs / oqsprovider",
@@ -706,7 +999,6 @@
             }
           ]
         },
-
         {
           "id": "ossl-dsa-new",
           "name": "DSA_new",
@@ -719,8 +1011,15 @@
           "nist_reference": "NIST FIPS 186-5 (DSA withdrawn); NISTIR 8413",
           "tc26_reference": "ТК 26: структура DSA, создаваемая через DSA_new, относится к квантово-уязвимым примитивам; рекомендуется переход на ML-DSA.",
           "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/DSA_new.html",
-          "patterns": ["DSA_new\\s*\\("],
-          "context_keywords": ["dsa", "new", "key", "sign"],
+          "patterns": [
+            "DSA_new\\s*\\("
+          ],
+          "context_keywords": [
+            "dsa",
+            "new",
+            "key",
+            "sign"
+          ],
           "replacements": [
             {
               "library": "liboqs / oqsprovider",
@@ -729,11 +1028,13 @@
             }
           ]
         },
-
         {
           "id": "ossl-ec-key-new",
           "name": "EC_KEY_new",
-          "aliases": ["EC_KEY_new_by_curve_name", "EC_KEY_generate_key"],
+          "aliases": [
+            "EC_KEY_new_by_curve_name",
+            "EC_KEY_generate_key"
+          ],
           "category": "asymmetric_key_generation",
           "algorithm": "ECDSA/ECDH",
           "quantum_vulnerability": "high",
@@ -742,8 +1043,19 @@
           "nist_reference": "NISTIR 8413; NIST SP 800-131A Rev.2",
           "tc26_reference": "ТК 26: структуры EC_KEY используются для ECDSA и ECDH — алгоритмов, уязвимых к квантовым атакам (задача ECDLP решается алгоритмом Шора).",
           "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/EC_KEY_new.html",
-          "patterns": ["EC_KEY_new\\s*\\(", "EC_KEY_new_by_curve_name\\s*\\(", "EC_KEY_generate_key\\s*\\("],
-          "context_keywords": ["ec", "key", "elliptic", "curve", "ecdsa", "ecdh"],
+          "patterns": [
+            "EC_KEY_new\\s*\\(",
+            "EC_KEY_new_by_curve_name\\s*\\(",
+            "EC_KEY_generate_key\\s*\\("
+          ],
+          "context_keywords": [
+            "ec",
+            "key",
+            "elliptic",
+            "curve",
+            "ecdsa",
+            "ecdh"
+          ],
           "replacements": [
             {
               "library": "liboqs / oqsprovider",
@@ -752,11 +1064,14 @@
             }
           ]
         },
-
         {
           "id": "ossl-ec-group-new-by-curve-name",
           "name": "EC_GROUP_new_by_curve_name",
-          "aliases": ["EC_GROUP_new", "EC_GROUP_free", "EC_GROUP_new_curve_GFp"],
+          "aliases": [
+            "EC_GROUP_new",
+            "EC_GROUP_free",
+            "EC_GROUP_new_curve_GFp"
+          ],
           "category": "asymmetric_key_generation",
           "algorithm": "ECDSA/ECDH",
           "quantum_vulnerability": "high",
@@ -765,8 +1080,20 @@
           "nist_reference": "NISTIR 8413; NIST SP 800-186 (elliptic curves for pre-quantum use only)",
           "tc26_reference": "ТК 26: создание группы эллиптической кривой через EC_GROUP_new_by_curve_name — индикатор использования ECDSA/ECDH; все именованные кривые уязвимы к квантовым атакам.",
           "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/EC_GROUP_new.html",
-          "patterns": ["EC_GROUP_new_by_curve_name\\s*\\(", "EC_GROUP_new\\s*\\(", "EC_GROUP_new_curve_GFp\\s*\\("],
-          "context_keywords": ["ec", "group", "curve", "nid", "elliptic", "ecdsa", "ecdh"],
+          "patterns": [
+            "EC_GROUP_new_by_curve_name\\s*\\(",
+            "EC_GROUP_new\\s*\\(",
+            "EC_GROUP_new_curve_GFp\\s*\\("
+          ],
+          "context_keywords": [
+            "ec",
+            "group",
+            "curve",
+            "nid",
+            "elliptic",
+            "ecdsa",
+            "ecdh"
+          ],
           "replacements": [
             {
               "library": "liboqs / oqsprovider",
@@ -775,11 +1102,14 @@
             }
           ]
         },
-
         {
           "id": "ossl-sha1",
           "name": "SHA1",
-          "aliases": ["SHA1_Init", "SHA1_Update", "SHA1_Final"],
+          "aliases": [
+            "SHA1_Init",
+            "SHA1_Update",
+            "SHA1_Final"
+          ],
           "category": "hash_function",
           "algorithm": "SHA-1",
           "quantum_vulnerability": "medium",
@@ -788,8 +1118,17 @@
           "nist_reference": "NIST SP 800-131A Rev.2 (SHA-1 disallowed for digital signatures after 2013); NIST SP 800-57 Part 1 Rev.5",
           "tc26_reference": "ТК 26: SHA-1 не рекомендован; для хэширования следует использовать Стрибог (ГОСТ Р 34.11-2012) с длиной дайджеста 256 или 512 бит.",
           "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/SHA1.html",
-          "patterns": ["\\bSHA1\\s*\\(", "SHA1_Init\\s*\\(", "SHA1_Update\\s*\\(", "SHA1_Final\\s*\\("],
-          "context_keywords": ["sha1", "hash", "digest"],
+          "patterns": [
+            "\\bSHA1\\s*\\(",
+            "SHA1_Init\\s*\\(",
+            "SHA1_Update\\s*\\(",
+            "SHA1_Final\\s*\\("
+          ],
+          "context_keywords": [
+            "sha1",
+            "hash",
+            "digest"
+          ],
           "replacements": [
             {
               "function_name": "EVP_DigestInit_ex",
@@ -802,11 +1141,14 @@
             }
           ]
         },
-
         {
           "id": "ossl-md5",
           "name": "MD5",
-          "aliases": ["MD5_Init", "MD5_Update", "MD5_Final"],
+          "aliases": [
+            "MD5_Init",
+            "MD5_Update",
+            "MD5_Final"
+          ],
           "category": "hash_function",
           "algorithm": "MD5",
           "quantum_vulnerability": "medium",
@@ -815,8 +1157,18 @@
           "nist_reference": "NIST SP 800-131A Rev.2 (MD5 disallowed); NIST SP 800-57 Part 1 Rev.5",
           "tc26_reference": "ТК 26: MD5 не рекомендован для применения в криптографических протоколах; следует использовать Стрибог (ГОСТ Р 34.11-2012).",
           "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/MD5.html",
-          "patterns": ["\\bMD5\\s*\\(", "MD5_Init\\s*\\(", "MD5_Update\\s*\\(", "MD5_Final\\s*\\("],
-          "context_keywords": ["md5", "hash", "digest", "checksum"],
+          "patterns": [
+            "\\bMD5\\s*\\(",
+            "MD5_Init\\s*\\(",
+            "MD5_Update\\s*\\(",
+            "MD5_Final\\s*\\("
+          ],
+          "context_keywords": [
+            "md5",
+            "hash",
+            "digest",
+            "checksum"
+          ],
           "replacements": [
             {
               "function_name": "EVP_DigestInit_ex",
@@ -1091,6 +1443,629 @@
               "migration_notes": "Гибридный KEM: вычислить VKO (классический), вычислить ML-KEM shared_secret, объединить через HKDF.",
               "example_code": "// Classical VKO (existing)\n// PQ part:\nOQS_KEM *kem = OQS_KEM_new(OQS_KEM_alg_ml_kem_768);\nOQS_KEM_encaps(kem, ct, pq_ss, pk);\n// Combine: HKDF(vko_secret || pq_ss)",
               "tc26_note": "ТК 26: гибридный KEM обязателен в переходный период 2025–2030"
+            }
+          ]
+        },
+        {
+          "id": "gost-evp-pkey-ctx-gost2012",
+          "name": "EVP_PKEY_CTX_new_from_name (gost2012/gost2001)",
+          "aliases": [],
+          "category": "asymmetric_key_generation",
+          "algorithm": "ГОСТ Р 34.10-2012 (EVP OpenSSL 3.x)",
+          "quantum_vulnerability": "high",
+          "risk_score": 9.2,
+          "description": "Creates an EVP_PKEY_CTX for ГОСТ Р 34.10-2012 or ГОСТ Р 34.10-2001 key operations via the OpenSSL 3.x provider API. The algorithm name strings 'gost2012_256', 'gost2012_512', and 'gost2001' identify ECC-based ГОСТ keys. The elliptic curve discrete logarithm problem on ГОСТ TC26 curves is solved in polynomial time by Shor's algorithm, making all keys and signatures produced in this context quantum-insecure. Similarly, EVP_PKEY_CTX_new_id with NID_id_GostR3410_2012_256, NID_id_GostR3410_2012_512, or NID_id_GostR3410_2001 creates the same quantum-vulnerable context.",
+          "nist_reference": "NIST IR 8547 §2 (ECDLP analogy); NISTIR 8413",
+          "tc26_reference": "ТК 26: ГОСТ Р 34.10-2012 квантово-уязвим через ЗАДЛП на ЭК алгебраической группы; в переходный период 2025–2030 рекомендуется гибридная схема ГОСТ Р 34.10-2012 + ML-DSA-65.",
+          "deprecation_url": "https://tc26.ru/post-quantum",
+          "patterns": [
+            "EVP_PKEY_CTX_new_from_name\\s*\\([^,]+,\\s*\"gost2012_256\"",
+            "EVP_PKEY_CTX_new_from_name\\s*\\([^,]+,\\s*\"gost2012_512\"",
+            "EVP_PKEY_CTX_new_from_name\\s*\\([^,]+,\\s*\"gost2001\"",
+            "EVP_PKEY_CTX_new_from_name\\s*\\([^,]+,\\s*\"GOST2012\"",
+            "EVP_PKEY_CTX_new_from_name\\s*\\([^,]+,\\s*\"GOST2001\"",
+            "EVP_PKEY_CTX_new_id\\s*\\(\\s*NID_id_GostR3410_2012_256",
+            "EVP_PKEY_CTX_new_id\\s*\\(\\s*NID_id_GostR3410_2012_512",
+            "EVP_PKEY_CTX_new_id\\s*\\(\\s*NID_id_GostR3410_2001"
+          ],
+          "context_keywords": [
+            "gost",
+            "gost2012",
+            "gost2001",
+            "evp",
+            "pkey",
+            "ctx"
+          ],
+          "replacements": [
+            {
+              "function_name": "OQS_SIG_sign",
+              "library": "liboqs",
+              "standard": "FIPS 204",
+              "algorithm": "ML-DSA-65",
+              "type": "signature",
+              "migration_notes": "Гибридная схема: ГОСТ Р 34.10-2012 + ML-DSA-65. Заменить алгоритм с \"gost2012_256\" на \"ML-DSA-65\" через oqsprovider, сохранив ГОСТ-подпись для совместимости в переходный период.",
+              "example_code": "// PQC part via oqsprovider:\nEVP_PKEY_CTX *ctx = EVP_PKEY_CTX_new_from_name(NULL, \"ML-DSA-65\", NULL);\nEVP_PKEY_keygen_init(ctx);\nEVP_PKEY_keygen(ctx, &pqc_key);",
+              "tc26_note": "ТК 26: гибридная подпись ГОСТ Р 34.10-2012 + ML-DSA-65 обязательна в переходный период"
+            }
+          ]
+        },
+        {
+          "id": "gost-ssl-cipher-list",
+          "name": "SSL_CTX_set_cipher_list (GOST суites)",
+          "aliases": [
+            "SSL_CTX_set_ciphersuites"
+          ],
+          "category": "key_exchange",
+          "algorithm": "ГОСТ Р 34.10-2012 (TLS)",
+          "quantum_vulnerability": "high",
+          "risk_score": 9.0,
+          "description": "Configures OpenSSL TLS context to use ГОСТ cipher suites (e.g. GOST2012-GOST8912-GOST8912, GOST2012-NULL-GOST12). ГОСТ TLS cipher suites defined in RFC 9058 / GOST R TLS use ГОСТ Р 34.10-2012 ECC for key exchange (VKO) and authentication. The ECDLP underlying ГОСТ 34.10-2012 is solved in polynomial time by Shor's algorithm. Any TLS session negotiated with a ГОСТ cipher suite is quantum-insecure because the session key establishment relies on a quantum-vulnerable key agreement.",
+          "nist_reference": "NIST IR 8547; NISTIR 8413",
+          "tc26_reference": "ТК 26: TLS-сессии с шифрсьютами ГОСТ 34.10-2012 квантово-уязвимы; необходим переход на гибридные KEM (ML-KEM-768 + VKO) в TLS 1.3 с HKDF-комбинацией.",
+          "deprecation_url": "https://tc26.ru/post-quantum",
+          "patterns": [
+            "SSL_CTX_set_cipher_list\\s*\\([^,]+,\\s*\"GOST",
+            "SSL_CTX_set_ciphersuites\\s*\\([^,]+,\\s*\"TLS_GOST"
+          ],
+          "context_keywords": [
+            "ssl",
+            "tls",
+            "gost",
+            "cipher",
+            "ciphersuite"
+          ],
+          "replacements": [
+            {
+              "library": "oqsprovider + gost-engine",
+              "function": "Гибридный KEM в TLS 1.3",
+              "notes": "Переход на TLS 1.3 с гибридными группами: ML-KEM-768 + ECDH/VKO через HKDF-комбинацию. Аутентификация: гибридная подпись ML-DSA-65 + ГОСТ Р 34.10-2012.",
+              "tc26_note": "ТК 26: гибридный TLS 1.3 с ML-KEM + VKO обязателен для новых систем с 2025 г."
+            }
+          ]
+        }
+      ]
+    },
+    "libgcrypt": {
+      "display_name": "libgcrypt",
+      "version_tested": "1.10.x",
+      "description": "GNU libgcrypt — низкоуровневая криптографическая библиотека. Используется в GnuPG, NSS и ряде российских продуктов для реализации ГОСТ-алгоритмов (Магма, Кузнечик, Стрибог).",
+      "functions": [
+        {
+          "id": "gcrypt-cipher-gost",
+          "name": "gcry_cipher_open",
+          "aliases": [
+            "GCRY_CIPHER_GOST28147",
+            "GCRY_CIPHER_GRASSHOPPER"
+          ],
+          "category": "symmetric_cipher",
+          "algorithm": "Магма / Кузнечик (ГОСТ Р 34.12-2015, ГОСТ 28147-89)",
+          "quantum_vulnerability": "low",
+          "risk_score": 4.5,
+          "description": "Opens a libgcrypt cipher context for a GOST symmetric cipher. GCRY_CIPHER_GOST28147 (Магма, 64-bit block) should be migrated to GCRY_CIPHER_GRASSHOPPER (Кузнечик, 128-bit block). Both are quantum-safe from a key-security perspective (Grover leaves ~128-bit effective security), but Магма has a birthday-bound at 2^32 blocks (~32 GB) due to the 64-bit block size.",
+          "nist_reference": "NIST SP 800-57 Part 1 Rev.5; Grover's algorithm halves symmetric key security",
+          "tc26_reference": "ТК 26: Магма (ГОСТ Р 34.12-2015) — 64-битный блок; для новых систем рекомендуется Кузнечик (128-битный блок). Оба алгоритма постквантово-стойки при 256-битном ключе.",
+          "deprecation_url": "https://www.gnupg.org/documentation/manuals/gcrypt/Available-ciphers.html",
+          "patterns": [
+            "gcry_cipher_open\\s*\\([^,]+,\\s*GCRY_CIPHER_GOST28147",
+            "GCRY_CIPHER_GOST28147",
+            "gcry_cipher_open\\s*\\([^,]+,\\s*GCRY_CIPHER_GRASSHOPPER",
+            "GCRY_CIPHER_GRASSHOPPER"
+          ],
+          "context_keywords": [
+            "gcrypt",
+            "gost",
+            "magma",
+            "grasshopper",
+            "kuznyechik",
+            "cipher"
+          ],
+          "replacements": [
+            {
+              "library": "libgcrypt",
+              "function_name": "gcry_cipher_open(hd, GCRY_CIPHER_GRASSHOPPER, mode, 0)",
+              "notes": "Заменить GCRY_CIPHER_GOST28147 на GCRY_CIPHER_GRASSHOPPER (Кузнечик, ГОСТ Р 34.12-2015): 128-битный блок, 256-битный ключ. Поддерживается в libgcrypt >= 1.8.0.",
+              "tc26_note": "ТК 26: Кузнечик (ГОСТ Р 34.12-2015) — рекомендуемый блочный шифр для новых систем"
+            }
+          ]
+        },
+        {
+          "id": "gcrypt-md-gost",
+          "name": "gcry_md_open",
+          "aliases": [
+            "GCRY_MD_STRIBOG256",
+            "GCRY_MD_STRIBOG512",
+            "GCRY_MD_GOSTR3411_CP",
+            "GCRY_MD_GOSTR3411_94"
+          ],
+          "category": "hash_function",
+          "algorithm": "Стрибог / ГОСТ Р 34.11-2012, ГОСТ Р 34.11-94 (устаревший)",
+          "quantum_vulnerability": "medium",
+          "risk_score": 6.5,
+          "description": "Opens a libgcrypt message digest context for a GOST hash function. GCRY_MD_GOSTR3411_CP/94 is deprecated — must migrate to Стрибог. GCRY_MD_STRIBOG256 provides ~128-bit quantum security (boundary); GCRY_MD_STRIBOG512 provides ~256-bit and is preferred for long-term use.",
+          "nist_reference": "NIST SP 800-131A Rev.2 (deprecated algorithms); NIST SP 800-57 Part 1 Rev.5",
+          "tc26_reference": "ТК 26: ГОСТ Р 34.11-94 снят с применения; необходимо перейти на Стрибог-256 или Стрибог-512 (ГОСТ Р 34.11-2012).",
+          "deprecation_url": "https://www.gnupg.org/documentation/manuals/gcrypt/Available-hash-algorithms.html",
+          "patterns": [
+            "gcry_md_open\\s*\\([^,]+,\\s*GCRY_MD_STRIBOG256",
+            "GCRY_MD_STRIBOG256",
+            "gcry_md_open\\s*\\([^,]+,\\s*GCRY_MD_STRIBOG512",
+            "GCRY_MD_STRIBOG512",
+            "gcry_md_open\\s*\\([^,]+,\\s*GCRY_MD_GOSTR3411_CP",
+            "gcry_md_open\\s*\\([^,]+,\\s*GCRY_MD_GOSTR3411_94",
+            "GCRY_MD_GOSTR3411_CP",
+            "GCRY_MD_GOSTR3411_94"
+          ],
+          "context_keywords": [
+            "gcrypt",
+            "stribog",
+            "streebog",
+            "gostr3411",
+            "gost94",
+            "hash",
+            "digest"
+          ],
+          "replacements": [
+            {
+              "library": "libgcrypt",
+              "function_name": "gcry_md_open(hd, GCRY_MD_STRIBOG512, 0)",
+              "notes": "Заменить GCRY_MD_GOSTR3411_CP/94 на GCRY_MD_STRIBOG512 (или GCRY_MD_STRIBOG256 при ограничениях размера). ГОСТ Р 34.11-94 снят с применения с 2013 года.",
+              "tc26_note": "ТК 26: переход на Стрибог (ГОСТ Р 34.11-2012) обязателен"
+            }
+          ]
+        },
+        {
+          "id": "gcrypt-mac-gost",
+          "name": "gcry_mac_open",
+          "aliases": [
+            "GCRY_MAC_GOST28147_IMIT",
+            "GCRY_MAC_HMAC_STRIBOG256",
+            "GCRY_MAC_HMAC_STRIBOG512"
+          ],
+          "category": "message_authentication",
+          "algorithm": "ГОСТ MAC / HMAC-Стрибог (ГОСТ Р 34.11-2012, ГОСТ 28147-89)",
+          "quantum_vulnerability": "low",
+          "risk_score": 4.0,
+          "description": "Opens a libgcrypt MAC context for a GOST MAC algorithm. GCRY_MAC_GOST28147_IMIT (32-bit tag, classical birthday risk at 2^16) should migrate to HMAC-Стрибог. GCRY_MAC_HMAC_STRIBOG256 is acceptable; GCRY_MAC_HMAC_STRIBOG512 is preferred for long-term security.",
+          "nist_reference": "NIST SP 800-57 Part 1 Rev.5",
+          "tc26_reference": "ТК 26: имитовставка ГОСТ 28147-89 — 32-битный тег; рекомендуется переход на HMAC-Стрибог-256 (ГОСТ Р 34.11-2012) или имитовставку Кузнечика (ГОСТ Р 34.13-2015).",
+          "deprecation_url": "https://www.gnupg.org/documentation/manuals/gcrypt/Available-MAC-algorithms.html",
+          "patterns": [
+            "gcry_mac_open\\s*\\([^,]+,\\s*GCRY_MAC_GOST28147_IMIT",
+            "GCRY_MAC_GOST28147_IMIT",
+            "gcry_mac_open\\s*\\([^,]+,\\s*GCRY_MAC_HMAC_STRIBOG256",
+            "GCRY_MAC_HMAC_STRIBOG256",
+            "gcry_mac_open\\s*\\([^,]+,\\s*GCRY_MAC_HMAC_STRIBOG512",
+            "GCRY_MAC_HMAC_STRIBOG512"
+          ],
+          "context_keywords": [
+            "gcrypt",
+            "gost28147",
+            "hmac",
+            "stribog",
+            "mac",
+            "imit",
+            "authentication"
+          ],
+          "replacements": [
+            {
+              "library": "libgcrypt",
+              "function_name": "gcry_mac_open(hd, GCRY_MAC_HMAC_STRIBOG256, 0, NULL)",
+              "notes": "Заменить GCRY_MAC_GOST28147_IMIT на GCRY_MAC_HMAC_STRIBOG256. Для долгосрочной защиты использовать GCRY_MAC_HMAC_STRIBOG512.",
+              "tc26_note": "ТК 26: HMAC-Стрибог является рекомендуемым MAC на основе ГОСТ Р 34.11-2012"
+            }
+          ]
+        },
+        {
+          "id": "gcrypt-hmac-streebog256-wrapper",
+          "name": "hmac_streebog256",
+          "aliases": [
+            "hmac_stribog256"
+          ],
+          "category": "message_authentication",
+          "algorithm": "HMAC-Стрибог-256 / ГОСТ Р 34.11-2012",
+          "quantum_vulnerability": "low",
+          "risk_score": 3.0,
+          "description": "User-defined wrapper function over HMAC-Стрибог-256. HMAC-Стрибог-256 provides ~128-bit quantum security (Grover on Стрибог-256 inner hash). Acceptable for most post-quantum use cases but at the boundary. Flagged for inventory.",
+          "nist_reference": "NIST SP 800-57 Part 1 Rev.5; NIST SP 800-107 Rev.1",
+          "tc26_reference": "ТК 26: HMAC-Стрибог-256 обеспечивает 128-битную постквантовую стойкость.",
+          "patterns": [
+            "hmac_streebog256\\s*\\(",
+            "hmac_stribog256\\s*\\("
+          ],
+          "context_keywords": [
+            "hmac",
+            "stribog",
+            "streebog",
+            "gost",
+            "mac"
+          ],
+          "replacements": [
+            {
+              "library": "libgcrypt",
+              "function_name": "hmac_streebog512",
+              "notes": "Для долгосрочной постквантовой защиты заменить на HMAC-Стрибог-512 (256-битная постквантовая стойкость)."
+            }
+          ]
+        },
+        {
+          "id": "gcrypt-hmac-streebog512-wrapper",
+          "name": "hmac_streebog512",
+          "aliases": [
+            "hmac_stribog512"
+          ],
+          "category": "message_authentication",
+          "algorithm": "HMAC-Стрибог-512 / ГОСТ Р 34.11-2012",
+          "quantum_vulnerability": "low",
+          "risk_score": 1.5,
+          "description": "User-defined wrapper function over HMAC-Стрибог-512. Provides ~256-bit quantum security. This is the strongest ГОСТ-standardised MAC construction and is considered quantum-safe. Flagged for inventory purposes only.",
+          "nist_reference": "NIST SP 800-57 Part 1 Rev.5",
+          "tc26_reference": "ТК 26: HMAC-Стрибог-512 является постквантово-стойким MAC.",
+          "patterns": [
+            "hmac_streebog512\\s*\\(",
+            "hmac_stribog512\\s*\\("
+          ],
+          "context_keywords": [
+            "hmac",
+            "stribog",
+            "streebog",
+            "gost",
+            "mac"
+          ],
+          "replacements": [
+            {
+              "library": "libgcrypt",
+              "function_name": "hmac_streebog512",
+              "notes": "HMAC-Стрибог-512 уже является постквантово-стойким MAC. Дополнительная миграция не требуется."
+            }
+          ]
+        },
+        {
+          "id": "gcrypt-gost28147-mac-wrapper",
+          "name": "gost28147_mac",
+          "aliases": [
+            "gost_mac",
+            "gost28147_imit"
+          ],
+          "category": "message_authentication",
+          "algorithm": "ГОСТ 28147-89 имитовставка (MAC)",
+          "quantum_vulnerability": "low",
+          "risk_score": 4.0,
+          "description": "User-defined wrapper for GOST 28147-89 MAC (имитовставка). 32-bit authentication tag with birthday-attack risk at 2^16 attempts. Should be migrated to HMAC-Стрибог-256 or Кузнечик MAC (ГОСТ Р 34.13-2015 § 5.7).",
+          "nist_reference": "NIST SP 800-57 Part 1 Rev.5",
+          "tc26_reference": "ТК 26: имитовставка ГОСТ 28147-89 — 32-битный тег; рекомендуется переход на HMAC-Стрибог-256.",
+          "patterns": [
+            "gost28147_mac\\s*\\(",
+            "gost_mac\\s*\\(",
+            "gost28147_imit\\s*\\("
+          ],
+          "context_keywords": [
+            "gost28147",
+            "mac",
+            "imit",
+            "authentication"
+          ],
+          "replacements": [
+            {
+              "library": "libgcrypt",
+              "function_name": "gcry_mac_open(hd, GCRY_MAC_HMAC_STRIBOG256, 0, NULL)",
+              "notes": "Заменить на HMAC-Стрибог-256 (gcry_mac_open с GCRY_MAC_HMAC_STRIBOG256) или имитовставку Кузнечика.",
+              "tc26_note": "ТК 26: переход на HMAC-Стрибог обязателен для новых систем"
+            }
+          ]
+        }
+      ]
+    },
+    "nettle": {
+      "display_name": "GNU Nettle",
+      "version_tested": "3.8+",
+      "description": "GNU Nettle — низкоуровневая криптографическая библиотека C. Включает реализации ГОСТ-алгоритмов: ГОСТ Р 34.10-2012 (gostdsa), Стрибог (streebog), ГОСТ 28147-89 (gost28147).",
+      "functions": [
+        {
+          "id": "nettle-gostdsa-sign",
+          "name": "gostdsa_sign",
+          "aliases": [
+            "gostdsa_verify",
+            "gost_point_mul_g",
+            "gost_hash"
+          ],
+          "category": "digital_signature",
+          "algorithm": "ГОСТ Р 34.10-2012 (Nettle)",
+          "quantum_vulnerability": "high",
+          "risk_score": 9.2,
+          "description": "Computes or verifies a ГОСТ Р 34.10-2012 digital signature using Nettle's low-level ECC API. The signature scheme is based on ECDLP on ГОСТ TC26 curves, which Shor's algorithm solves in polynomial time on a cryptographically relevant quantum computer. gost_point_mul_g performs the scalar multiplication core operation of ГОСТ 34.10.",
+          "nist_reference": "NIST IR 8547 §2 (ECDLP analogy); NISTIR 8413",
+          "tc26_reference": "ТК 26: ГОСТ Р 34.10-2012 квантово-уязвим; в переходный период необходима гибридная подпись ГОСТ + ML-DSA-65.",
+          "deprecation_url": "https://www.lysator.liu.se/~nisse/nettle/nettle.html",
+          "patterns": [
+            "gostdsa_sign\\s*\\(",
+            "gostdsa_verify\\s*\\(",
+            "gost_point_mul_g\\s*\\(",
+            "gost_point_mul\\s*\\("
+          ],
+          "context_keywords": [
+            "nettle",
+            "gost",
+            "gostdsa",
+            "sign",
+            "ecdlp"
+          ],
+          "replacements": [
+            {
+              "function_name": "OQS_SIG_sign",
+              "library": "liboqs",
+              "standard": "FIPS 204",
+              "algorithm": "ML-DSA-65",
+              "type": "signature",
+              "migration_notes": "Гибридная схема: сохранить gostdsa_sign для совместимости, добавить ML-DSA-65 подпись через liboqs.",
+              "tc26_note": "ТК 26: гибридная подпись ГОСТ Р 34.10-2012 + ML-DSA-65 обязательна в переходный период"
+            }
+          ]
+        },
+        {
+          "id": "nettle-streebog256",
+          "name": "streebog256_digest",
+          "aliases": [
+            "streebog256_init",
+            "streebog256_update",
+            "streebog256_final",
+            "nettle_streebog256"
+          ],
+          "category": "hash_function",
+          "algorithm": "Стрибог-256 / ГОСТ Р 34.11-2012 (Nettle)",
+          "quantum_vulnerability": "low",
+          "risk_score": 3.5,
+          "description": "Computes a Стрибог-256 hash (ГОСТ Р 34.11-2012) using the Nettle library. Provides 128-bit post-quantum preimage security (Grover). Flagged for inventory; acceptable for most use cases. Prefer streebog512 for long-term post-quantum security.",
+          "nist_reference": "NIST SP 800-57 Part 1 Rev.5",
+          "tc26_reference": "ТК 26: Стрибог-256 приемлем; для долгосрочной защиты рекомендуется Стрибог-512.",
+          "deprecation_url": "https://www.lysator.liu.se/~nisse/nettle/nettle.html",
+          "patterns": [
+            "streebog256_digest\\s*\\(",
+            "streebog256_init\\s*\\(",
+            "streebog256_update\\s*\\(",
+            "nettle_streebog256\\b"
+          ],
+          "context_keywords": [
+            "nettle",
+            "streebog",
+            "stribog",
+            "hash",
+            "gost"
+          ],
+          "replacements": [
+            {
+              "library": "Nettle",
+              "function": "streebog512_digest / streebog512_init + streebog512_update + streebog512_final",
+              "notes": "Для долгосрочной постквантовой защиты использовать Стрибог-512 (streebog512_*)."
+            }
+          ]
+        },
+        {
+          "id": "nettle-streebog512",
+          "name": "streebog512_digest",
+          "aliases": [
+            "streebog512_init",
+            "streebog512_update",
+            "streebog512_final",
+            "nettle_streebog512"
+          ],
+          "category": "hash_function",
+          "algorithm": "Стрибог-512 / ГОСТ Р 34.11-2012 (Nettle)",
+          "quantum_vulnerability": "low",
+          "risk_score": 1.5,
+          "description": "Computes a Стрибог-512 hash (ГОСТ Р 34.11-2012) using the Nettle library. Provides 256-bit post-quantum preimage security (Grover). Quantum-safe. Flagged for inventory only.",
+          "nist_reference": "NIST SP 800-57 Part 1 Rev.5 (256-bit post-quantum security is sufficient)",
+          "tc26_reference": "ТК 26: Стрибог-512 является постквантово-стойкой хэш-функцией.",
+          "deprecation_url": "https://www.lysator.liu.se/~nisse/nettle/nettle.html",
+          "patterns": [
+            "streebog512_digest\\s*\\(",
+            "streebog512_init\\s*\\(",
+            "streebog512_update\\s*\\(",
+            "nettle_streebog512\\b"
+          ],
+          "context_keywords": [
+            "nettle",
+            "streebog",
+            "stribog",
+            "hash",
+            "gost"
+          ],
+          "replacements": [
+            {
+              "library": "Nettle",
+              "function": "streebog512_digest",
+              "notes": "Стрибог-512 уже является постквантово-стойкой хэш-функцией. Миграция не требуется."
+            }
+          ]
+        },
+        {
+          "id": "nettle-gost28147",
+          "name": "gost28147_set_key",
+          "aliases": [
+            "gost28147_encrypt",
+            "gost28147_decrypt",
+            "gost28147_imit"
+          ],
+          "category": "symmetric_cipher",
+          "algorithm": "ГОСТ 28147-89 / Магма (Nettle)",
+          "quantum_vulnerability": "low",
+          "risk_score": 4.5,
+          "description": "Sets up or uses the ГОСТ 28147-89 / Магма symmetric cipher in Nettle. 64-bit block, 256-bit key. Grover's algorithm gives ~128-bit effective key security. The 64-bit block size creates a classical birthday attack at 2^32 blocks. Should be replaced by ГОСТ Р 34.12-2015 Кузнечик for new implementations.",
+          "nist_reference": "NIST SP 800-57 Part 1 Rev.5",
+          "tc26_reference": "ТК 26: ГОСТ 28147-89 (Магма) с 64-битным блоком не рекомендуется для новых применений; следует использовать Кузнечик.",
+          "deprecation_url": "https://www.lysator.liu.se/~nisse/nettle/nettle.html",
+          "patterns": [
+            "gost28147_set_key\\s*\\(",
+            "gost28147_encrypt\\s*\\(",
+            "gost28147_decrypt\\s*\\(",
+            "gost28147_imit\\s*\\("
+          ],
+          "context_keywords": [
+            "nettle",
+            "gost28147",
+            "magma",
+            "cipher",
+            "gost"
+          ],
+          "replacements": [
+            {
+              "library": "Nettle / libgcrypt",
+              "function": "GCRY_CIPHER_GRASSHOPPER (libgcrypt) или собственная реализация Кузнечика",
+              "notes": "Заменить ГОСТ 28147-89 (Магма) на Кузнечик (ГОСТ Р 34.12-2015, 128-битный блок)."
+            }
+          ]
+        }
+      ]
+    },
+    "botan": {
+      "display_name": "Botan (C++)",
+      "version_tested": "3.x",
+      "description": "Botan — кроссплатформенная C++ криптографическая библиотека с поддержкой ГОСТ Р 34.10-2012, ГОСТ 28147-89 и Стрибог.",
+      "functions": [
+        {
+          "id": "botan-gost3410-private-key",
+          "name": "GOST_3410_PrivateKey",
+          "aliases": [
+            "GOST_3410_PublicKey",
+            "GOST_3410_2001_PrivateKey",
+            "GOST_3410_2001_PublicKey"
+          ],
+          "category": "asymmetric_key_generation",
+          "algorithm": "ГОСТ Р 34.10-2012 (Botan)",
+          "quantum_vulnerability": "high",
+          "risk_score": 9.2,
+          "description": "Botan C++ class for ГОСТ Р 34.10-2012 (and ГОСТ Р 34.10-2001) ECC key pairs. The security of these keys relies on the ECDLP on ГОСТ TC26 curves, which Shor's algorithm solves in polynomial time. Any code instantiating GOST_3410_PrivateKey or GOST_3410_PublicKey is performing quantum-insecure asymmetric cryptography.",
+          "nist_reference": "NIST IR 8547 §2 (ECDLP analogy); NISTIR 8413",
+          "tc26_reference": "ТК 26: ГОСТ Р 34.10-2012 квантово-уязвим; гибридная схема ГОСТ + ML-DSA-65 обязательна в переходный период.",
+          "deprecation_url": "https://botan.randombit.net/handbook/api_ref/pubkey.html",
+          "patterns": [
+            "GOST_3410_PrivateKey\\b",
+            "GOST_3410_PublicKey\\b",
+            "GOST_3410_2001_PrivateKey\\b",
+            "GOST_3410_2001_PublicKey\\b"
+          ],
+          "context_keywords": [
+            "botan",
+            "gost",
+            "gost3410",
+            "ecdlp",
+            "sign"
+          ],
+          "replacements": [
+            {
+              "function_name": "Dilithium_PrivateKey / ML_DSA_PrivateKey",
+              "library": "Botan 3.x",
+              "standard": "FIPS 204",
+              "algorithm": "ML-DSA-65",
+              "type": "signature",
+              "migration_notes": "Использовать Botan::Dilithium_PrivateKey (Botan 3.x) или ML_DSA_PrivateKey для постквантовой подписи. Гибридная схема: сохранить GOST_3410 + добавить Dilithium.",
+              "tc26_note": "ТК 26: гибридная подпись ГОСТ Р 34.10-2012 + ML-DSA-65"
+            }
+          ]
+        },
+        {
+          "id": "botan-gost28147-mac",
+          "name": "GOST_28147_MAC",
+          "aliases": [
+            "GOST_28147"
+          ],
+          "category": "message_authentication",
+          "algorithm": "ГОСТ 28147-89 MAC (Botan)",
+          "quantum_vulnerability": "low",
+          "risk_score": 4.0,
+          "description": "Botan C++ class for ГОСТ 28147-89 MAC (имитовставка). 32-bit tag, based on Магма cipher. Same quantum analysis as GCRY_MAC_GOST28147_IMIT: Grover on 256-bit key gives 128-bit security, but 32-bit tag is classically weak and 64-bit block limits security. Should be replaced by HMAC-Стрибог-256.",
+          "nist_reference": "NIST SP 800-57 Part 1 Rev.5",
+          "tc26_reference": "ТК 26: имитовставка ГОСТ 28147-89 — устаревший MAC; рекомендуется HMAC-Стрибог-256.",
+          "deprecation_url": "https://botan.randombit.net/handbook/api_ref/mac.html",
+          "patterns": [
+            "GOST_28147_MAC\\b",
+            "Botan::GOST_28147\\b"
+          ],
+          "context_keywords": [
+            "botan",
+            "gost28147",
+            "mac",
+            "imit"
+          ],
+          "replacements": [
+            {
+              "library": "Botan",
+              "function": "Botan::HMAC(\"Streebog-256\") or Botan::MessageAuthenticationCode::create(\"HMAC(Streebog-256)\")",
+              "notes": "Заменить GOST_28147_MAC на HMAC с Стрибог-256 или Стрибог-512."
+            }
+          ]
+        },
+        {
+          "id": "botan-gost3411-256",
+          "name": "GOST_3411",
+          "aliases": [
+            "Streebog_256",
+            "Streebog_512",
+            "GOST_3411_256",
+            "GOST_3411_512"
+          ],
+          "category": "hash_function",
+          "algorithm": "Стрибог / ГОСТ Р 34.11-2012 (Botan)",
+          "quantum_vulnerability": "low",
+          "risk_score": 3.0,
+          "description": "Botan C++ class for Стрибог (ГОСТ Р 34.11-2012) hash functions. Streebog_256 produces a 256-bit digest (128-bit post-quantum security, borderline); Streebog_512 produces a 512-bit digest (256-bit post-quantum security, acceptable). Flagged for inventory. Prefer Streebog_512 for post-quantum contexts.",
+          "nist_reference": "NIST SP 800-57 Part 1 Rev.5",
+          "tc26_reference": "ТК 26: Стрибог (ГОСТ Р 34.11-2012) рекомендован; для максимальной постквантовой стойкости предпочтителен Стрибог-512.",
+          "deprecation_url": "https://botan.randombit.net/handbook/api_ref/hash.html",
+          "patterns": [
+            "GOST_3411\\b",
+            "Streebog_256\\b",
+            "Streebog_512\\b",
+            "GOST_3411_256\\b",
+            "GOST_3411_512\\b",
+            "\"Streebog-256\"",
+            "\"Streebog-512\""
+          ],
+          "context_keywords": [
+            "botan",
+            "streebog",
+            "stribog",
+            "gost3411",
+            "hash"
+          ],
+          "replacements": [
+            {
+              "library": "Botan",
+              "function": "Streebog_512 / Botan::HashFunction::create(\"Streebog-512\")",
+              "notes": "Для долгосрочной постквантовой защиты использовать Стрибог-512 вместо Стрибог-256."
+            }
+          ]
+        },
+        {
+          "id": "botan-gost28147-cipher",
+          "name": "GOST_28147",
+          "aliases": [
+            "Botan::GOST_28147"
+          ],
+          "category": "symmetric_cipher",
+          "algorithm": "ГОСТ 28147-89 / Магма (Botan cipher)",
+          "quantum_vulnerability": "low",
+          "risk_score": 4.5,
+          "description": "Botan C++ class for ГОСТ 28147-89 (Магма) block cipher. 64-bit block, 256-bit key. Grover's algorithm gives ~128-bit effective key security; the 64-bit block is the primary classical concern. Should be replaced by a Grasshopper/Кузнечик implementation for new systems.",
+          "nist_reference": "NIST SP 800-57 Part 1 Rev.5",
+          "tc26_reference": "ТК 26: ГОСТ 28147-89 с 64-битным блоком не рекомендуется для новых применений; использовать Кузнечик (ГОСТ Р 34.12-2015).",
+          "deprecation_url": "https://botan.randombit.net/handbook/api_ref/block_cipher.html",
+          "patterns": [
+            "\"GOST-28147-89\"",
+            "Botan::GOST_28147\\b",
+            "BlockCipher::create\\s*\\(\\s*\"GOST"
+          ],
+          "context_keywords": [
+            "botan",
+            "gost28147",
+            "magma",
+            "cipher",
+            "block"
+          ],
+          "replacements": [
+            {
+              "library": "Botan",
+              "function": "Botan::BlockCipher::create(\"Grasshopper\") — Кузнечик (ГОСТ Р 34.12-2015)",
+              "notes": "Заменить GOST-28147-89 (Магма, 64-бит блок) на Кузнечик/Grasshopper (128-бит блок): Botan::BlockCipher::create(\"Grasshopper\")."
             }
           ]
         }

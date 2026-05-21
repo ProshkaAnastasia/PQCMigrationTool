@@ -55,40 +55,45 @@ AnalysisMetrics MetricsCalculator::compute(const std::vector<Finding>& findings,
 {
     AnalysisMetrics m;
     m.ground_truth_total = static_cast<int>(gt.size());
+
     std::vector<bool> gt_matched(gt.size(), false);
     std::vector<bool> f_matched(findings.size(), false);
-    for (size_t fi = 0; fi < findings.size(); ++fi) {
-        const auto& f = findings[fi];
-        for (size_t gi = 0; gi < gt.size(); ++gi) {
-            if (gt_matched[gi]) {
-                continue;
-            }
-            const auto& g = gt[gi];
-            if (f.function_name != g.function_name) {
-                continue;
-            }
-            if (!g.file_path.empty() && f.file_path.find(g.file_path) == std::string::npos) {
-                continue;
-            }
-            if (g.line_number >= 0 && std::abs(f.line_number - g.line_number) > g.line_tolerance) {
-                continue;
-            }
-            gt_matched[gi] = true;
-            f_matched[fi] = true;
-            ++m.true_positives;
-            break;
-        }
-    }
-    for (size_t fi = 0; fi < findings.size(); ++fi) {
-        if (!f_matched[fi]) {
-            ++m.false_positives;
-        }
-    }
+
     for (size_t gi = 0; gi < gt.size(); ++gi) {
-        if (!gt_matched[gi]) {
-            ++m.false_negatives;
+        const auto& g = gt[gi];
+        int best_fi   = -1;
+        int best_diff = INT_MAX;
+
+        for (size_t fi = 0; fi < findings.size(); ++fi) {
+            if (f_matched[fi]) continue;
+            const auto& f = findings[fi];
+
+            if (f.function_name != g.function_name) continue;
+            if (!g.file_path.empty() &&
+                f.file_path.find(g.file_path) == std::string::npos) continue;
+
+            int diff = (g.line_number >= 0)
+                           ? std::abs(f.line_number - g.line_number)
+                           : 0;
+            if (diff <= g.line_tolerance && diff < best_diff) {
+                best_diff = diff;
+                best_fi   = static_cast<int>(fi);
+            }
+        }
+
+        if (best_fi >= 0) {
+            gt_matched[gi]      = true;
+            f_matched[best_fi]  = true;
+            ++m.true_positives;
         }
     }
+
+    for (size_t fi = 0; fi < findings.size(); ++fi)
+        if (!f_matched[fi]) ++m.false_positives;
+
+    for (size_t gi = 0; gi < gt.size(); ++gi)
+        if (!gt_matched[gi]) ++m.false_negatives;
+
     return m;
 }
 

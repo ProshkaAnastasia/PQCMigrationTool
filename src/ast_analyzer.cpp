@@ -36,6 +36,19 @@ ASTAnalyzer::ASTAnalyzer(const VulnDatabase& db)
 #else
     has_libclang_ = false;
 #endif
+
+#ifdef PQC_OPENSSL_INCLUDE_DIR
+    include_dirs_.push_back(PQC_OPENSSL_INCLUDE_DIR);
+#endif
+#ifdef PQC_LIBGCRYPT_INCLUDE_DIR
+    include_dirs_.push_back(PQC_LIBGCRYPT_INCLUDE_DIR);
+#endif
+#ifdef PQC_LIBGCRYPT_INCLUDE_DIR2
+    include_dirs_.push_back(PQC_LIBGCRYPT_INCLUDE_DIR2);
+#endif
+#ifdef PQC_MACOS_SDKROOT
+    include_dirs_.push_back(std::string(PQC_MACOS_SDKROOT) + "/usr/include");
+#endif
 }
 
 ASTAnalyzer::~ASTAnalyzer() = default;
