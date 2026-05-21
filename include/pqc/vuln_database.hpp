@@ -14,6 +14,9 @@ struct VulnerableFunction {
     std::string nist_reference, tc26_reference, deprecation_url, library_name;
     double risk_score = 0.0;
     std::vector<std::string> aliases, patterns, context_keywords;
+    std::vector<std::string> safe_argument_substrings;
+    std::vector<std::string> dangerous_argument_substrings;
+    bool match_arguments_case_insensitive = true;
     std::vector<ReplacementInfo> replacements;
 };
 class VulnDatabase {

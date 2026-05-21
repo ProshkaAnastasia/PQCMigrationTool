@@ -44,6 +44,37 @@
           ]
         },
         {
+          "id": "openssl-obj-txt2nid-gost",
+          "name": "OBJ_txt2nid",
+          "category": "gost-algorithm-identifier",
+          "algorithm": "GOST / TC26 identifier lookup",
+          "quantum_vulnerability": "info",
+          "risk_score": 5.0,
+          "description": "Text-to-NID conversion for Russian GOST/TC26 algorithm identifiers. Indicates that the code uses GOST cryptography.",
+          "nist_reference": "",
+          "tc26_reference": "TC 26 standards for GOST R 34.10-2012, 34.11-2012, 34.12-2015, 34.13-2015",
+          "deprecation_url": "",
+          "aliases": [],
+          "patterns": [],
+          "context_keywords": [
+            "gost",
+            "tc26",
+            "id-GostR3410-2012-256",
+            "id-GostR3410-2012-512"
+          ],
+          "dangerous_argument_substrings": [
+            "id-gostr3410-2012-256",
+            "id-gostr3410-2012-512",
+            "gostr3410-2012",
+            "gostr3411-2012",
+            "id-tc26",
+            "1.2.643"
+          ],
+          "safe_argument_substrings": [],
+          "match_arguments_case_insensitive": true,
+          "replacements": []
+        },
+        {
           "id": "ossl-rsa-public-encrypt",
           "name": "RSA_public_encrypt",
           "aliases": [
@@ -256,9 +287,9 @@
           "aliases": [],
           "category": "asymmetric_key_generation",
           "algorithm": "RSA/EC/DH (EVP)",
-          "quantum_vulnerability": "high",
+          "quantum_vulnerability": "conditional",
           "risk_score": 9.0,
-          "description": "High-level EVP key generation function. When the associated EVP_PKEY_CTX was initialised with a quantum-vulnerable algorithm (RSA, EC, DH, DSA), the resulting key is quantum-insecure. Vulnerability depends on the algorithm configured in the context.",
+          "description": "High-level EVP key generation function. Emit a warning when the associated EVP_PKEY_CTX was initialised with quantum-vulnerable algorithms such as RSA, EC, DH, or DSA. Suppress the warning when the argument chain shows a PQC-safe context created from names like \"ML-KEM-*\", \"ML-DSA-*\", \"SLH-DSA-*\" or other post-quantum algorithms.",
           "nist_reference": "NISTIR 8413",
           "tc26_reference": "ТК 26: генерация ключей через EVP_PKEY_keygen для RSA/EC/DH не обеспечивает постквантовую стойкость; необходима замена на постквантовые алгоритмы через oqsprovider.",
           "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/EVP_PKEY_keygen.html",
@@ -271,11 +302,34 @@
             "keygen",
             "generate"
           ],
+          "dangerous_argument_substrings": [
+            "\"rsa\"",
+            "\"ec\"",
+            "\"dsa\"",
+            "\"dh\"",
+            "\"x25519\"",
+            "\"x448\"",
+            "\"ed25519\"",
+            "\"ed448\""
+          ],
+          "safe_argument_substrings": [
+            "\"ml-kem",
+            "\"ml-dsa",
+            "\"slh-dsa",
+            "\"fn-dsa",
+            "\"falcon",
+            "\"sphincs",
+            "\"kyber",
+            "\"dilithium",
+            "\"hawk",
+            "\"mceliece"
+          ],
+          "match_arguments_case_insensitive": true,
           "replacements": [
             {
               "library": "liboqs / oqsprovider",
               "function": "EVP_PKEY_keygen with ML-KEM or ML-DSA context",
-              "notes": "Load oqsprovider and initialise EVP_PKEY_CTX with 'ML-KEM-768', 'ML-DSA-65', or similar PQC algorithm names."
+              "notes": "Load oqsprovider and initialise EVP_PKEY_CTX with 'ML-KEM-768', 'ML-DSA-65', or similar PQC algorithm names before calling EVP_PKEY_keygen."
             }
           ]
         },
@@ -377,9 +431,9 @@
           "aliases": [],
           "category": "asymmetric_key_generation",
           "algorithm": "RSA/EC/DH (EVP)",
-          "quantum_vulnerability": "high",
+          "quantum_vulnerability": "conditional",
           "risk_score": 9.0,
-          "description": "Creates a new EVP_PKEY_CTX by numeric algorithm NID. The first argument identifies the algorithm type: EVP_PKEY_RSA (NID=6), EVP_PKEY_DSA (NID=116), EVP_PKEY_DH (NID=28), and EVP_PKEY_EC (NID=408) are all quantum-vulnerable. Any context created with these NIDs will produce keys or perform operations that are broken by Shor's algorithm on a cryptographically relevant quantum computer. Detection should flag all call sites where the NID argument resolves to one of the above values.",
+          "description": "Creates a new EVP_PKEY_CTX by numeric algorithm identifier. Emit a warning only when the resolved first argument indicates a classical vulnerable algorithm such as EVP_PKEY_RSA, EVP_PKEY_DSA, EVP_PKEY_DH, EVP_PKEY_EC, or their numeric NID forms 6, 116, 28, 408.",
           "nist_reference": "NISTIR 8413; NIST SP 800-131A Rev.2",
           "tc26_reference": "ТК 26: вызов EVP_PKEY_CTX_new_id с идентификаторами алгоритмов RSA, DSA, DH или EC (NID 6, 116, 28, 408 соответственно) создаёт контекст для квантово-уязвимого примитива; рекомендуется переход на постквантовые алгоритмы через oqsprovider.",
           "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/EVP_PKEY_CTX_new_id.html",
@@ -400,6 +454,18 @@
             "dh",
             "dsa"
           ],
+          "dangerous_argument_substrings": [
+            "evp_pkey_rsa",
+            "evp_pkey_dsa",
+            "evp_pkey_dh",
+            "evp_pkey_ec",
+            "6",
+            "116",
+            "28",
+            "408"
+          ],
+          "safe_argument_substrings": [],
+          "match_arguments_case_insensitive": true,
           "replacements": [
             {
               "library": "liboqs / oqsprovider",
@@ -416,7 +482,7 @@
           "algorithm": "RSA/EC/DH (EVP)",
           "quantum_vulnerability": "conditional",
           "risk_score": 7.5,
-          "description": "OpenSSL 3.x API that creates an EVP_PKEY_CTX from a string algorithm name. Vulnerability is conditional on the name argument: the function is quantum-vulnerable when called with classical algorithm names 'RSA', 'EC', 'DSA', 'DH', 'X25519', 'X448', 'ED25519', or 'ED448'. It is NOT vulnerable when called with post-quantum algorithm names such as 'ML-KEM-512', 'ML-KEM-768', 'ML-KEM-1024', 'ML-DSA-44', 'ML-DSA-65', 'ML-DSA-87', 'SLH-DSA-SHA2-128s', or any other NIST PQC standardised algorithm supported by oqsprovider. Static analysis tools should warn on classical names and suppress warnings on PQC names.",
+          "description": "OpenSSL 3.x API that creates an EVP_PKEY_CTX from a string algorithm name. Emit a warning when resolved arguments contain classical algorithm literals such as \"RSA\", \"EC\", \"DSA\", \"DH\", \"X25519\", \"X448\", \"ED25519\", or \"ED448\". Suppress the warning when resolved arguments contain PQC-safe algorithm literals such as \"ML-KEM-*\", \"ML-DSA-*\", \"SLH-DSA-*\", or other PQC names propagated through the argument chain.",
           "nist_reference": "NISTIR 8413; NIST FIPS 203/204/205",
           "tc26_reference": "ТК 26: EVP_PKEY_CTX_new_from_name с именами RSA/EC/DSA/DH/X25519/X448 является квантово-уязвимым; при использовании имён ML-KEM-*/ML-DSA-*/SLH-DSA-* уязвимость отсутствует.",
           "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/EVP_PKEY_CTX_new_from_name.html",
@@ -442,11 +508,34 @@
             "dsa",
             "x25519"
           ],
+          "dangerous_argument_substrings": [
+            "\"rsa\"",
+            "\"ec\"",
+            "\"dsa\"",
+            "\"dh\"",
+            "\"x25519\"",
+            "\"x448\"",
+            "\"ed25519\"",
+            "\"ed448\""
+          ],
+          "safe_argument_substrings": [
+            "\"ml-kem",
+            "\"ml-dsa",
+            "\"slh-dsa",
+            "\"fn-dsa",
+            "\"falcon",
+            "\"sphincs",
+            "\"kyber",
+            "\"dilithium",
+            "\"hawk",
+            "\"mceliece"
+          ],
+          "match_arguments_case_insensitive": true,
           "replacements": [
             {
               "library": "liboqs / oqsprovider",
               "function": "EVP_PKEY_CTX_new_from_name(NULL, \"ML-KEM-768\", NULL)",
-              "notes": "When using OpenSSL 3.x with oqsprovider, replace classical algorithm name strings with PQC equivalents: 'ML-KEM-768' (key encapsulation), 'ML-DSA-65' (signatures), 'SLH-DSA-SHA2-128s' (stateless hash-based signatures)."
+              "notes": "When using OpenSSL 3.x with oqsprovider, replace classical algorithm name strings with PQC equivalents such as 'ML-KEM-768', 'ML-DSA-65', or 'SLH-DSA-SHA2-128s'."
             }
           ]
         },
@@ -768,9 +857,9 @@
           "aliases": [],
           "category": "asymmetric_key_generation",
           "algorithm": "RSA/EC/DH (EVP)",
-          "quantum_vulnerability": "high",
+          "quantum_vulnerability": "conditional",
           "risk_score": 9.0,
-          "description": "Initialises a key-generation operation in an EVP_PKEY_CTX. If the context was created for RSA, EC, DH, or DSA, the key that will be generated is quantum-insecure. The vulnerability of the subsequent EVP_PKEY_keygen call is determined at this init step.",
+          "description": "Initialises a key-generation operation in an EVP_PKEY_CTX. Emit a warning when the associated context was created for classical algorithms such as RSA, EC, DH, or DSA. Suppress the warning when the argument chain shows a PQC-safe context created from names like \"ML-KEM-*\", \"ML-DSA-*\", \"SLH-DSA-*\" or other post-quantum algorithms.",
           "nist_reference": "NISTIR 8413",
           "tc26_reference": "ТК 26: инициализация генерации ключа EVP_PKEY_keygen_init для RSA/EC/DH/DSA является квантово-уязвимой операцией.",
           "deprecation_url": "https://www.openssl.org/docs/man3.0/man3/EVP_PKEY_keygen.html",
@@ -783,6 +872,29 @@
             "keygen",
             "init"
           ],
+          "dangerous_argument_substrings": [
+            "\"rsa\"",
+            "\"ec\"",
+            "\"dsa\"",
+            "\"dh\"",
+            "\"x25519\"",
+            "\"x448\"",
+            "\"ed25519\"",
+            "\"ed448\""
+          ],
+          "safe_argument_substrings": [
+            "\"ml-kem",
+            "\"ml-dsa",
+            "\"slh-dsa",
+            "\"fn-dsa",
+            "\"falcon",
+            "\"sphincs",
+            "\"kyber",
+            "\"dilithium",
+            "\"hawk",
+            "\"mceliece"
+          ],
+          "match_arguments_case_insensitive": true,
           "replacements": [
             {
               "library": "liboqs / oqsprovider",

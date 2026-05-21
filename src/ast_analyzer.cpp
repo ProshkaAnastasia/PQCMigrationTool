@@ -219,6 +219,36 @@ static std::string trim_copy(std::string s)
     return s;
 }
 
+static std::string lower_copy(std::string s)
+{
+    std::transform(s.begin(), s.end(), s.begin(),
+                   [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
+    return s;
+}
+
+static bool arguments_match_any_substring(const std::vector<std::string>& arguments,
+                                          const std::vector<std::string>& patterns,
+                                          bool case_insensitive)
+{
+    if (patterns.empty())
+        return false;
+
+    for (const auto& arg_raw : arguments) {
+        std::string arg = case_insensitive ? lower_copy(arg_raw) : arg_raw;
+
+        for (const auto& pat_raw : patterns) {
+            if (pat_raw.empty())
+                continue;
+
+            std::string pat = case_insensitive ? lower_copy(pat_raw) : pat_raw;
+            if (arg.find(pat) != std::string::npos)
+                return true;
+        }
+    }
+
+    return false;
+}
+
 static std::string squash_spaces(std::string s)
 {
     std::string out;
@@ -1672,30 +1702,34 @@ static void emit_finding(const PendingCall& pc, VisitData* vd)
         return;
     }
 
-    // Suppress any finding whose argument chain contains a PQC-safe algorithm
-    // name. This covers:
-    //  (a) Conditional functions (EVP_PKEY_CTX_new_from_name with "ML-KEM-*")
-    //  (b) Functions that receive an EVP_PKEY_CTX* built from a PQC context
-    //      (e.g. EVP_PKEY_keygen_init/EVP_PKEY_keygen after a safe ctx).
-    // RSA/DH/EC operations never carry PQC algorithm names in their arguments,
-    // so this check cannot suppress true positives.
-    {
-        static const char* const kPQCSafePrefixes[] = {"ml-kem", "ml-dsa",   "slh-dsa", "fn-dsa",
-                                                       "falcon", "sphincs",  "kyber",   "dilithium",
-                                                       "hawk",   "mceliece", nullptr};
-        for (const auto& arg : pc.arguments) {
-            std::string al = arg;
-            std::transform(al.begin(), al.end(), al.begin(), ::tolower);
-            for (const char* const* pfx = kPQCSafePrefixes; *pfx; ++pfx) {
-                if (al.find(*pfx) != std::string::npos) {
+    // If the DB entry defines dangerous argument substrings, the finding is
+    // emitted only when at least one argument matches one of them.
+    if (!opt->dangerous_argument_substrings.empty()) {
+        const bool matched = arguments_match_any_substring(
+            pc.arguments,
+            opt->dangerous_argument_substrings,
+            opt->match_arguments_case_insensitive);
+
+        if (!matched) {
 #if PQC_AST_DEBUG
-                    std::cerr << "[AST][debug] emit skip (PQC safe arg): callee='" << fname
-                              << "' arg='" << arg << "'\n";
+            std::cerr << "[AST][debug] emit skip (no dangerous arg match): callee='"
+                      << fname << "'\n";
 #endif
-                    return;
-                }
-            }
+            return;
         }
+    }
+
+    // Safe argument substrings suppress the finding even if the function name
+    // itself is present in the vulnerability DB.
+    if (arguments_match_any_substring(
+            pc.arguments,
+            opt->safe_argument_substrings,
+            opt->match_arguments_case_insensitive)) {
+#if PQC_AST_DEBUG
+        std::cerr << "[AST][debug] emit skip (safe arg from DB): callee='"
+                  << fname << "'\n";
+#endif
+        return;
     }
 
 #if PQC_AST_DEBUG

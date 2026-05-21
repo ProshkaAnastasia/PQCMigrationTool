@@ -59,6 +59,18 @@ void VulnDatabase::merge_json(const nlohmann::json& j)
             if (fn.contains("context_keywords"))
                 for (auto& k : fn["context_keywords"])
                     vf.context_keywords.push_back(k.get<std::string>());
+
+            if (fn.contains("safe_argument_substrings"))
+                for (auto& s : fn["safe_argument_substrings"])
+                    vf.safe_argument_substrings.push_back(s.get<std::string>());
+
+            if (fn.contains("dangerous_argument_substrings"))
+                for (auto& s : fn["dangerous_argument_substrings"])
+                    vf.dangerous_argument_substrings.push_back(s.get<std::string>());
+
+            vf.match_arguments_case_insensitive =
+                fn.value("match_arguments_case_insensitive", true);
+
             if (fn.contains("replacements")) {
                 for (auto& rep : fn["replacements"]) {
                     ReplacementInfo ri;
