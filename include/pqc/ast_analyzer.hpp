@@ -12,13 +12,14 @@ public:
     std::vector<Finding> analyze_file(const std::filesystem::path& p) const override;
     bool has_libclang() const { return has_libclang_; }
     void set_include_dirs(const std::vector<std::string>& dirs);
+
 private:
     const VulnDatabase& db_;
     std::unique_ptr<TokenAnalyzer> fallback_;
     std::vector<std::string> include_dirs_;
-    bool has_libclang_=false;
+    bool has_libclang_ = false;
 #ifdef PQC_HAS_LIBCLANG
     bool try_libclang(const std::filesystem::path& path, std::vector<Finding>& out) const;
 #endif
 };
-} // namespace pqc
+}  // namespace pqc

@@ -13,18 +13,19 @@
 #include <filesystem>
 #include <iostream>
 #ifndef PQC_TEST_FIXTURES_DIR
-#  define PQC_TEST_FIXTURES_DIR "tests/fixtures"
+#define PQC_TEST_FIXTURES_DIR "tests/fixtures"
 #endif
 #ifndef PQC_TEST_DATA_DIR
-#  define PQC_TEST_DATA_DIR "data"
+#define PQC_TEST_DATA_DIR "data"
 #endif
 
-int main() {
+int main()
+{
     std::cout << "PQC Migration Tool — Integration Tests\n";
-    std::cout << std::string(55,'=') << "\n";
+    std::cout << std::string(55, '=') << "\n";
     TestSuite ts("FullPipeline");
 
-    ts.add("regex_pipeline_end_to_end", [](){
+    ts.add("regex_pipeline_end_to_end", []() {
         pqc::VulnDatabase db;
         db.load(PQC_TEST_DATA_DIR "/vulnerable_functions.json");
         pqc::ProjectScanner scanner;
@@ -40,7 +41,7 @@ int main() {
         ASSERT_FALSE(rr.file_summaries.empty());
     });
 
-    ts.add("ast_pipeline_end_to_end", [](){
+    ts.add("ast_pipeline_end_to_end", []() {
         pqc::VulnDatabase db;
         db.load(PQC_TEST_DATA_DIR "/vulnerable_functions.json");
         pqc::ProjectScanner scanner;
@@ -52,15 +53,15 @@ int main() {
                   << (aa.has_libclang() ? "libclang" : "token fallback") << ")\n";
     });
 
-    ts.add("regex_precision_recall_gt50pct", [](){
+    ts.add("regex_precision_recall_gt50pct", []() {
         pqc::VulnDatabase db;
         db.load(PQC_TEST_DATA_DIR "/vulnerable_functions.json");
         pqc::ProjectScanner scanner;
         auto inv = scanner.scan(PQC_TEST_FIXTURES_DIR);
         pqc::RegexAnalyzer ra(db);
         auto findings = ra.analyze(inv);
-        auto gt = pqc::MetricsCalculator::load_from_json(
-            PQC_TEST_FIXTURES_DIR "/ground_truth.json");
+        auto gt =
+            pqc::MetricsCalculator::load_from_json(PQC_TEST_FIXTURES_DIR "/ground_truth.json");
         pqc::MetricsCalculator calc;
         auto m = calc.compute(findings, gt);
         m.print();
@@ -69,7 +70,7 @@ int main() {
         ASSERT_GE(m.f1_score(), 0.5);
     });
 
-    ts.add("risk_report_has_tc26_data", [](){
+    ts.add("risk_report_has_tc26_data", []() {
         pqc::VulnDatabase db;
         db.load(PQC_TEST_DATA_DIR "/vulnerable_functions.json");
         pqc::ProjectScanner scanner;
@@ -79,12 +80,15 @@ int main() {
         pqc::RiskAssessor assessor(db);
         auto rr = assessor.assess(findings, inv);
         bool has_tc26 = false;
-        for(auto& a : rr.migration_plan)
-            if(!a.tc26_note.empty()) { has_tc26=true; break; }
+        for (auto& a : rr.migration_plan)
+            if (!a.tc26_note.empty()) {
+                has_tc26 = true;
+                break;
+            }
         ASSERT_TRUE(has_tc26);
     });
 
-    ts.add("migration_plan_has_fips_references", [](){
+    ts.add("migration_plan_has_fips_references", []() {
         pqc::VulnDatabase db;
         db.load(PQC_TEST_DATA_DIR "/vulnerable_functions.json");
         pqc::ProjectScanner scanner;
@@ -94,13 +98,15 @@ int main() {
         pqc::RiskAssessor assessor(db);
         auto rr = assessor.assess(findings, inv);
         bool has_fips = false;
-        for(auto& a : rr.migration_plan)
-            if(a.replacement_standard.find("FIPS")!=std::string::npos)
-                { has_fips=true; break; }
+        for (auto& a : rr.migration_plan)
+            if (a.replacement_standard.find("FIPS") != std::string::npos) {
+                has_fips = true;
+                break;
+            }
         ASSERT_TRUE(has_fips);
     });
 
-    ts.add("report_json_serialization", [](){
+    ts.add("report_json_serialization", []() {
         pqc::VulnDatabase db;
         db.load(PQC_TEST_DATA_DIR "/vulnerable_functions.json");
         pqc::ProjectScanner scanner;
@@ -116,6 +122,8 @@ int main() {
     });
 
     int fail = ts.run();
-    std::cout << "\n" << (fail==0?"ALL INTEGRATION TESTS PASSED":"SOME INTEGRATION TESTS FAILED") << "\n";
+    std::cout << "\n"
+              << (fail == 0 ? "ALL INTEGRATION TESTS PASSED" : "SOME INTEGRATION TESTS FAILED")
+              << "\n";
     return fail;
 }

@@ -7,48 +7,52 @@
 
 namespace pqc {
 
-double AnalysisMetrics::precision() const {
+double AnalysisMetrics::precision() const
+{
     const int denom = true_positives + false_positives;
     return (denom == 0) ? 0.0 : static_cast<double>(true_positives) / denom;
 }
 
-double AnalysisMetrics::recall() const {
-    return (ground_truth_total == 0) ? 0.0 : static_cast<double>(true_positives) / ground_truth_total;
+double AnalysisMetrics::recall() const
+{
+    return (ground_truth_total == 0) ? 0.0
+                                     : static_cast<double>(true_positives) / ground_truth_total;
 }
 
-double AnalysisMetrics::f1_score() const {
+double AnalysisMetrics::f1_score() const
+{
     const double p = precision();
     const double r = recall();
     return (p + r == 0.0) ? 0.0 : (2.0 * p * r) / (p + r);
 }
 
-nlohmann::json AnalysisMetrics::to_json() const {
-    return {
-        {"true_positives",      true_positives},
-        {"false_positives",     false_positives},
-        {"false_negatives",     false_negatives},
-        {"ground_truth_total",  ground_truth_total},
-        {"precision",           precision()},
-        {"recall",              recall()},
-        {"f1_score",            f1_score()}
-    };
+nlohmann::json AnalysisMetrics::to_json() const
+{
+    return {{"true_positives", true_positives},
+            {"false_positives", false_positives},
+            {"false_negatives", false_negatives},
+            {"ground_truth_total", ground_truth_total},
+            {"precision", precision()},
+            {"recall", recall()},
+            {"f1_score", f1_score()}};
 }
 
-void AnalysisMetrics::print() const {
+void AnalysisMetrics::print() const
+{
     std::cout << "\n=== Analysis Metrics ===\n";
     std::cout << std::fixed << std::setprecision(3);
     std::cout << "  Ground truth   : " << ground_truth_total << "\n";
-    std::cout << "  True positives : " << true_positives     << "\n";
-    std::cout << "  False positives: " << false_positives    << "\n";
-    std::cout << "  False negatives: " << false_negatives    << "\n";
-    std::cout << "  Precision      : " << precision() * 100  << "%\n";
-    std::cout << "  Recall         : " << recall() * 100     << "%\n";
-    std::cout << "  F1 score       : " << f1_score() * 100   << "%\n";
+    std::cout << "  True positives : " << true_positives << "\n";
+    std::cout << "  False positives: " << false_positives << "\n";
+    std::cout << "  False negatives: " << false_negatives << "\n";
+    std::cout << "  Precision      : " << precision() * 100 << "%\n";
+    std::cout << "  Recall         : " << recall() * 100 << "%\n";
+    std::cout << "  F1 score       : " << f1_score() * 100 << "%\n";
 }
 
-
 AnalysisMetrics MetricsCalculator::compute(const std::vector<Finding>& findings,
-                                            const std::vector<GroundTruth>& gt) const {
+                                           const std::vector<GroundTruth>& gt) const
+{
     AnalysisMetrics m;
     m.ground_truth_total = static_cast<int>(gt.size());
     std::vector<bool> gt_matched(gt.size(), false);
@@ -88,8 +92,8 @@ AnalysisMetrics MetricsCalculator::compute(const std::vector<Finding>& findings,
     return m;
 }
 
-
-std::vector<GroundTruth> MetricsCalculator::load_from_json(const std::string& path) {
+std::vector<GroundTruth> MetricsCalculator::load_from_json(const std::string& path)
+{
     std::ifstream ifs(path);
     if (!ifs.is_open()) {
         throw std::runtime_error("Cannot open ground truth file: " + path);
@@ -99,13 +103,13 @@ std::vector<GroundTruth> MetricsCalculator::load_from_json(const std::string& pa
     std::vector<GroundTruth> gts;
     for (const auto& e : j) {
         GroundTruth g;
-        g.function_name  = e.value("function_name", "");
-        g.file_path      = e.value("file_path", "");
-        g.line_number    = e.value("line_number", -1);
+        g.function_name = e.value("function_name", "");
+        g.file_path = e.value("file_path", "");
+        g.line_number = e.value("line_number", -1);
         g.line_tolerance = e.value("line_tolerance", 3);
         gts.push_back(g);
     }
     return gts;
 }
 
-} // namespace pqc
+}  // namespace pqc

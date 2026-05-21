@@ -19,11 +19,11 @@
 #include <vector>
 
 #ifdef PQC_HAS_LIBCLANG
-#  include <clang-c/Index.h>
+#include <clang-c/Index.h>
 #endif
 
 #ifndef PQC_AST_DEBUG
-#  define PQC_AST_DEBUG 0
+#define PQC_AST_DEBUG 0
 #endif
 
 namespace pqc {
@@ -40,7 +40,8 @@ ASTAnalyzer::ASTAnalyzer(const VulnDatabase& db)
 
 ASTAnalyzer::~ASTAnalyzer() = default;
 
-void ASTAnalyzer::set_include_dirs(const std::vector<std::string>& dirs) {
+void ASTAnalyzer::set_include_dirs(const std::vector<std::string>& dirs)
+{
     include_dirs_ = dirs;
 
 #ifdef PQC_OPENSSL_INCLUDE_DIR
@@ -59,7 +60,8 @@ void ASTAnalyzer::set_include_dirs(const std::vector<std::string>& dirs) {
 
     std::vector<std::string> unique_dirs;
     for (const auto& d : include_dirs_) {
-        if (d.empty()) continue;
+        if (d.empty())
+            continue;
         bool exists = false;
         for (const auto& u : unique_dirs) {
             std::error_code ec1, ec2;
@@ -74,12 +76,14 @@ void ASTAnalyzer::set_include_dirs(const std::vector<std::string>& dirs) {
                 break;
             }
         }
-        if (!exists) unique_dirs.push_back(d);
+        if (!exists)
+            unique_dirs.push_back(d);
     }
     include_dirs_.swap(unique_dirs);
 }
 
-std::vector<Finding> ASTAnalyzer::analyze(const ProjectInventory& inv) const {
+std::vector<Finding> ASTAnalyzer::analyze(const ProjectInventory& inv) const
+{
 #ifdef PQC_HAS_LIBCLANG
     if (!has_libclang_) {
         return {};
@@ -89,9 +93,11 @@ std::vector<Finding> ASTAnalyzer::analyze(const ProjectInventory& inv) const {
     auto& dirs = const_cast<std::vector<std::string>&>(include_dirs_);
 
     auto add_dir_if_missing = [&](const std::filesystem::path& p) {
-        if (p.empty()) return;
+        if (p.empty())
+            return;
         std::error_code ecx;
-        if (!std::filesystem::exists(p, ecx)) return;
+        if (!std::filesystem::exists(p, ecx))
+            return;
 
         bool exists = false;
         for (const auto& d : dirs) {
@@ -107,7 +113,8 @@ std::vector<Finding> ASTAnalyzer::analyze(const ProjectInventory& inv) const {
                 break;
             }
         }
-        if (!exists) dirs.push_back(p.string());
+        if (!exists)
+            dirs.push_back(p.string());
     };
 
     add_dir_if_missing(inv.project_path);
@@ -115,7 +122,8 @@ std::vector<Finding> ASTAnalyzer::analyze(const ProjectInventory& inv) const {
     add_dir_if_missing(std::filesystem::path(inv.project_path) / "src");
 
     for (const auto* fe : inv.get_by_category(FileCategory::HEADER)) {
-        if (!fe) continue;
+        if (!fe)
+            continue;
         add_dir_if_missing(fe->path.parent_path());
     }
 
@@ -128,7 +136,8 @@ std::vector<Finding> ASTAnalyzer::analyze(const ProjectInventory& inv) const {
 #endif
 
     for (const auto* fe : inv.get_by_category(FileCategory::SOURCE)) {
-        if (!fe) continue;
+        if (!fe)
+            continue;
 #if PQC_AST_DEBUG
         std::cerr << "[AST][debug] analyzing TU: " << fe->path.string() << "\n";
 #endif
@@ -146,7 +155,8 @@ std::vector<Finding> ASTAnalyzer::analyze(const ProjectInventory& inv) const {
 #endif
 }
 
-std::vector<Finding> ASTAnalyzer::analyze_file(const std::filesystem::path& p) const {
+std::vector<Finding> ASTAnalyzer::analyze_file(const std::filesystem::path& p) const
+{
     std::vector<Finding> out;
 #ifdef PQC_HAS_LIBCLANG
     if (has_libclang_) {
@@ -168,40 +178,44 @@ namespace {
 // =============================================================================
 // Tunables
 // =============================================================================
-static constexpr int         kMaxResolveDepth          = 12;
-static constexpr int         kMaxInlineExpansionDepth  = 6;
-static constexpr int         kMaxCallGraphDepth        = 8;   // depth of inter-procedural propagation
-static constexpr std::size_t kMaxResolvedText          = 512;
+static constexpr int kMaxResolveDepth = 12;
+static constexpr int kMaxInlineExpansionDepth = 6;
+static constexpr int kMaxCallGraphDepth = 8;  // depth of inter-procedural propagation
+static constexpr std::size_t kMaxResolvedText = 512;
 
 // Risk multiplier applied to findings located in functions that are NOT
 // reachable from the call-graph roots (main + external-linkage functions).
 // 1.0 = no penalty, 0.0 = effectively suppressed.
-static constexpr double      kUnreachableRiskFactor    = 0.3;
+static constexpr double kUnreachableRiskFactor = 0.3;
 
 // =============================================================================
 // Small string helpers
 // =============================================================================
-static std::string to_string_and_dispose(CXString s) {
+static std::string to_string_and_dispose(CXString s)
+{
     const char* c = clang_getCString(s);
     std::string out = c ? c : "";
     clang_disposeString(s);
     return out;
 }
 
-static std::string trim_copy(std::string s) {
+static std::string trim_copy(std::string s)
+{
     while (!s.empty() && std::isspace(static_cast<unsigned char>(s.front()))) s.erase(s.begin());
     while (!s.empty() && std::isspace(static_cast<unsigned char>(s.back()))) s.pop_back();
     return s;
 }
 
-static std::string squash_spaces(std::string s) {
+static std::string squash_spaces(std::string s)
+{
     std::string out;
     out.reserve(s.size());
     bool prev_space = false;
     for (char ch : s) {
         const bool is_sp = std::isspace(static_cast<unsigned char>(ch)) != 0;
         if (is_sp) {
-            if (!prev_space) out.push_back(' ');
+            if (!prev_space)
+                out.push_back(' ');
         } else {
             out.push_back(ch);
         }
@@ -210,17 +224,21 @@ static std::string squash_spaces(std::string s) {
     return trim_copy(out);
 }
 
-static std::string clip_text(std::string s, std::size_t max_len = kMaxResolvedText) {
+static std::string clip_text(std::string s, std::size_t max_len = kMaxResolvedText)
+{
     s = squash_spaces(std::move(s));
-    if (s.size() <= max_len) return s;
+    if (s.size() <= max_len)
+        return s;
     return s.substr(0, max_len - 3) + "...";
 }
 
-static bool same_path(const std::string& a, const std::string& b) {
+static bool same_path(const std::string& a, const std::string& b)
+{
     std::error_code ec1, ec2;
     auto p1 = std::filesystem::weakly_canonical(a, ec1);
     auto p2 = std::filesystem::weakly_canonical(b, ec2);
-    if (!ec1 && !ec2) return p1 == p2;
+    if (!ec1 && !ec2)
+        return p1 == p2;
     return a == b;
 }
 
@@ -244,26 +262,39 @@ static bool same_path(const std::string& a, const std::string& b) {
 // not an identifier/literal/closing bracket; otherwise they are binary and
 // kept with surrounding spaces.
 // -----------------------------------------------------------------------------
-static bool token_is_word_like(CXTokenKind k) {
+static bool token_is_word_like(CXTokenKind k)
+{
     return k == CXToken_Identifier || k == CXToken_Literal || k == CXToken_Keyword;
 }
 
-static bool is_open_bracket(const std::string& t)  { return t == "(" || t == "["; }
-static bool is_close_bracket(const std::string& t) { return t == ")" || t == "]"; }
-static bool is_unary_punct(const std::string& t) {
+static bool is_open_bracket(const std::string& t)
+{
+    return t == "(" || t == "[";
+}
+static bool is_close_bracket(const std::string& t)
+{
+    return t == ")" || t == "]";
+}
+static bool is_unary_punct(const std::string& t)
+{
     return t == "!" || t == "~" || t == "++" || t == "--";
 }
-static bool is_no_space_glue(const std::string& t) {
+static bool is_no_space_glue(const std::string& t)
+{
     // Punctuation that should never have spaces on either side.
     return t == "." || t == "->" || t == "::" || t == ".*" || t == "->*";
 }
-static bool prev_allows_binary(CXTokenKind k, const std::string& t) {
-    if (token_is_word_like(k)) return true;
-    if (k == CXToken_Punctuation && (is_close_bracket(t) || t == "++" || t == "--")) return true;
+static bool prev_allows_binary(CXTokenKind k, const std::string& t)
+{
+    if (token_is_word_like(k))
+        return true;
+    if (k == CXToken_Punctuation && (is_close_bracket(t) || t == "++" || t == "--"))
+        return true;
     return false;
 }
 
-static std::string get_cursor_text(CXCursor cursor, CXTranslationUnit tu) {
+static std::string get_cursor_text(CXCursor cursor, CXTranslationUnit tu)
+{
     CXSourceRange range = clang_getCursorExtent(cursor);
     CXToken* tokens = nullptr;
     unsigned n_tokens = 0;
@@ -276,7 +307,8 @@ static std::string get_cursor_text(CXCursor cursor, CXTranslationUnit tu) {
 
     auto last_non_space_char = [&]() -> char {
         for (auto it = text.rbegin(); it != text.rend(); ++it) {
-            if (*it != ' ') return *it;
+            if (*it != ' ')
+                return *it;
         }
         return '\0';
     };
@@ -284,7 +316,8 @@ static std::string get_cursor_text(CXCursor cursor, CXTranslationUnit tu) {
     for (unsigned i = 0; i < n_tokens; ++i) {
         CXTokenKind kind = clang_getTokenKind(tokens[i]);
         std::string ts = to_string_and_dispose(clang_getTokenSpelling(tu, tokens[i]));
-        if (ts.empty()) continue;
+        if (ts.empty())
+            continue;
 
         bool need_space = false;
         bool this_amp_or_star_is_unary = false;
@@ -304,8 +337,7 @@ static std::string get_cursor_text(CXCursor cursor, CXTranslationUnit tu) {
                 if (token_is_word_like(prev_kind) || is_close_bracket(prev_text)) {
                     need_space = false;
                 } else if (prev_kind == CXToken_Punctuation &&
-                           (prev_text == "*" || prev_text == "&") &&
-                           prev_amp_or_star_was_unary) {
+                           (prev_text == "*" || prev_text == "&") && prev_amp_or_star_was_unary) {
                     need_space = false;
                 } else {
                     need_space = true;
@@ -319,18 +351,19 @@ static std::string get_cursor_text(CXCursor cursor, CXTranslationUnit tu) {
                 bool prev_makes_unary =
                     text.empty() ||
                     (prev_kind == CXToken_Punctuation &&
-                     (is_open_bracket(prev_text) || prev_text == "," ||
-                      prev_text == "=" || prev_text == "==" || prev_text == "!=" ||
-                      prev_text == "<" || prev_text == ">" || prev_text == "<=" ||
-                      prev_text == ">=" || prev_text == "&&" || prev_text == "||" ||
-                      prev_text == "+" || prev_text == "-" || prev_text == "*" ||
-                      prev_text == "/" || prev_text == "%" || prev_text == "!" ||
-                      prev_text == "~" || prev_text == "?" || prev_text == ":" ||
-                      prev_text == ";" || prev_text == "return")) ||
+                     (is_open_bracket(prev_text) || prev_text == "," || prev_text == "=" ||
+                      prev_text == "==" || prev_text == "!=" || prev_text == "<" ||
+                      prev_text == ">" || prev_text == "<=" || prev_text == ">=" ||
+                      prev_text == "&&" || prev_text == "||" || prev_text == "+" ||
+                      prev_text == "-" || prev_text == "*" || prev_text == "/" ||
+                      prev_text == "%" || prev_text == "!" || prev_text == "~" ||
+                      prev_text == "?" || prev_text == ":" || prev_text == ";" ||
+                      prev_text == "return")) ||
                     (prev_kind == CXToken_Keyword && prev_text == "return");
 
                 if (prev_makes_unary) {
-                    need_space = (prev_kind == CXToken_Keyword);  // `return &x` needs a space after return
+                    need_space =
+                        (prev_kind == CXToken_Keyword);  // `return &x` needs a space after return
                     this_amp_or_star_is_unary = true;
                 } else if (token_is_word_like(prev_kind)) {
                     // `T* x` / `T& x` (declaration) or `a * b` (binary). Without
@@ -357,8 +390,8 @@ static std::string get_cursor_text(CXCursor cursor, CXTranslationUnit tu) {
                     // After `*`/`&`: no space if it was unary, space if it was
                     // glued to a type identifier (declaration style).
                     need_space = !prev_amp_or_star_was_unary;
-                } else if (prev_text == "!" || prev_text == "~" ||
-                           prev_text == "++" || prev_text == "--") {
+                } else if (prev_text == "!" || prev_text == "~" || prev_text == "++" ||
+                           prev_text == "--") {
                     need_space = false;
                 } else if (prev_text == "," || prev_text == ";") {
                     need_space = true;
@@ -371,20 +404,24 @@ static std::string get_cursor_text(CXCursor cursor, CXTranslationUnit tu) {
         }
 
         // Override: never emit duplicate or leading whitespace.
-        if (need_space && (text.empty() || last_non_space_char() == '\0')) need_space = false;
+        if (need_space && (text.empty() || last_non_space_char() == '\0'))
+            need_space = false;
 
-        if (need_space) text.push_back(' ');
+        if (need_space)
+            text.push_back(' ');
         text += ts;
         prev_kind = kind;
         prev_text = ts;
         prev_amp_or_star_was_unary = this_amp_or_star_is_unary;
     }
 
-    if (tokens) clang_disposeTokens(tu, tokens, n_tokens);
+    if (tokens)
+        clang_disposeTokens(tu, tokens, n_tokens);
     return clip_text(text);
 }
 
-static std::string evaluate_cursor_value(CXCursor cursor, CXTranslationUnit tu) {
+static std::string evaluate_cursor_value(CXCursor cursor, CXTranslationUnit tu)
+{
     CXEvalResult eval = clang_Cursor_Evaluate(cursor);
     if (eval) {
         CXEvalResultKind kind = clang_EvalResult_getKind(eval);
@@ -407,7 +444,8 @@ static std::string evaluate_cursor_value(CXCursor cursor, CXTranslationUnit tu) 
             case CXEval_ObjCStrLiteral:
             case CXEval_Other: {
                 const char* str = clang_EvalResult_getAsStr(eval);
-                if (str) result = std::string("\"") + str + "\"";
+                if (str)
+                    result = std::string("\"") + str + "\"";
                 break;
             }
 
@@ -416,7 +454,8 @@ static std::string evaluate_cursor_value(CXCursor cursor, CXTranslationUnit tu) 
         }
 
         clang_EvalResult_dispose(eval);
-        if (!result.empty()) return clip_text(result);
+        if (!result.empty())
+            return clip_text(result);
     }
 
     (void)tu;
@@ -426,9 +465,11 @@ static std::string evaluate_cursor_value(CXCursor cursor, CXTranslationUnit tu) 
 // =============================================================================
 // Source-location predicates
 // =============================================================================
-static bool cursor_is_from_file_or_header(CXCursor cursor, const std::string& main_file_path) {
+static bool cursor_is_from_file_or_header(CXCursor cursor, const std::string& main_file_path)
+{
     CXSourceLocation loc = clang_getCursorLocation(cursor);
-    if (clang_Location_isInSystemHeader(loc)) return false;
+    if (clang_Location_isInSystemHeader(loc))
+        return false;
 
     CXFile cf;
     unsigned line = 0, col = 0;
@@ -436,11 +477,14 @@ static bool cursor_is_from_file_or_header(CXCursor cursor, const std::string& ma
     (void)line;
     (void)col;
 
-    if (!cf) return false;
+    if (!cf)
+        return false;
     std::string fname = to_string_and_dispose(clang_getFileName(cf));
-    if (fname.empty()) return false;
+    if (fname.empty())
+        return false;
 
-    if (same_path(fname, main_file_path)) return true;
+    if (same_path(fname, main_file_path))
+        return true;
 
     std::filesystem::path mainp(main_file_path);
     auto root = mainp.parent_path().parent_path();
@@ -451,7 +495,8 @@ static bool cursor_is_from_file_or_header(CXCursor cursor, const std::string& ma
         if (!ec1 && !ec2) {
             auto root_s = croot.string();
             auto file_s = cfile.string();
-            if (file_s.rfind(root_s, 0) == 0) return true;
+            if (file_s.rfind(root_s, 0) == 0)
+                return true;
         }
     }
     return false;
@@ -460,7 +505,8 @@ static bool cursor_is_from_file_or_header(CXCursor cursor, const std::string& ma
 // =============================================================================
 // Callee-name extraction
 // =============================================================================
-static std::string extract_name_from_tokens_before_paren(CXCursor cursor, CXTranslationUnit tu) {
+static std::string extract_name_from_tokens_before_paren(CXCursor cursor, CXTranslationUnit tu)
+{
     CXSourceRange range = clang_getCursorExtent(cursor);
     CXToken* tokens = nullptr;
     unsigned n_tokens = 0;
@@ -470,21 +516,27 @@ static std::string extract_name_from_tokens_before_paren(CXCursor cursor, CXTran
     for (unsigned i = 0; i < n_tokens; ++i) {
         auto kind = clang_getTokenKind(tokens[i]);
         auto text = to_string_and_dispose(clang_getTokenSpelling(tu, tokens[i]));
-        if (text == "(") break;
-        if (kind == CXToken_Identifier) last_ident = text;
+        if (text == "(")
+            break;
+        if (kind == CXToken_Identifier)
+            last_ident = text;
     }
 
-    if (tokens) clang_disposeTokens(tu, tokens, n_tokens);
+    if (tokens)
+        clang_disposeTokens(tu, tokens, n_tokens);
     return last_ident;
 }
 
-static std::string get_best_cursor_spelling(CXCursor c) {
+static std::string get_best_cursor_spelling(CXCursor c)
+{
     std::string s = to_string_and_dispose(clang_getCursorSpelling(c));
-    if (!s.empty()) return s;
+    if (!s.empty())
+        return s;
     return to_string_and_dispose(clang_getCursorDisplayName(c));
 }
 
-static std::string extract_callee_name_from_children(CXCursor cursor, CXTranslationUnit tu) {
+static std::string extract_callee_name_from_children(CXCursor cursor, CXTranslationUnit tu)
+{
     struct ChildData {
         std::string name;
     } cd{""};
@@ -495,11 +547,8 @@ static std::string extract_callee_name_from_children(CXCursor cursor, CXTranslat
             auto* cd = static_cast<ChildData*>(data);
             auto ck = clang_getCursorKind(child);
 
-            if (ck == CXCursor_DeclRefExpr ||
-                ck == CXCursor_MemberRefExpr ||
-                ck == CXCursor_UnexposedExpr ||
-                ck == CXCursor_OverloadedDeclRef) {
-
+            if (ck == CXCursor_DeclRefExpr || ck == CXCursor_MemberRefExpr ||
+                ck == CXCursor_UnexposedExpr || ck == CXCursor_OverloadedDeclRef) {
                 std::string name = get_best_cursor_spelling(child);
                 if (name.empty()) {
                     CXCursor ref = clang_getCursorReferenced(child);
@@ -515,14 +564,15 @@ static std::string extract_callee_name_from_children(CXCursor cursor, CXTranslat
 
             return CXChildVisit_Recurse;
         },
-        &cd
-    );
+        &cd);
 
-    if (!cd.name.empty()) return cd.name;
+    if (!cd.name.empty())
+        return cd.name;
     return extract_name_from_tokens_before_paren(cursor, tu);
 }
 
-static std::string get_callee_name(CXCursor call_cursor, CXTranslationUnit tu) {
+static std::string get_callee_name(CXCursor call_cursor, CXTranslationUnit tu)
+{
     std::string fname;
 
     CXCursor ref = clang_getCursorReferenced(call_cursor);
@@ -541,18 +591,18 @@ static std::string get_callee_name(CXCursor call_cursor, CXTranslationUnit tu) {
     return fname;
 }
 
-static std::string get_qualified_cursor_name(CXCursor cursor) {
+static std::string get_qualified_cursor_name(CXCursor cursor)
+{
     std::vector<std::string> parts;
     CXCursor cur = cursor;
     while (!clang_Cursor_isNull(cur)) {
         CXCursorKind k = clang_getCursorKind(cur);
-        if (k == CXCursor_FunctionDecl || k == CXCursor_CXXMethod ||
-            k == CXCursor_Constructor || k == CXCursor_Destructor ||
-            k == CXCursor_FunctionTemplate || k == CXCursor_Namespace ||
-            k == CXCursor_ClassDecl || k == CXCursor_StructDecl ||
-            k == CXCursor_ClassTemplate) {
+        if (k == CXCursor_FunctionDecl || k == CXCursor_CXXMethod || k == CXCursor_Constructor ||
+            k == CXCursor_Destructor || k == CXCursor_FunctionTemplate || k == CXCursor_Namespace ||
+            k == CXCursor_ClassDecl || k == CXCursor_StructDecl || k == CXCursor_ClassTemplate) {
             std::string s = to_string_and_dispose(clang_getCursorSpelling(cur));
-            if (!s.empty()) parts.push_back(s);
+            if (!s.empty())
+                parts.push_back(s);
         }
         cur = clang_getCursorSemanticParent(cur);
     }
@@ -561,30 +611,29 @@ static std::string get_qualified_cursor_name(CXCursor cursor) {
 
     std::ostringstream oss;
     for (std::size_t i = 0; i < parts.size(); ++i) {
-        if (i) oss << "::";
+        if (i)
+            oss << "::";
         oss << parts[i];
     }
     return oss.str();
 }
 
-static bool is_function_like_cursor(CXCursorKind kind) {
-    return kind == CXCursor_FunctionDecl ||
-           kind == CXCursor_CXXMethod ||
-           kind == CXCursor_Constructor ||
-           kind == CXCursor_Destructor ||
+static bool is_function_like_cursor(CXCursorKind kind)
+{
+    return kind == CXCursor_FunctionDecl || kind == CXCursor_CXXMethod ||
+           kind == CXCursor_Constructor || kind == CXCursor_Destructor ||
            kind == CXCursor_FunctionTemplate;
 }
 
-static bool is_literal_like(CXCursorKind kind) {
-    return kind == CXCursor_IntegerLiteral ||
-           kind == CXCursor_FloatingLiteral ||
-           kind == CXCursor_StringLiteral ||
-           kind == CXCursor_CharacterLiteral ||
-           kind == CXCursor_CXXBoolLiteralExpr ||
-           kind == CXCursor_ImaginaryLiteral;
+static bool is_literal_like(CXCursorKind kind)
+{
+    return kind == CXCursor_IntegerLiteral || kind == CXCursor_FloatingLiteral ||
+           kind == CXCursor_StringLiteral || kind == CXCursor_CharacterLiteral ||
+           kind == CXCursor_CXXBoolLiteralExpr || kind == CXCursor_ImaginaryLiteral;
 }
 
-static std::vector<CXCursor> get_children(CXCursor cursor) {
+static std::vector<CXCursor> get_children(CXCursor cursor)
+{
     std::vector<CXCursor> children;
     clang_visitChildren(
         cursor,
@@ -593,24 +642,27 @@ static std::vector<CXCursor> get_children(CXCursor cursor) {
             vec->push_back(child);
             return CXChildVisit_Continue;
         },
-        &children
-    );
+        &children);
     return children;
 }
 
-static std::string format_type_placeholder(CXType t) {
+static std::string format_type_placeholder(CXType t)
+{
     std::string ts = to_string_and_dispose(clang_getTypeSpelling(t));
     ts = clip_text(trim_copy(ts));
-    if (ts.empty()) ts = "unknown";
+    if (ts.empty())
+        ts = "unknown";
     return "<type: " + ts + ">";
 }
 
 // Render an unresolved variable reference as `name (<type: T>)` so the user
 // sees both the source-level identifier and its static type. Falls back to
 // just the placeholder when the name is empty.
-static std::string format_named_type_placeholder(const std::string& name, CXType t) {
+static std::string format_named_type_placeholder(const std::string& name, CXType t)
+{
     std::string ph = format_type_placeholder(t);
-    if (name.empty()) return ph;
+    if (name.empty())
+        return ph;
     return clip_text(name + " (" + ph + ")");
 }
 
@@ -624,9 +676,7 @@ static std::string format_named_type_placeholder(const std::string& name, CXType
 // =============================================================================
 enum class AssignKind { None, Pure, Compound };
 
-static AssignKind detect_assignment_between(CXCursor bin_op,
-                                            CXCursor lhs,
-                                            CXCursor rhs,
+static AssignKind detect_assignment_between(CXCursor bin_op, CXCursor lhs, CXCursor rhs,
                                             CXTranslationUnit tu)
 {
     // Get the source range that contains both children, then look at tokens
@@ -650,26 +700,29 @@ static AssignKind detect_assignment_between(CXCursor bin_op,
         CXSourceLocation tloc = clang_getTokenLocation(tu, tokens[i]);
         unsigned toff = 0;
         clang_getExpansionLocation(tloc, &dummy, nullptr, nullptr, &toff);
-        if (toff < lhs_end_off) continue;
-        if (toff >= rhs_start_off) break;
+        if (toff < lhs_end_off)
+            continue;
+        if (toff >= rhs_start_off)
+            break;
 
         auto kind = clang_getTokenKind(tokens[i]);
-        if (kind != CXToken_Punctuation) continue;
+        if (kind != CXToken_Punctuation)
+            continue;
 
         auto text = to_string_and_dispose(clang_getTokenSpelling(tu, tokens[i]));
         if (text == "=") {
             result = AssignKind::Pure;
             break;
         }
-        if (text == "+="  || text == "-="  || text == "*="  || text == "/="  ||
-            text == "%="  || text == "<<=" || text == ">>=" || text == "&="  ||
-            text == "|="  || text == "^=") {
+        if (text == "+=" || text == "-=" || text == "*=" || text == "/=" || text == "%=" ||
+            text == "<<=" || text == ">>=" || text == "&=" || text == "|=" || text == "^=") {
             result = AssignKind::Compound;
             break;
         }
     }
 
-    if (tokens) clang_disposeTokens(tu, tokens, n_tokens);
+    if (tokens)
+        clang_disposeTokens(tu, tokens, n_tokens);
     return result;
 }
 
@@ -686,8 +739,8 @@ static AssignKind detect_assignment_between(CXCursor bin_op,
 // =============================================================================
 struct LocalValue {
     std::string text;
-    unsigned    line = 0;
-    bool        known = false;
+    unsigned line = 0;
+    bool known = false;
 };
 using ResolvedValue = LocalValue;
 
@@ -720,12 +773,12 @@ struct FunctionSummary {
     std::string qualified_name;
     std::string simple_name;
     std::string file_path;
-    CXCursor    cursor{};
-    bool        has_cursor = false;
+    CXCursor cursor{};
+    bool has_cursor = false;
 
-    bool        is_static = false;        // internal linkage
-    bool        in_anon_ns = false;
-    bool        is_definition = false;
+    bool is_static = false;  // internal linkage
+    bool in_anon_ns = false;
+    bool is_definition = false;
 
     std::vector<std::string> param_names;
     std::vector<std::string> param_types;
@@ -737,7 +790,7 @@ struct FunctionSummary {
     // For inter-procedural inlining of return values we keep the cursor of the
     // return expression itself (preferred over textual return_expr).
     CXCursor return_cursor{};
-    bool     has_return_cursor = false;
+    bool has_return_cursor = false;
 
     // Outgoing calls discovered in this function (qualified name when we could
     // resolve it, otherwise simple name). Used to build the call graph.
@@ -749,9 +802,9 @@ struct FunctionSummary {
 // guess resolved initializer value (from inline default member initializer
 // and/or constructor member-init list).
 struct FieldInfo {
-    std::string type_spelling;          // e.g. "EVP_PKEY *"
-    std::string resolved_value;         // resolved initializer text, possibly empty
-    bool has_value = false;             // true if resolved_value is meaningful
+    std::string type_spelling;   // e.g. "EVP_PKEY *"
+    std::string resolved_value;  // resolved initializer text, possibly empty
+    bool has_value = false;      // true if resolved_value is meaningful
 };
 using ClassFieldMap = std::unordered_map<std::string /*field name*/, FieldInfo>;
 using ClassFieldRegistry = std::unordered_map<std::string /*class qualified*/, ClassFieldMap>;
@@ -760,14 +813,15 @@ using ClassFieldRegistry = std::unordered_map<std::string /*class qualified*/, C
 // Used by the inter-procedural field-state engine.
 struct FieldEffect {
     enum class Kind {
-        DirectAssign,   // this->field = expr;   (or field = expr;)
-        AddressOfArg,   // some_call(…, &field, …)
+        DirectAssign,  // this->field = expr;   (or field = expr;)
+        AddressOfArg,  // some_call(…, &field, …)
     };
-    Kind        kind        = Kind::DirectAssign;
-    std::string field_name;            // mutated field
-    std::string class_qualified;       // class that owns the field
-    unsigned    line        = 0;       // location inside the method
-    std::string assigned_value;        // resolved RHS (for DirectAssign) or call render (for AddressOfArg)
+    Kind kind = Kind::DirectAssign;
+    std::string field_name;       // mutated field
+    std::string class_qualified;  // class that owns the field
+    unsigned line = 0;            // location inside the method
+    std::string
+        assigned_value;  // resolved RHS (for DirectAssign) or call render (for AddressOfArg)
 };
 
 // One "event" in a method's body that the inter-procedural engine cares about:
@@ -776,15 +830,15 @@ struct FieldEffect {
 // can replay them sequentially.
 struct MethodEvent {
     enum class Kind { Mutation, IntraClassCall };
-    Kind        kind         = Kind::Mutation;
-    unsigned    line         = 0;
-    FieldEffect mutation{};            // valid when kind == Mutation
-    std::string call_qualified;        // valid when kind == IntraClassCall
+    Kind kind = Kind::Mutation;
+    unsigned line = 0;
+    FieldEffect mutation{};      // valid when kind == Mutation
+    std::string call_qualified;  // valid when kind == IntraClassCall
 };
 
 struct MethodEffects {
     std::string class_qualified;
-    std::vector<MethodEvent> events;   // ordered by source line
+    std::vector<MethodEvent> events;  // ordered by source line
 };
 
 using MethodEffectsMap = std::unordered_map<std::string /*method qualified*/, MethodEffects>;
@@ -807,8 +861,8 @@ struct ResolutionContext {
 
     // Class context for member references through implicit `this`.
     const ClassFieldRegistry* field_registry = nullptr;
-    std::string current_class_qualified;   // qualified name of the enclosing class, if any
-    std::string current_class_simple;      // simple name, used for rendering Class::field
+    std::string current_class_qualified;  // qualified name of the enclosing class, if any
+    std::string current_class_simple;     // simple name, used for rendering Class::field
 
     // Inter-procedural field state: for the currently-walked method, this maps
     // field name -> latest-known resolved value at the current point in the
@@ -820,18 +874,14 @@ struct ResolutionContext {
 // =============================================================================
 // Forward declarations
 // =============================================================================
-static std::string resolve_expr(CXCursor cursor,
-                                CXTranslationUnit tu,
-                                ResolutionContext& rc,
-                                unsigned line_limit,
-                                int depth);
+static std::string resolve_expr(CXCursor cursor, CXTranslationUnit tu, ResolutionContext& rc,
+                                unsigned line_limit, int depth);
 
 // =============================================================================
 // Local lookup honoring scope by line: returns the most recent assignment
 // with line ≤ line_limit. Falls back to param_bindings.
 // =============================================================================
-static std::string lookup_local(const ResolutionContext& rc,
-                                const std::string& name,
+static std::string lookup_local(const ResolutionContext& rc, const std::string& name,
                                 unsigned line_limit)
 {
     if (rc.frame) {
@@ -840,12 +890,15 @@ static std::string lookup_local(const ResolutionContext& rc,
             const auto& hist = it->second;
             const LocalValue* best = nullptr;
             for (const auto& v : hist) {
-                if (!v.known) continue;
+                if (!v.known)
+                    continue;
                 if (v.line <= line_limit) {
-                    if (!best || v.line >= best->line) best = &v;
+                    if (!best || v.line >= best->line)
+                        best = &v;
                 }
             }
-            if (best) return best->text;
+            if (best)
+                return best->text;
         }
     }
 
@@ -861,15 +914,18 @@ static const FunctionSummary* find_function_summary(const ResolutionContext& rc,
                                                     const std::string& callee_simple,
                                                     const std::string& callee_qualified = {})
 {
-    if (!rc.summaries) return nullptr;
+    if (!rc.summaries)
+        return nullptr;
 
     if (!callee_qualified.empty()) {
         auto it = rc.summaries->find(callee_qualified);
-        if (it != rc.summaries->end()) return &it->second;
+        if (it != rc.summaries->end())
+            return &it->second;
     }
 
     auto it = rc.summaries->find(callee_simple);
-    if (it != rc.summaries->end()) return &it->second;
+    if (it != rc.summaries->end())
+        return &it->second;
 
     const FunctionSummary* fallback = nullptr;
     int matches = 0;
@@ -877,7 +933,8 @@ static const FunctionSummary* find_function_summary(const ResolutionContext& rc,
         if (kv.second.simple_name == callee_simple) {
             fallback = &kv.second;
             ++matches;
-            if (matches > 1) break;
+            if (matches > 1)
+                break;
         }
     }
     // If multiple overloads share the simple name we can't pick safely;
@@ -888,14 +945,12 @@ static const FunctionSummary* find_function_summary(const ResolutionContext& rc,
 // =============================================================================
 // resolve_decl_ref / resolve_member_ref / resolve_call_expr / resolve_expr
 // =============================================================================
-static std::string resolve_decl_ref(CXCursor ref_cursor,
-                                    CXTranslationUnit tu,
-                                    ResolutionContext& rc,
-                                    unsigned line_limit,
-                                    int depth)
+static std::string resolve_decl_ref(CXCursor ref_cursor, CXTranslationUnit tu,
+                                    ResolutionContext& rc, unsigned line_limit, int depth)
 {
     std::string name = to_string_and_dispose(clang_getCursorSpelling(ref_cursor));
-    if (name.empty()) return {};
+    if (name.empty())
+        return {};
 
     std::string local = lookup_local(rc, name, line_limit);
     if (!local.empty()) {
@@ -919,7 +974,8 @@ static std::string resolve_decl_ref(CXCursor ref_cursor,
 
     if (dk == CXCursor_EnumConstantDecl) {
         std::string val = evaluate_cursor_value(decl, tu);
-        if (!val.empty()) return clip_text(val);
+        if (!val.empty())
+            return clip_text(val);
         return format_named_type_placeholder(name, clang_getCursorType(decl));
     }
 
@@ -939,8 +995,10 @@ static std::string resolve_decl_ref(CXCursor ref_cursor,
             }
         }
         std::string qualified_field;
-        if (!cls.empty()) qualified_field = cls + "::" + name;
-        else              qualified_field = name;
+        if (!cls.empty())
+            qualified_field = cls + "::" + name;
+        else
+            qualified_field = name;
 
         // 1) Dynamic field state (last-seen value at current source position).
         if (rc.dynamic_field_state) {
@@ -951,14 +1009,12 @@ static std::string resolve_decl_ref(CXCursor ref_cursor,
         }
         // 2) Static field registry (inline / ctor init).
         if (rc.field_registry) {
-            std::string cls_qual = get_qualified_cursor_name(
-                clang_getCursorSemanticParent(decl));
+            std::string cls_qual = get_qualified_cursor_name(clang_getCursorSemanticParent(decl));
             auto cit = rc.field_registry->find(cls_qual);
             if (cit != rc.field_registry->end()) {
                 auto fit = cit->second.find(name);
                 if (fit != cit->second.end() && fit->second.has_value &&
-                    !fit->second.resolved_value.empty())
-                {
+                    !fit->second.resolved_value.empty()) {
                     return clip_text(fit->second.resolved_value);
                 }
             }
@@ -969,7 +1025,8 @@ static std::string resolve_decl_ref(CXCursor ref_cursor,
     if (dk == CXCursor_VarDecl && depth > 0) {
         // First try a compile-time evaluation — covers true constants.
         std::string val = evaluate_cursor_value(decl, tu);
-        if (!val.empty()) return clip_text(val);
+        if (!val.empty())
+            return clip_text(val);
 
         // Collect non-type initializer children. We only "unfold" a VarDecl into
         // its initializer when that initializer is a *simple* expression
@@ -981,35 +1038,32 @@ static std::string resolve_decl_ref(CXCursor ref_cursor,
         std::vector<CXCursor> init_children;
         for (const auto& c : ch) {
             CXCursorKind ck = clang_getCursorKind(c);
-            if (ck == CXCursor_TypeRef || ck == CXCursor_NamespaceRef ||
-                ck == CXCursor_TemplateRef) continue;
+            if (ck == CXCursor_TypeRef || ck == CXCursor_NamespaceRef || ck == CXCursor_TemplateRef)
+                continue;
             init_children.push_back(c);
         }
 
         auto is_simple_init_kind = [](CXCursorKind ck) {
-            return ck == CXCursor_IntegerLiteral ||
-                   ck == CXCursor_FloatingLiteral ||
-                   ck == CXCursor_StringLiteral ||
-                   ck == CXCursor_CharacterLiteral ||
-                   ck == CXCursor_CXXBoolLiteralExpr ||
-                   ck == CXCursor_ImaginaryLiteral ||
-                   ck == CXCursor_DeclRefExpr ||
-                   ck == CXCursor_MemberRefExpr ||
-                   ck == CXCursor_MemberRef ||
-                   ck == CXCursor_UnexposedExpr ||
+            return ck == CXCursor_IntegerLiteral || ck == CXCursor_FloatingLiteral ||
+                   ck == CXCursor_StringLiteral || ck == CXCursor_CharacterLiteral ||
+                   ck == CXCursor_CXXBoolLiteralExpr || ck == CXCursor_ImaginaryLiteral ||
+                   ck == CXCursor_DeclRefExpr || ck == CXCursor_MemberRefExpr ||
+                   ck == CXCursor_MemberRef || ck == CXCursor_UnexposedExpr ||
                    ck == CXCursor_ParenExpr;
         };
 
-        if (init_children.size() == 1 && is_simple_init_kind(clang_getCursorKind(init_children.front()))) {
+        if (init_children.size() == 1 &&
+            is_simple_init_kind(clang_getCursorKind(init_children.front()))) {
             CXCursor init = init_children.front();
             // Recurse, but if the resolved text differs from the variable name
             // and looks like a complex expression (contains '(' or ','), prefer
             // the typed name to keep the rendering close to the user's source.
             std::string rv = resolve_expr(init, tu, rc, line_limit, depth - 1);
             if (!rv.empty()) {
-                bool complex = rv.find('(') != std::string::npos ||
-                               rv.find(',') != std::string::npos;
-                if (!complex) return clip_text(rv);
+                bool complex =
+                    rv.find('(') != std::string::npos || rv.find(',') != std::string::npos;
+                if (!complex)
+                    return clip_text(rv);
             }
         }
 
@@ -1019,11 +1073,8 @@ static std::string resolve_decl_ref(CXCursor ref_cursor,
     return format_named_type_placeholder(name, clang_getCursorType(decl));
 }
 
-static std::string resolve_member_ref(CXCursor cursor,
-                                      CXTranslationUnit tu,
-                                      ResolutionContext& rc,
-                                      unsigned line_limit,
-                                      int depth)
+static std::string resolve_member_ref(CXCursor cursor, CXTranslationUnit tu, ResolutionContext& rc,
+                                      unsigned line_limit, int depth)
 {
     std::string name = to_string_and_dispose(clang_getCursorSpelling(cursor));
     if (name.empty()) {
@@ -1041,8 +1092,8 @@ static std::string resolve_member_ref(CXCursor cursor,
         // CXCursor_CXXThisExpr is exposed in libclang; some versions report it
         // as UnexposedExpr wrapping nothing. We treat any single-child
         // UnexposedExpr that resolves to empty text as implicit-this too.
-        if (ck == CXCursor_TypeRef || ck == CXCursor_NamespaceRef ||
-            ck == CXCursor_TemplateRef) continue;
+        if (ck == CXCursor_TypeRef || ck == CXCursor_NamespaceRef || ck == CXCursor_TemplateRef)
+            continue;
         explicit_base = c;
         has_explicit_base = true;
         break;
@@ -1065,7 +1116,8 @@ static std::string resolve_member_ref(CXCursor cursor,
     std::string cls_qualified;
     if (!clang_Cursor_isNull(ref)) {
         std::string ref_name = to_string_and_dispose(clang_getCursorSpelling(ref));
-        if (!ref_name.empty()) field_name = ref_name;
+        if (!ref_name.empty())
+            field_name = ref_name;
         field_type = clang_getCursorType(ref);
         CXCursor parent = clang_getCursorSemanticParent(ref);
         if (!clang_Cursor_isNull(parent)) {
@@ -1077,8 +1129,10 @@ static std::string resolve_member_ref(CXCursor cursor,
             }
         }
     }
-    if (cls_simple.empty()) cls_simple = rc.current_class_simple;
-    if (cls_qualified.empty()) cls_qualified = rc.current_class_qualified;
+    if (cls_simple.empty())
+        cls_simple = rc.current_class_simple;
+    if (cls_qualified.empty())
+        cls_qualified = rc.current_class_qualified;
 
     // 1) Dynamic field state — latest-known value for this field inside the
     //    currently-walked method.
@@ -1094,8 +1148,7 @@ static std::string resolve_member_ref(CXCursor cursor,
         if (cit != rc.field_registry->end()) {
             auto fit = cit->second.find(field_name);
             if (fit != cit->second.end() && fit->second.has_value &&
-                !fit->second.resolved_value.empty())
-            {
+                !fit->second.resolved_value.empty()) {
                 return clip_text(fit->second.resolved_value);
             }
         }
@@ -1106,14 +1159,12 @@ static std::string resolve_member_ref(CXCursor cursor,
     return format_named_type_placeholder(qualified_field, field_type);
 }
 
-static std::string resolve_call_expr(CXCursor cursor,
-                                     CXTranslationUnit tu,
-                                     ResolutionContext& rc,
-                                     unsigned line_limit,
-                                     int depth)
+static std::string resolve_call_expr(CXCursor cursor, CXTranslationUnit tu, ResolutionContext& rc,
+                                     unsigned line_limit, int depth)
 {
     std::string callee_simple = get_callee_name(cursor, tu);
-    if (callee_simple.empty()) callee_simple = "<call>";
+    if (callee_simple.empty())
+        callee_simple = "<call>";
 
     std::string callee_qualified;
     {
@@ -1141,7 +1192,8 @@ static std::string resolve_call_expr(CXCursor cursor,
                 for (const auto& mc : mch) {
                     CXCursorKind mck = clang_getCursorKind(mc);
                     if (mck == CXCursor_TypeRef || mck == CXCursor_NamespaceRef ||
-                        mck == CXCursor_TemplateRef) continue;
+                        mck == CXCursor_TemplateRef)
+                        continue;
                     recv = mc;
                     has_recv = true;
                     break;
@@ -1152,7 +1204,7 @@ static std::string resolve_call_expr(CXCursor cursor,
                         callee_display = base + "." + callee_simple;
                     }
                 }
-                break; // only first member-ref child matters
+                break;  // only first member-ref child matters
             }
             if (ck == CXCursor_DeclRefExpr || ck == CXCursor_CallExpr ||
                 ck == CXCursor_UnexposedExpr) {
@@ -1168,7 +1220,8 @@ static std::string resolve_call_expr(CXCursor cursor,
     for (int i = 0; i < na; ++i) {
         CXCursor arg = clang_Cursor_getArgument(cursor, i);
         std::string a = resolve_expr(arg, tu, rc, line_limit, depth - 1);
-        if (a.empty()) a = format_type_placeholder(clang_getCursorType(arg));
+        if (a.empty())
+            a = format_type_placeholder(clang_getCursorType(arg));
         actuals.push_back(clip_text(a));
     }
 
@@ -1179,19 +1232,18 @@ static std::string resolve_call_expr(CXCursor cursor,
         if (const auto* summary = find_function_summary(rc, callee_simple, callee_qualified)) {
             const std::string summary_key =
                 summary->qualified_name.empty() ? summary->simple_name : summary->qualified_name;
-            if (!summary_key.empty() &&
-                summary->has_return_cursor &&
-                rc.active_functions.find(summary_key) == rc.active_functions.end())
-            {
+            if (!summary_key.empty() && summary->has_return_cursor &&
+                rc.active_functions.find(summary_key) == rc.active_functions.end()) {
                 ResolutionContext nested;
-                nested.frame = nullptr;                       // no caller locals visible inside callee
+                nested.frame = nullptr;  // no caller locals visible inside callee
                 nested.summaries = rc.summaries;
                 nested.active_functions = rc.active_functions;
                 nested.active_functions.insert(summary_key);
 
                 for (std::size_t i = 0; i < summary->param_names.size(); ++i) {
                     std::string bound;
-                    if (i < actuals.size()) bound = actuals[i];
+                    if (i < actuals.size())
+                        bound = actuals[i];
                     if (bound.empty() && i < summary->param_types.size()) {
                         bound = "<type: " + summary->param_types[i] + ">";
                     }
@@ -1200,21 +1252,26 @@ static std::string resolve_call_expr(CXCursor cursor,
 
                 // Also expose callee's pre-collected locals as last-resort bindings.
                 for (const auto& kv : summary->locals) {
-                    if (kv.first.empty() || kv.second.empty()) continue;
+                    if (kv.first.empty() || kv.second.empty())
+                        continue;
                     const auto& hist = kv.second;
                     const LocalValue* latest = nullptr;
                     for (const auto& v : hist) {
-                        if (!v.known) continue;
-                        if (!latest || v.line >= latest->line) latest = &v;
+                        if (!v.known)
+                            continue;
+                        if (!latest || v.line >= latest->line)
+                            latest = &v;
                     }
-                    if (latest && nested.param_bindings.find(kv.first) == nested.param_bindings.end()) {
+                    if (latest &&
+                        nested.param_bindings.find(kv.first) == nested.param_bindings.end()) {
                         nested.param_bindings[kv.first] = latest->text;
                     }
                 }
 
-                std::string rr = resolve_expr(summary->return_cursor, tu, nested,
-                                              UINT_MAX, kMaxInlineExpansionDepth);
-                if (!rr.empty()) return clip_text(rr);
+                std::string rr = resolve_expr(summary->return_cursor, tu, nested, UINT_MAX,
+                                              kMaxInlineExpansionDepth);
+                if (!rr.empty())
+                    return clip_text(rr);
             }
         }
     }
@@ -1222,23 +1279,23 @@ static std::string resolve_call_expr(CXCursor cursor,
     std::ostringstream oss;
     oss << callee_display << "(";
     for (std::size_t i = 0; i < actuals.size(); ++i) {
-        if (i) oss << ", ";
+        if (i)
+            oss << ", ";
         oss << actuals[i];
     }
     oss << ")";
     return clip_text(oss.str());
 }
 
-static std::string resolve_expr(CXCursor cursor,
-                                CXTranslationUnit tu,
-                                ResolutionContext& rc,
-                                unsigned line_limit,
-                                int depth)
+static std::string resolve_expr(CXCursor cursor, CXTranslationUnit tu, ResolutionContext& rc,
+                                unsigned line_limit, int depth)
 {
-    if (clang_Cursor_isNull(cursor)) return {};
+    if (clang_Cursor_isNull(cursor))
+        return {};
     if (depth <= 0) {
         std::string eval = evaluate_cursor_value(cursor, tu);
-        if (!eval.empty()) return eval;
+        if (!eval.empty())
+            return eval;
         return get_cursor_text(cursor, tu);
     }
 
@@ -1246,7 +1303,8 @@ static std::string resolve_expr(CXCursor cursor,
 
     if (is_literal_like(kind)) {
         std::string eval = evaluate_cursor_value(cursor, tu);
-        if (!eval.empty()) return eval;
+        if (!eval.empty())
+            return eval;
         return get_cursor_text(cursor, tu);
     }
 
@@ -1260,7 +1318,8 @@ static std::string resolve_expr(CXCursor cursor,
 
         case CXCursor_ParenExpr: {
             auto children = get_children(cursor);
-            if (!children.empty()) return resolve_expr(children.front(), tu, rc, line_limit, depth - 1);
+            if (!children.empty())
+                return resolve_expr(children.front(), tu, rc, line_limit, depth - 1);
             return get_cursor_text(cursor, tu);
         }
 
@@ -1273,7 +1332,8 @@ static std::string resolve_expr(CXCursor cursor,
         case CXCursor_InitListExpr:
         case CXCursor_ArraySubscriptExpr: {
             std::string eval = evaluate_cursor_value(cursor, tu);
-            if (!eval.empty()) return eval;
+            if (!eval.empty())
+                return eval;
             return get_cursor_text(cursor, tu);
         }
 
@@ -1286,26 +1346,30 @@ static std::string resolve_expr(CXCursor cursor,
                 return resolve_expr(children.front(), tu, rc, line_limit, depth - 1);
             }
             std::string eval = evaluate_cursor_value(cursor, tu);
-            if (!eval.empty()) return eval;
+            if (!eval.empty())
+                return eval;
             return get_cursor_text(cursor, tu);
         }
 
         default: {
             std::string eval = evaluate_cursor_value(cursor, tu);
-            if (!eval.empty()) return eval;
+            if (!eval.empty())
+                return eval;
             return get_cursor_text(cursor, tu);
         }
     }
 }
 
-static std::string extract_assignment_lhs_name(CXCursor cursor) {
+static std::string extract_assignment_lhs_name(CXCursor cursor)
+{
     CXCursorKind kind = clang_getCursorKind(cursor);
     if (kind == CXCursor_DeclRefExpr) {
         return to_string_and_dispose(clang_getCursorSpelling(cursor));
     }
     if (kind == CXCursor_UnexposedExpr || kind == CXCursor_ParenExpr) {
         auto children = get_children(cursor);
-        if (!children.empty()) return extract_assignment_lhs_name(children.front());
+        if (!children.empty())
+            return extract_assignment_lhs_name(children.front());
     }
     return {};
 }
@@ -1316,12 +1380,11 @@ static std::string extract_assignment_lhs_name(CXCursor cursor) {
 //
 // The collection populates `frame.locals` as a *history* per variable name.
 // =============================================================================
-static void record_local(FunctionFrame& frame,
-                         const std::string& name,
-                         const std::string& value,
+static void record_local(FunctionFrame& frame, const std::string& name, const std::string& value,
                          unsigned line)
 {
-    if (name.empty() || value.empty()) return;
+    if (name.empty() || value.empty())
+        return;
     LocalValue lv;
     lv.text = clip_text(value);
     lv.line = line;
@@ -1329,8 +1392,10 @@ static void record_local(FunctionFrame& frame,
     frame.locals[name].push_back(std::move(lv));
 }
 
-static bool is_scope_boundary(CXCursorKind k) {
-    if (is_function_like_cursor(k)) return true;
+static bool is_scope_boundary(CXCursorKind k)
+{
+    if (is_function_like_cursor(k))
+        return true;
     switch (k) {
         case CXCursor_LambdaExpr:
         case CXCursor_ClassDecl:
@@ -1350,16 +1415,11 @@ struct DefCollectPayload {
     bool stop_at_nested;  // true when walking inside an outer function body
 };
 
-static void collect_definitions_recursive(CXCursor cursor,
-                                          const std::string& file_path,
-                                          CXTranslationUnit tu,
-                                          FunctionFrame& frame,
-                                          const std::unordered_map<std::string, FunctionSummary>& summaries,
-                                          bool stop_at_nested);
+static void collect_definitions_recursive(
+    CXCursor cursor, const std::string& file_path, CXTranslationUnit tu, FunctionFrame& frame,
+    const std::unordered_map<std::string, FunctionSummary>& summaries, bool stop_at_nested);
 
-static void visit_for_defs(CXCursor parent,
-                           const std::string& file_path,
-                           CXTranslationUnit tu,
+static void visit_for_defs(CXCursor parent, const std::string& file_path, CXTranslationUnit tu,
                            FunctionFrame& frame,
                            const std::unordered_map<std::string, FunctionSummary>& summaries,
                            bool stop_at_nested)
@@ -1369,34 +1429,33 @@ static void visit_for_defs(CXCursor parent,
         parent,
         [](CXCursor child, CXCursor, CXClientData data) -> CXChildVisitResult {
             auto* p = static_cast<DefCollectPayload*>(data);
-            collect_definitions_recursive(child, *p->file_path, p->tu, *p->frame,
-                                          *p->summaries, p->stop_at_nested);
+            collect_definitions_recursive(child, *p->file_path, p->tu, *p->frame, *p->summaries,
+                                          p->stop_at_nested);
             return CXChildVisit_Continue;
         },
-        &payload
-    );
+        &payload);
 }
 
-static void collect_definitions_recursive(CXCursor cursor,
-                                          const std::string& file_path,
-                                          CXTranslationUnit tu,
-                                          FunctionFrame& frame,
-                                          const std::unordered_map<std::string, FunctionSummary>& summaries,
-                                          bool stop_at_nested)
+static void collect_definitions_recursive(
+    CXCursor cursor, const std::string& file_path, CXTranslationUnit tu, FunctionFrame& frame,
+    const std::unordered_map<std::string, FunctionSummary>& summaries, bool stop_at_nested)
 {
-    if (!cursor_is_from_file_or_header(cursor, file_path)) return;
+    if (!cursor_is_from_file_or_header(cursor, file_path))
+        return;
 
     CXCursorKind kind = clang_getCursorKind(cursor);
 
     // Stop walking into nested function / lambda / class bodies — their locals
     // must not pollute the outer function's frame.
-    if (stop_at_nested && is_scope_boundary(kind)) return;
+    if (stop_at_nested && is_scope_boundary(kind))
+        return;
 
     CXSourceLocation loc = clang_getCursorLocation(cursor);
     CXFile cf;
     unsigned line = 0, col = 0;
     clang_getExpansionLocation(loc, &cf, &line, &col, nullptr);
-    (void)cf; (void)col;
+    (void)cf;
+    (void)col;
 
     ResolutionContext rc;
     rc.frame = &frame;
@@ -1411,9 +1470,11 @@ static void collect_definitions_recursive(CXCursor cursor,
                 // Skip type-related children (they are not initializers).
                 CXCursorKind ck = clang_getCursorKind(c);
                 if (ck == CXCursor_TypeRef || ck == CXCursor_NamespaceRef ||
-                    ck == CXCursor_TemplateRef) continue;
+                    ck == CXCursor_TemplateRef)
+                    continue;
                 init_value = resolve_expr(c, tu, rc, line, kMaxResolveDepth);
-                if (!init_value.empty()) break;
+                if (!init_value.empty())
+                    break;
             }
             if (init_value.empty()) {
                 init_value = evaluate_cursor_value(cursor, tu);
@@ -1423,8 +1484,8 @@ static void collect_definitions_recursive(CXCursor cursor,
             }
             record_local(frame, var_name, init_value, line);
 #if PQC_AST_DEBUG
-            std::cerr << "[AST][debug] var init " << var_name << " -> "
-                      << clip_text(init_value) << " at line " << line << "\n";
+            std::cerr << "[AST][debug] var init " << var_name << " -> " << clip_text(init_value)
+                      << " at line " << line << "\n";
 #endif
         }
     } else if (kind == CXCursor_BinaryOperator) {
@@ -1447,8 +1508,8 @@ static void collect_definitions_recursive(CXCursor cursor,
                     }
                     record_local(frame, lhs, value, line);
 #if PQC_AST_DEBUG
-                    std::cerr << "[AST][debug] assign " << lhs << " -> "
-                              << clip_text(value) << " at line " << line << "\n";
+                    std::cerr << "[AST][debug] assign " << lhs << " -> " << clip_text(value)
+                              << " at line " << line << "\n";
 #endif
                 }
             }
@@ -1459,8 +1520,7 @@ static void collect_definitions_recursive(CXCursor cursor,
         if (children.size() >= 1) {
             std::string lhs = extract_assignment_lhs_name(children[0]);
             if (!lhs.empty()) {
-                record_local(frame, lhs,
-                             format_type_placeholder(clang_getCursorType(cursor)),
+                record_local(frame, lhs, format_type_placeholder(clang_getCursorType(cursor)),
                              line);
             }
         }
@@ -1470,10 +1530,8 @@ static void collect_definitions_recursive(CXCursor cursor,
     visit_for_defs(cursor, file_path, tu, frame, summaries, stop_at_nested);
 }
 
-static void collect_definitions(CXCursor function_cursor,
-                                const std::string& file_path,
-                                CXTranslationUnit tu,
-                                FunctionFrame& frame,
+static void collect_definitions(CXCursor function_cursor, const std::string& file_path,
+                                CXTranslationUnit tu, FunctionFrame& frame,
                                 const std::unordered_map<std::string, FunctionSummary>& summaries)
 {
     // The top-level is the function body itself; from here we forbid descending
@@ -1484,14 +1542,15 @@ static void collect_definitions(CXCursor function_cursor,
 // =============================================================================
 // Find the first return-statement cursor inside a function body (last-wins).
 // =============================================================================
-static void find_return_cursor(CXCursor cursor,
-                               const std::string& file_path,
+static void find_return_cursor(CXCursor cursor, const std::string& file_path,
                                FunctionSummary& summary)
 {
-    if (!cursor_is_from_file_or_header(cursor, file_path)) return;
+    if (!cursor_is_from_file_or_header(cursor, file_path))
+        return;
 
     CXCursorKind kind = clang_getCursorKind(cursor);
-    if (is_scope_boundary(kind) && !clang_equalCursors(cursor, summary.cursor)) return;
+    if (is_scope_boundary(kind) && !clang_equalCursors(cursor, summary.cursor))
+        return;
 
     if (kind == CXCursor_ReturnStmt) {
         auto children = get_children(cursor);
@@ -1509,13 +1568,12 @@ static void find_return_cursor(CXCursor cursor,
 // =============================================================================
 // Collect outgoing call edges from a function body (for call-graph building).
 // =============================================================================
-static void collect_callees_recursive(CXCursor cursor,
-                                      const std::string& file_path,
-                                      CXTranslationUnit tu,
-                                      const CXCursor& outer_fn,
+static void collect_callees_recursive(CXCursor cursor, const std::string& file_path,
+                                      CXTranslationUnit tu, const CXCursor& outer_fn,
                                       std::vector<std::string>& out)
 {
-    if (!cursor_is_from_file_or_header(cursor, file_path)) return;
+    if (!cursor_is_from_file_or_header(cursor, file_path))
+        return;
 
     CXCursorKind kind = clang_getCursorKind(cursor);
     if (is_scope_boundary(kind) && !clang_equalCursors(cursor, outer_fn)) {
@@ -1529,8 +1587,10 @@ static void collect_callees_recursive(CXCursor cursor,
         if (!clang_Cursor_isNull(ref) && is_function_like_cursor(clang_getCursorKind(ref))) {
             key = get_qualified_cursor_name(ref);
         }
-        if (key.empty()) key = get_callee_name(cursor, tu);
-        if (!key.empty()) out.push_back(key);
+        if (key.empty())
+            key = get_callee_name(cursor, tu);
+        if (!key.empty())
+            out.push_back(key);
     }
 
     for (const auto& ch : get_children(cursor)) {
@@ -1562,13 +1622,13 @@ struct VisitData {
     std::unordered_set<std::string> reachable;
 };
 
-static void emit_finding(const PendingCall& pc, VisitData* vd) {
+static void emit_finding(const PendingCall& pc, VisitData* vd)
+{
     std::string fname = pc.callee_name;
     if (fname.empty()) {
 #if PQC_AST_DEBUG
-        std::cerr << "[AST][debug] emit skip: empty callee at "
-                  << pc.file_path << ":" << pc.line << ":" << pc.col
-                  << " raw='" << pc.raw_line << "'\n";
+        std::cerr << "[AST][debug] emit skip: empty callee at " << pc.file_path << ":" << pc.line
+                  << ":" << pc.col << " raw='" << pc.raw_line << "'\n";
 #endif
         return;
     }
@@ -1578,17 +1638,13 @@ static void emit_finding(const PendingCall& pc, VisitData* vd) {
     {
         std::string cln = fname;
         std::transform(cln.begin(), cln.end(), cln.begin(), ::tolower);
-        static const char* const kCleanupSuffixes[] = {
-            "_free", "_clear_free", "_up_ref", "_cleanup", nullptr
-        };
+        static const char* const kCleanupSuffixes[] = {"_free", "_clear_free", "_up_ref",
+                                                       "_cleanup", nullptr};
         for (const char* const* sfx = kCleanupSuffixes; *sfx; ++sfx) {
             std::string s(*sfx);
-            if (cln.size() > s.size() &&
-                cln.compare(cln.size() - s.size(), s.size(), s) == 0)
-            {
+            if (cln.size() > s.size() && cln.compare(cln.size() - s.size(), s.size(), s) == 0) {
 #if PQC_AST_DEBUG
-                std::cerr << "[AST][debug] emit skip (cleanup alias): callee='"
-                          << fname << "'\n";
+                std::cerr << "[AST][debug] emit skip (cleanup alias): callee='" << fname << "'\n";
 #endif
                 return;
             }
@@ -1598,8 +1654,7 @@ static void emit_finding(const PendingCall& pc, VisitData* vd) {
     auto opt = vd->db.find_by_name(fname);
     if (!opt) {
 #if PQC_AST_DEBUG
-        std::cerr << "[AST][debug] db MISS: callee='" << fname
-                  << "' raw='" << pc.raw_line << "'\n";
+        std::cerr << "[AST][debug] db MISS: callee='" << fname << "' raw='" << pc.raw_line << "'\n";
 #endif
         return;
     }
@@ -1612,18 +1667,17 @@ static void emit_finding(const PendingCall& pc, VisitData* vd) {
     // RSA/DH/EC operations never carry PQC algorithm names in their arguments,
     // so this check cannot suppress true positives.
     {
-        static const char* const kPQCSafePrefixes[] = {
-            "ml-kem", "ml-dsa", "slh-dsa", "fn-dsa", "falcon",
-            "sphincs", "kyber", "dilithium", "hawk", "mceliece", nullptr
-        };
+        static const char* const kPQCSafePrefixes[] = {"ml-kem", "ml-dsa",   "slh-dsa", "fn-dsa",
+                                                       "falcon", "sphincs",  "kyber",   "dilithium",
+                                                       "hawk",   "mceliece", nullptr};
         for (const auto& arg : pc.arguments) {
             std::string al = arg;
             std::transform(al.begin(), al.end(), al.begin(), ::tolower);
             for (const char* const* pfx = kPQCSafePrefixes; *pfx; ++pfx) {
                 if (al.find(*pfx) != std::string::npos) {
 #if PQC_AST_DEBUG
-                    std::cerr << "[AST][debug] emit skip (PQC safe arg): callee='"
-                              << fname << "' arg='" << arg << "'\n";
+                    std::cerr << "[AST][debug] emit skip (PQC safe arg): callee='" << fname
+                              << "' arg='" << arg << "'\n";
 #endif
                     return;
                 }
@@ -1632,39 +1686,36 @@ static void emit_finding(const PendingCall& pc, VisitData* vd) {
     }
 
 #if PQC_AST_DEBUG
-    std::cerr << "[AST][debug] db HIT: callee='" << fname
-              << "' vuln_id='" << opt->id << "' at "
+    std::cerr << "[AST][debug] db HIT: callee='" << fname << "' vuln_id='" << opt->id << "' at "
               << pc.file_path << ":" << pc.line << ":" << pc.col
-              << (pc.reachable_from_root ? " [reachable]" : " [UNREACHABLE]")
-              << "\n";
+              << (pc.reachable_from_root ? " [reachable]" : " [UNREACHABLE]") << "\n";
 #endif
 
     Finding f;
     // Use the actual called name (fname) so findings report what's in the source.
     // The canonical opt->name is used for DB lookups; fname may be an alias.
-    f.function_name         = fname.empty() ? opt->name : fname;
-    f.file_path             = pc.file_path;
-    f.line_number           = static_cast<int>(pc.line);
-    f.column                = static_cast<int>(pc.col);
-    f.library               = opt->library_name;
-    f.algorithm             = opt->algorithm;
-    f.category              = opt->category;
+    f.function_name = fname.empty() ? opt->name : fname;
+    f.file_path = pc.file_path;
+    f.line_number = static_cast<int>(pc.line);
+    f.column = static_cast<int>(pc.col);
+    f.library = opt->library_name;
+    f.algorithm = opt->algorithm;
+    f.category = opt->category;
     f.quantum_vulnerability = opt->quantum_vulnerability;
     // Apply the unreachable-call risk discount in-place. The schema stays the
     // same; downstream sorting by base_risk_score naturally deprioritizes
     // findings whose enclosing function is not called from any root.
-    f.base_risk_score       = pc.reachable_from_root
-                                ? opt->risk_score
-                                : opt->risk_score * kUnreachableRiskFactor;
-    f.analyzer_mode         = "ast";
-    f.vuln_id               = opt->id;
-    f.nist_reference        = opt->nist_reference;
-    f.tc26_reference        = opt->tc26_reference;
-    f.context_function      = pc.context_function.empty() ? "<global>" : pc.context_function;
-    f.context_class         = pc.context_class;
-    f.context_namespace     = pc.context_namespace;
-    f.raw_line              = pc.raw_line;
-    f.arguments             = pc.arguments;
+    f.base_risk_score =
+        pc.reachable_from_root ? opt->risk_score : opt->risk_score * kUnreachableRiskFactor;
+    f.analyzer_mode = "ast";
+    f.vuln_id = opt->id;
+    f.nist_reference = opt->nist_reference;
+    f.tc26_reference = opt->tc26_reference;
+    f.context_function = pc.context_function.empty() ? "<global>" : pc.context_function;
+    f.context_class = pc.context_class;
+    f.context_namespace = pc.context_namespace;
+    f.raw_line = pc.raw_line;
+    f.arguments = pc.arguments;
 
 #if PQC_AST_DEBUG
     for (size_t i = 0; i < f.arguments.size(); ++i) {
@@ -1694,8 +1745,7 @@ struct CallSiteVisitState {
     std::vector<std::pair<std::string /*qualified or simple*/,
                           std::vector<std::string> /*actuals*/>>* outgoing;
     // Dedup key set for emissions, scoped per top-level walk.
-    std::set<std::tuple<std::string, unsigned, unsigned,
-                        std::string, std::string>>* seen;
+    std::set<std::tuple<std::string, unsigned, unsigned, std::string, std::string>>* seen;
     CXCursor outer_fn;
     // Mutable field-state for the current method body. After each intra-class
     // call we replay its effects so subsequent sibling expressions see the
@@ -1711,23 +1761,23 @@ static void walk_calls_in_function(CXCursor cursor, CallSiteVisitState* st);
 // Forward declarations — these functions are defined later (phase 2.6) but the
 // call-graph walker (phase 4) uses them to keep field state up-to-date as it
 // visits each CallExpr in source order.
-static FieldStateMap initial_field_state(const VisitData* vd,
-                                         const std::string& cls_qual);
-static void replay_method_effects(const VisitData* vd,
-                                  const std::string& method_qual,
-                                  FieldStateMap& state,
-                                  std::unordered_set<std::string>& active,
+static FieldStateMap initial_field_state(const VisitData* vd, const std::string& cls_qual);
+static void replay_method_effects(const VisitData* vd, const std::string& method_qual,
+                                  FieldStateMap& state, std::unordered_set<std::string>& active,
                                   int depth_left);
 
-static CXChildVisitResult walk_calls_visitor(CXCursor child, CXCursor, CXClientData data) {
+static CXChildVisitResult walk_calls_visitor(CXCursor child, CXCursor, CXClientData data)
+{
     auto* st = static_cast<CallSiteVisitState*>(data);
     walk_calls_in_function(child, st);
     return CXChildVisit_Continue;
 }
 
-static void walk_calls_in_function(CXCursor cursor, CallSiteVisitState* st) {
+static void walk_calls_in_function(CXCursor cursor, CallSiteVisitState* st)
+{
     VisitData* vd = st->vd;
-    if (!cursor_is_from_file_or_header(cursor, vd->file_path)) return;
+    if (!cursor_is_from_file_or_header(cursor, vd->file_path))
+        return;
 
     CXCursorKind kind = clang_getCursorKind(cursor);
     if (is_scope_boundary(kind) && !clang_equalCursors(cursor, st->outer_fn)) {
@@ -1784,38 +1834,32 @@ static void walk_calls_in_function(CXCursor cursor, CallSiteVisitState* st) {
         // call sites on the same line aren't collapsed.
         std::ostringstream args_join;
         for (size_t i = 0; i < actuals.size(); ++i) {
-            if (i) args_join << "|";
+            if (i)
+                args_join << "|";
             args_join << actuals[i];
         }
-        auto key = std::make_tuple(pc.file_path, pc.line, pc.col,
-                                   pc.callee_name, args_join.str());
+        auto key = std::make_tuple(pc.file_path, pc.line, pc.col, pc.callee_name, args_join.str());
         if (st->seen->insert(key).second) {
             emit_finding(pc, vd);
         }
 
         // Queue for recursive descent regardless of reachability filter — the
         // outer driver decides what to do with callees.
-        st->outgoing->emplace_back(
-            callee_qualified.empty() ? callee_simple : callee_qualified,
-            actuals
-        );
+        st->outgoing->emplace_back(callee_qualified.empty() ? callee_simple : callee_qualified,
+                                   actuals);
 
         // Inter-procedural field-state replay: if this CallExpr resolves to a
         // method of the same enclosing class (and we have collected its
         // effects), apply those effects to the mutable field state so the
         // *next* CallExpr in this body sees the updated field values.
         if (st->mutable_field_state && st->enclosing_class_qualified &&
-            !st->enclosing_class_qualified->empty() &&
-            !callee_qualified.empty())
-        {
+            !st->enclosing_class_qualified->empty() && !callee_qualified.empty()) {
             auto mit = vd->method_effects.find(callee_qualified);
             if (mit != vd->method_effects.end() &&
-                mit->second.class_qualified == *st->enclosing_class_qualified)
-            {
+                mit->second.class_qualified == *st->enclosing_class_qualified) {
                 std::unordered_set<std::string> active;
-                replay_method_effects(vd, callee_qualified,
-                                      *st->mutable_field_state,
-                                      active, kMaxCallGraphDepth);
+                replay_method_effects(vd, callee_qualified, *st->mutable_field_state, active,
+                                      kMaxCallGraphDepth);
             }
         }
     }
@@ -1829,12 +1873,14 @@ static void walk_calls_in_function(CXCursor cursor, CallSiteVisitState* st) {
 struct WalkKey {
     std::string qualified_name;
     std::vector<std::string> bindings;  // values for each param (ordered)
-    bool operator==(const WalkKey& o) const {
+    bool operator==(const WalkKey& o) const
+    {
         return qualified_name == o.qualified_name && bindings == o.bindings;
     }
 };
 struct WalkKeyHash {
-    std::size_t operator()(const WalkKey& k) const noexcept {
+    std::size_t operator()(const WalkKey& k) const noexcept
+    {
         std::size_t h = std::hash<std::string>{}(k.qualified_name);
         for (const auto& b : k.bindings) {
             h ^= std::hash<std::string>{}(b) + 0x9e3779b97f4a7c15ULL + (h << 6) + (h >> 2);
@@ -1843,19 +1889,20 @@ struct WalkKeyHash {
     }
 };
 
-static void walk_call_graph(const FunctionSummary& fn,
-                            const std::vector<std::string>& actuals_from_caller,
-                            VisitData* vd,
-                            std::unordered_set<WalkKey, WalkKeyHash>& visited,
-                            std::set<std::tuple<std::string, unsigned, unsigned,
-                                                std::string, std::string>>& seen,
-                            int depth_left)
+static void walk_call_graph(
+    const FunctionSummary& fn, const std::vector<std::string>& actuals_from_caller, VisitData* vd,
+    std::unordered_set<WalkKey, WalkKeyHash>& visited,
+    std::set<std::tuple<std::string, unsigned, unsigned, std::string, std::string>>& seen,
+    int depth_left)
 {
-    if (depth_left <= 0) return;
-    if (!fn.has_cursor) return;
+    if (depth_left <= 0)
+        return;
+    if (!fn.has_cursor)
+        return;
 
     WalkKey key{fn.qualified_name, actuals_from_caller};
-    if (!visited.insert(key).second) return;
+    if (!visited.insert(key).second)
+        return;
 
     // Build the frame for this function. Start from definition-time locals
     // (already collected during phase 2), then bind params from caller.
@@ -1870,7 +1917,8 @@ static void walk_call_graph(const FunctionSummary& fn,
 
     for (std::size_t i = 0; i < fn.param_names.size(); ++i) {
         std::string bound;
-        if (i < actuals_from_caller.size()) bound = actuals_from_caller[i];
+        if (i < actuals_from_caller.size())
+            bound = actuals_from_caller[i];
         if (bound.empty()) {
             if (i < fn.param_types.size() && !fn.param_types[i].empty()) {
                 bound = "<type: " + fn.param_types[i] + ">";
@@ -1892,10 +1940,12 @@ static void walk_call_graph(const FunctionSummary& fn,
             CXCursorKind k = clang_getCursorKind(cur);
             std::string name = to_string_and_dispose(clang_getCursorSpelling(cur));
             if (k == CXCursor_Namespace) {
-                if (!name.empty()) ns_parts.push_back(name);
+                if (!name.empty())
+                    ns_parts.push_back(name);
             } else if (k == CXCursor_ClassDecl || k == CXCursor_StructDecl ||
                        k == CXCursor_ClassTemplate) {
-                if (cls.empty() && !name.empty()) cls = name;
+                if (cls.empty() && !name.empty())
+                    cls = name;
             } else if (k == CXCursor_TranslationUnit) {
                 break;
             }
@@ -1903,7 +1953,8 @@ static void walk_call_graph(const FunctionSummary& fn,
         }
         std::reverse(ns_parts.begin(), ns_parts.end());
         for (const auto& p : ns_parts) {
-            if (!ns.empty()) ns += "::";
+            if (!ns.empty())
+                ns += "::";
             ns += p;
         }
     }
@@ -1921,7 +1972,8 @@ static void walk_call_graph(const FunctionSummary& fn,
                 rc.current_class_qualified = get_qualified_cursor_name(cur);
                 break;
             }
-            if (k == CXCursor_TranslationUnit) break;
+            if (k == CXCursor_TranslationUnit)
+                break;
             cur = clang_getCursorSemanticParent(cur);
         }
     }
@@ -1967,10 +2019,13 @@ static void walk_call_graph(const FunctionSummary& fn,
         // Try qualified, then simple (find_function_summary handles both).
         if (!callee_key.empty()) {
             auto it = vd->function_summaries.find(callee_key);
-            if (it != vd->function_summaries.end()) sub = &it->second;
-            else sub = find_function_summary(tmp, callee_key);
+            if (it != vd->function_summaries.end())
+                sub = &it->second;
+            else
+                sub = find_function_summary(tmp, callee_key);
         }
-        if (!sub) continue;
+        if (!sub)
+            continue;
         walk_call_graph(*sub, callee_actuals, vd, visited, seen, depth_left - 1);
     }
 }
@@ -1978,9 +2033,7 @@ static void walk_call_graph(const FunctionSummary& fn,
 // =============================================================================
 // Phase 2.5 — collect class fields with their inline / ctor initializer values.
 // =============================================================================
-static void resolve_field_initializer(CXCursor init_cursor,
-                                      CXTranslationUnit tu,
-                                      VisitData* vd,
+static void resolve_field_initializer(CXCursor init_cursor, CXTranslationUnit tu, VisitData* vd,
                                       FieldInfo& out)
 {
     // Use a minimal ResolutionContext: no frame, no param bindings, but with
@@ -1998,7 +2051,8 @@ static void resolve_field_initializer(CXCursor init_cursor,
     }
 }
 
-static void collect_class_fields(VisitData* vd) {
+static void collect_class_fields(VisitData* vd)
+{
     // Visit every ClassDecl / StructDecl reachable from the TU root and walk
     // its immediate declarations.
     auto tu_cursor = clang_getTranslationUnitCursor(vd->tu);
@@ -2008,12 +2062,11 @@ static void collect_class_fields(VisitData* vd) {
     std::function<void(CXCursor)> walk_decl = [&](CXCursor c) {
         CXCursorKind kind = clang_getCursorKind(c);
         // TU root has no file location; allow descent unconditionally.
-        if (kind != CXCursor_TranslationUnit &&
-            !cursor_is_from_file_or_header(c, vd->file_path)) return;
+        if (kind != CXCursor_TranslationUnit && !cursor_is_from_file_or_header(c, vd->file_path))
+            return;
 
         if (kind == CXCursor_ClassDecl || kind == CXCursor_StructDecl ||
-            kind == CXCursor_ClassTemplate)
-        {
+            kind == CXCursor_ClassTemplate) {
             std::string class_qual = get_qualified_cursor_name(c);
             if (!class_qual.empty()) {
                 auto& fields = vd->class_fields[class_qual];
@@ -2023,9 +2076,9 @@ static void collect_class_fields(VisitData* vd) {
                     CXCursorKind mk = clang_getCursorKind(member);
 
                     if (mk == CXCursor_FieldDecl) {
-                        std::string fname = to_string_and_dispose(
-                            clang_getCursorSpelling(member));
-                        if (fname.empty()) continue;
+                        std::string fname = to_string_and_dispose(clang_getCursorSpelling(member));
+                        if (fname.empty())
+                            continue;
                         FieldInfo& fi = fields[fname];
                         if (fi.type_spelling.empty()) {
                             fi.type_spelling = to_string_and_dispose(
@@ -2037,9 +2090,9 @@ static void collect_class_fields(VisitData* vd) {
                         // FieldDecl (filtering out type / namespace cursors).
                         for (const auto& fc : get_children(member)) {
                             CXCursorKind fck = clang_getCursorKind(fc);
-                            if (fck == CXCursor_TypeRef ||
-                                fck == CXCursor_NamespaceRef ||
-                                fck == CXCursor_TemplateRef) continue;
+                            if (fck == CXCursor_TypeRef || fck == CXCursor_NamespaceRef ||
+                                fck == CXCursor_TemplateRef)
+                                continue;
                             if (!fi.has_value) {
                                 resolve_field_initializer(fc, vd->tu, vd, fi);
                             }
@@ -2062,11 +2115,14 @@ static void collect_class_fields(VisitData* vd) {
                 const bool single_ctor = (ctor_count == 1);
 
                 for (const auto& member : get_children(c)) {
-                    if (clang_getCursorKind(member) != CXCursor_Constructor) continue;
-                    if (!clang_isCursorDefinition(member)) continue;
+                    if (clang_getCursorKind(member) != CXCursor_Constructor)
+                        continue;
+                    if (!clang_isCursorDefinition(member))
+                        continue;
 
                     for (const auto& mi : get_children(member)) {
-                        if (clang_getCursorKind(mi) != CXCursor_MemberRef) continue;
+                        if (clang_getCursorKind(mi) != CXCursor_MemberRef)
+                            continue;
                         // The MemberRef inside a constructor declaration is
                         // the member-init-list entry. Its spelling is the
                         // field name; its siblings (next children of the
@@ -2074,15 +2130,17 @@ static void collect_class_fields(VisitData* vd) {
                         // expression — but libclang here gives us the init
                         // expression as a child of the MemberRef itself in
                         // most versions. Try children first.
-                        std::string fname = to_string_and_dispose(
-                            clang_getCursorSpelling(mi));
-                        if (fname.empty()) continue;
+                        std::string fname = to_string_and_dispose(clang_getCursorSpelling(mi));
+                        if (fname.empty())
+                            continue;
 
                         auto fit = fields.find(fname);
-                        if (fit == fields.end()) continue;
+                        if (fit == fields.end())
+                            continue;
                         // Skip if we already have an inline value, unless
                         // there's exactly one ctor (then ctor wins).
-                        if (fit->second.has_value && !single_ctor) continue;
+                        if (fit->second.has_value && !single_ctor)
+                            continue;
 
                         // The initializer expression follows the MemberRef in
                         // the ctor's child list. Find it by extent.
@@ -2092,13 +2150,9 @@ static void collect_class_fields(VisitData* vd) {
                             if (clang_equalCursors(ctor_children[i], mi)) {
                                 CXCursor init = ctor_children[i + 1];
                                 CXCursorKind ik = clang_getCursorKind(init);
-                                if (ik != CXCursor_TypeRef &&
-                                    ik != CXCursor_NamespaceRef &&
-                                    ik != CXCursor_TemplateRef &&
-                                    ik != CXCursor_MemberRef &&
-                                    ik != CXCursor_ParmDecl &&
-                                    ik != CXCursor_CompoundStmt)
-                                {
+                                if (ik != CXCursor_TypeRef && ik != CXCursor_NamespaceRef &&
+                                    ik != CXCursor_TemplateRef && ik != CXCursor_MemberRef &&
+                                    ik != CXCursor_ParmDecl && ik != CXCursor_CompoundStmt) {
                                     FieldInfo tmp = fit->second;
                                     resolve_field_initializer(init, vd->tu, vd, tmp);
                                     if (tmp.has_value) {
@@ -2118,9 +2172,8 @@ static void collect_class_fields(VisitData* vd) {
         // Recurse into namespaces and nested classes.
         if (kind == CXCursor_Namespace || kind == CXCursor_TranslationUnit ||
             kind == CXCursor_ClassDecl || kind == CXCursor_StructDecl ||
-            kind == CXCursor_ClassTemplate ||
-            kind == CXCursor_LinkageSpec || kind == CXCursor_UnexposedDecl)
-        {
+            kind == CXCursor_ClassTemplate || kind == CXCursor_LinkageSpec ||
+            kind == CXCursor_UnexposedDecl) {
             for (const auto& ch : get_children(c)) {
                 walk_decl(ch);
             }
@@ -2148,40 +2201,45 @@ static void collect_class_fields(VisitData* vd) {
 // Helper: is `cursor` a reference to a field that belongs to class `cls_qual`?
 // If yes, fill out `field_name`. Accepts both DeclRefExpr to a FieldDecl and
 // MemberRefExpr whose canonical referenced decl is a FieldDecl in the class.
-static bool cursor_is_own_field_ref(CXCursor cursor,
-                                    const std::string& cls_qual,
+static bool cursor_is_own_field_ref(CXCursor cursor, const std::string& cls_qual,
                                     std::string& out_field_name)
 {
     CXCursor ref = clang_getCursorReferenced(cursor);
-    if (clang_Cursor_isNull(ref)) return false;
-    if (clang_getCursorKind(ref) != CXCursor_FieldDecl) return false;
+    if (clang_Cursor_isNull(ref))
+        return false;
+    if (clang_getCursorKind(ref) != CXCursor_FieldDecl)
+        return false;
     CXCursor parent = clang_getCursorSemanticParent(ref);
-    if (clang_Cursor_isNull(parent)) return false;
+    if (clang_Cursor_isNull(parent))
+        return false;
     CXCursorKind pk = clang_getCursorKind(parent);
-    if (pk != CXCursor_ClassDecl && pk != CXCursor_StructDecl &&
-        pk != CXCursor_ClassTemplate) return false;
+    if (pk != CXCursor_ClassDecl && pk != CXCursor_StructDecl && pk != CXCursor_ClassTemplate)
+        return false;
     std::string parent_qual = get_qualified_cursor_name(parent);
-    if (parent_qual != cls_qual) return false;
+    if (parent_qual != cls_qual)
+        return false;
     out_field_name = to_string_and_dispose(clang_getCursorSpelling(ref));
     return !out_field_name.empty();
 }
 
 // Helper: is `cursor` a CXXMethod whose semantic parent is class `cls_qual`?
-static bool cursor_is_own_method_call(CXCursor call_cursor,
-                                      const std::string& cls_qual,
+static bool cursor_is_own_method_call(CXCursor call_cursor, const std::string& cls_qual,
                                       std::string& out_method_qualified)
 {
     CXCursor ref = clang_getCursorReferenced(call_cursor);
-    if (clang_Cursor_isNull(ref)) return false;
+    if (clang_Cursor_isNull(ref))
+        return false;
     CXCursorKind rk = clang_getCursorKind(ref);
-    if (rk != CXCursor_CXXMethod && rk != CXCursor_Constructor &&
-        rk != CXCursor_Destructor) return false;
+    if (rk != CXCursor_CXXMethod && rk != CXCursor_Constructor && rk != CXCursor_Destructor)
+        return false;
     CXCursor parent = clang_getCursorSemanticParent(ref);
-    if (clang_Cursor_isNull(parent)) return false;
+    if (clang_Cursor_isNull(parent))
+        return false;
     CXCursorKind pk = clang_getCursorKind(parent);
-    if (pk != CXCursor_ClassDecl && pk != CXCursor_StructDecl &&
-        pk != CXCursor_ClassTemplate) return false;
-    if (get_qualified_cursor_name(parent) != cls_qual) return false;
+    if (pk != CXCursor_ClassDecl && pk != CXCursor_StructDecl && pk != CXCursor_ClassTemplate)
+        return false;
+    if (get_qualified_cursor_name(parent) != cls_qual)
+        return false;
     out_method_qualified = get_qualified_cursor_name(ref);
     return !out_method_qualified.empty();
 }
@@ -2189,8 +2247,7 @@ static bool cursor_is_own_method_call(CXCursor call_cursor,
 // Helper: render a call-expression as text by re-resolving its callee + args
 // in a neutral context (no caller frame, no dynamic state, just static
 // summaries + field registry). Used to label AddressOfArg effects.
-static std::string render_call_for_effect(CXCursor call_cursor,
-                                          VisitData* vd)
+static std::string render_call_for_effect(CXCursor call_cursor, VisitData* vd)
 {
     ResolutionContext rc;
     rc.summaries = &vd->function_summaries;
@@ -2199,7 +2256,8 @@ static std::string render_call_for_effect(CXCursor call_cursor,
     return clip_text(out);
 }
 
-static CXChildVisitResult method_event_visitor(CXCursor cursor, CXCursor /*parent*/, CXClientData data);
+static CXChildVisitResult method_event_visitor(CXCursor cursor, CXCursor /*parent*/,
+                                               CXClientData data);
 
 struct MethodEventCtx {
     VisitData* vd;
@@ -2208,7 +2266,9 @@ struct MethodEventCtx {
     std::string cls_qual;
 };
 
-static CXChildVisitResult method_event_visitor(CXCursor cursor, CXCursor /*parent*/, CXClientData data) {
+static CXChildVisitResult method_event_visitor(CXCursor cursor, CXCursor /*parent*/,
+                                               CXClientData data)
+{
     auto* ctx = static_cast<MethodEventCtx*>(data);
     VisitData* vd = ctx->vd;
 
@@ -2247,7 +2307,8 @@ static CXChildVisitResult method_event_visitor(CXCursor cursor, CXCursor /*paren
                     rc.summaries = &vd->function_summaries;
                     rc.field_registry = &vd->class_fields;
                     rc.current_class_qualified = ctx->cls_qual;
-                    std::string rhs_value = resolve_expr(rhs, vd->tu, rc, UINT_MAX, kMaxResolveDepth);
+                    std::string rhs_value =
+                        resolve_expr(rhs, vd->tu, rc, UINT_MAX, kMaxResolveDepth);
                     if (rhs_value.empty()) {
                         rhs_value = format_type_placeholder(clang_getCursorType(rhs));
                     }
@@ -2278,9 +2339,11 @@ static CXChildVisitResult method_event_visitor(CXCursor cursor, CXCursor /*paren
             // Peel UnexposedExpr / ParenExpr.
             for (int peel = 0; peel < 3; ++peel) {
                 if (clang_getCursorKind(inner) != CXCursor_UnexposedExpr &&
-                    clang_getCursorKind(inner) != CXCursor_ParenExpr) break;
+                    clang_getCursorKind(inner) != CXCursor_ParenExpr)
+                    break;
                 auto ch = get_children(inner);
-                if (ch.empty()) break;
+                if (ch.empty())
+                    break;
                 inner = ch.front();
             }
             (void)ak;
@@ -2293,9 +2356,11 @@ static CXChildVisitResult method_event_visitor(CXCursor cursor, CXCursor /*paren
                 bool is_addr_of = false;
                 if (ntok > 0) {
                     std::string t = to_string_and_dispose(clang_getTokenSpelling(vd->tu, toks[0]));
-                    if (t == "&") is_addr_of = true;
+                    if (t == "&")
+                        is_addr_of = true;
                 }
-                if (toks) clang_disposeTokens(vd->tu, toks, ntok);
+                if (toks)
+                    clang_disposeTokens(vd->tu, toks, ntok);
 
                 if (is_addr_of) {
                     auto uch = get_children(inner);
@@ -2304,9 +2369,11 @@ static CXChildVisitResult method_event_visitor(CXCursor cursor, CXCursor /*paren
                         // Look through casts/unexposed.
                         for (int peel = 0; peel < 3; ++peel) {
                             if (clang_getCursorKind(target) != CXCursor_UnexposedExpr &&
-                                clang_getCursorKind(target) != CXCursor_ParenExpr) break;
+                                clang_getCursorKind(target) != CXCursor_ParenExpr)
+                                break;
                             auto tch = get_children(target);
-                            if (tch.empty()) break;
+                            if (tch.empty())
+                                break;
                             target = tch.front();
                         }
                         std::string field_name;
@@ -2339,7 +2406,8 @@ static CXChildVisitResult method_event_visitor(CXCursor cursor, CXCursor /*paren
                     for (const auto& mc : get_children(c)) {
                         CXCursorKind mck = clang_getCursorKind(mc);
                         if (mck == CXCursor_TypeRef || mck == CXCursor_NamespaceRef ||
-                            mck == CXCursor_TemplateRef) continue;
+                            mck == CXCursor_TemplateRef)
+                            continue;
                         // Any non-trivial base disqualifies.
                         implicit_this = false;
                         break;
@@ -2360,13 +2428,15 @@ static CXChildVisitResult method_event_visitor(CXCursor cursor, CXCursor /*paren
     return CXChildVisit_Recurse;
 }
 
-static void collect_method_effects(VisitData* vd) {
+static void collect_method_effects(VisitData* vd)
+{
     for (auto& kv : vd->function_summaries) {
         FunctionSummary& s = kv.second;
-        if (!s.has_cursor) continue;
+        if (!s.has_cursor)
+            continue;
         CXCursorKind ck = clang_getCursorKind(s.cursor);
-        if (ck != CXCursor_CXXMethod && ck != CXCursor_Constructor &&
-            ck != CXCursor_Destructor) continue;
+        if (ck != CXCursor_CXXMethod && ck != CXCursor_Constructor && ck != CXCursor_Destructor)
+            continue;
 
         // Find the enclosing class.
         std::string cls_qual;
@@ -2380,7 +2450,8 @@ static void collect_method_effects(VisitData* vd) {
                 }
             }
         }
-        if (cls_qual.empty()) continue;
+        if (cls_qual.empty())
+            continue;
 
         MethodEffects me;
         me.class_qualified = cls_qual;
@@ -2391,9 +2462,7 @@ static void collect_method_effects(VisitData* vd) {
         // Sort events by line just in case AST visitation order isn't strictly
         // source-order (it usually is, but defensive).
         std::sort(me.events.begin(), me.events.end(),
-                  [](const MethodEvent& a, const MethodEvent& b) {
-                      return a.line < b.line;
-                  });
+                  [](const MethodEvent& a, const MethodEvent& b) { return a.line < b.line; });
 
         if (!me.events.empty()) {
             vd->method_effects[s.qualified_name] = std::move(me);
@@ -2403,12 +2472,12 @@ static void collect_method_effects(VisitData* vd) {
 
 // Apply the static (inline / ctor) field initializers as the starting field
 // state for a class.
-static FieldStateMap initial_field_state(const VisitData* vd,
-                                         const std::string& cls_qual)
+static FieldStateMap initial_field_state(const VisitData* vd, const std::string& cls_qual)
 {
     FieldStateMap out;
     auto it = vd->class_fields.find(cls_qual);
-    if (it == vd->class_fields.end()) return out;
+    if (it == vd->class_fields.end())
+        return out;
     for (const auto& kv : it->second) {
         if (kv.second.has_value && !kv.second.resolved_value.empty()) {
             out[kv.first] = kv.second.resolved_value;
@@ -2419,16 +2488,17 @@ static FieldStateMap initial_field_state(const VisitData* vd,
 
 // Recursively replay the effects of `method_qual` on `state`. `active` guards
 // against direct/indirect recursion through the call graph.
-static void replay_method_effects(const VisitData* vd,
-                                  const std::string& method_qual,
-                                  FieldStateMap& state,
-                                  std::unordered_set<std::string>& active,
+static void replay_method_effects(const VisitData* vd, const std::string& method_qual,
+                                  FieldStateMap& state, std::unordered_set<std::string>& active,
                                   int depth_left)
 {
-    if (depth_left <= 0) return;
+    if (depth_left <= 0)
+        return;
     auto mit = vd->method_effects.find(method_qual);
-    if (mit == vd->method_effects.end()) return;
-    if (!active.insert(method_qual).second) return;
+    if (mit == vd->method_effects.end())
+        return;
+    if (!active.insert(method_qual).second)
+        return;
 
     for (const auto& ev : mit->second.events) {
         if (ev.kind == MethodEvent::Kind::Mutation) {
@@ -2446,20 +2516,24 @@ static void replay_method_effects(const VisitData* vd,
 // =============================================================================
 // Phase 1 — precollect signatures + linkage flags for *every* defined function.
 // =============================================================================
-static bool is_in_anonymous_namespace(CXCursor c) {
+static bool is_in_anonymous_namespace(CXCursor c)
+{
     CXCursor cur = clang_getCursorSemanticParent(c);
     while (!clang_Cursor_isNull(cur)) {
         if (clang_getCursorKind(cur) == CXCursor_Namespace) {
             std::string name = to_string_and_dispose(clang_getCursorSpelling(cur));
-            if (name.empty()) return true;
+            if (name.empty())
+                return true;
         }
         cur = clang_getCursorSemanticParent(cur);
     }
     return false;
 }
 
-static void build_function_summary(CXCursor cursor, VisitData* vd) {
-    if (!clang_isCursorDefinition(cursor)) return;
+static void build_function_summary(CXCursor cursor, VisitData* vd)
+{
+    if (!clang_isCursorDefinition(cursor))
+        return;
 
     FunctionSummary summary;
     summary.qualified_name = get_qualified_cursor_name(cursor);
@@ -2478,15 +2552,15 @@ static void build_function_summary(CXCursor cursor, VisitData* vd) {
         CXCursor arg = clang_Cursor_getArgument(cursor, i);
         summary.param_names.push_back(to_string_and_dispose(clang_getCursorSpelling(arg)));
         summary.param_types.push_back(
-            to_string_and_dispose(clang_getTypeSpelling(clang_getCursorType(arg)))
-        );
+            to_string_and_dispose(clang_getTypeSpelling(clang_getCursorType(arg))));
     }
 
     // Locals will be (re-)collected in phase 2 once all signatures are known.
     vd->function_summaries[summary.qualified_name] = std::move(summary);
 }
 
-static CXChildVisitResult precollect_visitor(CXCursor cursor, CXCursor, CXClientData data) {
+static CXChildVisitResult precollect_visitor(CXCursor cursor, CXCursor, CXClientData data)
+{
     auto* vd = static_cast<VisitData*>(data);
 
     if (!cursor_is_from_file_or_header(cursor, vd->file_path)) {
@@ -2506,7 +2580,8 @@ static CXChildVisitResult precollect_visitor(CXCursor cursor, CXCursor, CXClient
 // Phase 2 — for every collected summary, populate locals + return cursor +
 // outgoing callee names (for the graph).
 // =============================================================================
-static void populate_function_bodies(VisitData* vd) {
+static void populate_function_bodies(VisitData* vd)
+{
     // Copy keys first because we'll mutate values in the map.
     std::vector<std::string> keys;
     keys.reserve(vd->function_summaries.size());
@@ -2514,9 +2589,11 @@ static void populate_function_bodies(VisitData* vd) {
 
     for (const auto& key : keys) {
         auto it = vd->function_summaries.find(key);
-        if (it == vd->function_summaries.end()) continue;
+        if (it == vd->function_summaries.end())
+            continue;
         FunctionSummary& s = it->second;
-        if (!s.has_cursor) continue;
+        if (!s.has_cursor)
+            continue;
 
         FunctionFrame frame;
         frame.qualified_name = s.qualified_name;
@@ -2538,10 +2615,12 @@ static void populate_function_bodies(VisitData* vd) {
 // We additionally mark *every* defined function as analyzable, but the
 // emission step filters by reachability.
 // =============================================================================
-static void compute_reachability(VisitData* vd) {
+static void compute_reachability(VisitData* vd)
+{
     std::deque<std::string> frontier;
     auto add_root = [&](const std::string& key) {
-        if (vd->reachable.insert(key).second) frontier.push_back(key);
+        if (vd->reachable.insert(key).second)
+            frontier.push_back(key);
     };
 
     for (const auto& kv : vd->function_summaries) {
@@ -2557,11 +2636,13 @@ static void compute_reachability(VisitData* vd) {
         std::string cur = std::move(frontier.front());
         frontier.pop_front();
         auto it = vd->function_summaries.find(cur);
-        if (it == vd->function_summaries.end()) continue;
+        if (it == vd->function_summaries.end())
+            continue;
         for (const auto& callee_key : it->second.callees) {
             // callee_key may be qualified or simple; try both.
             if (vd->function_summaries.count(callee_key)) {
-                if (vd->reachable.insert(callee_key).second) frontier.push_back(callee_key);
+                if (vd->reachable.insert(callee_key).second)
+                    frontier.push_back(callee_key);
                 continue;
             }
             // Simple-name fallback (single match only, to avoid wrong unions).
@@ -2571,7 +2652,8 @@ static void compute_reachability(VisitData* vd) {
                 if (kv2.second.simple_name == callee_key) {
                     unique = &kv2.second;
                     ++matches;
-                    if (matches > 1) break;
+                    if (matches > 1)
+                        break;
                 }
             }
             if (matches == 1 && unique) {
@@ -2590,10 +2672,10 @@ static void compute_reachability(VisitData* vd) {
 // emit_finding's reachability check). At the same time, reachable roots get
 // proper inter-procedural propagation of param values.
 // =============================================================================
-static void drive_emission(VisitData* vd) {
+static void drive_emission(VisitData* vd)
+{
     std::unordered_set<WalkKey, WalkKeyHash> visited;
-    std::set<std::tuple<std::string, unsigned, unsigned,
-                        std::string, std::string>> seen;
+    std::set<std::tuple<std::string, unsigned, unsigned, std::string, std::string>> seen;
 
     // 1) Walk from reachable roots first so propagated values win over
     //    plain "<type: T>" fallbacks. Top-level walks use empty actuals
@@ -2601,7 +2683,8 @@ static void drive_emission(VisitData* vd) {
     //    are external entry points whose callers we don't see).
     for (const auto& root_key : vd->reachable) {
         auto it = vd->function_summaries.find(root_key);
-        if (it == vd->function_summaries.end()) continue;
+        if (it == vd->function_summaries.end())
+            continue;
         const FunctionSummary& fn = it->second;
         // Only start from roots (functions with no caller in our graph that
         // are themselves in the reachable set). Practically: every reachable
@@ -2619,15 +2702,15 @@ static void drive_emission(VisitData* vd) {
     //    If you want unreachable functions to also produce findings (e.g. for
     //    a "reachable" flag in Finding), flip the gate in emit_finding.
     for (const auto& kv : vd->function_summaries) {
-        if (vd->reachable.count(kv.first)) continue;
+        if (vd->reachable.count(kv.first))
+            continue;
         walk_call_graph(kv.second, /*actuals*/ {}, vd, visited, seen, kMaxCallGraphDepth);
     }
 }
 
-} // anonymous namespace
+}  // anonymous namespace
 
-bool ASTAnalyzer::try_libclang(const std::filesystem::path& path,
-                               std::vector<Finding>& out) const
+bool ASTAnalyzer::try_libclang(const std::filesystem::path& path, std::vector<Finding>& out) const
 {
     std::error_code ec;
     auto canon = std::filesystem::weakly_canonical(path, ec);
@@ -2647,10 +2730,7 @@ bool ASTAnalyzer::try_libclang(const std::filesystem::path& path,
                                       /*displayDiagnostics=*/0);
 
     std::vector<std::string> args_str = {
-        "-x", "c++",
-        "-std=c++17",
-        "-w",
-        "-ferror-limit=0",
+        "-x", "c++", "-std=c++17", "-w", "-ferror-limit=0",
     };
 
 #ifdef PQC_MACOS_SDKROOT
@@ -2659,13 +2739,14 @@ bool ASTAnalyzer::try_libclang(const std::filesystem::path& path,
 #endif
 
     for (const auto& d : include_dirs_) {
-        if (d.empty()) continue;
+        if (d.empty())
+            continue;
         args_str.push_back("-I");
         args_str.push_back(d);
     }
 
     auto parent = real_path.parent_path();
-    auto root   = parent.parent_path();
+    auto root = parent.parent_path();
 
     if (!parent.empty()) {
         args_str.push_back("-I");
@@ -2686,17 +2767,11 @@ bool ASTAnalyzer::try_libclang(const std::filesystem::path& path,
     cargs.reserve(args_str.size());
     for (auto& s : args_str) cargs.push_back(s.c_str());
 
-    unsigned tu_flags =
-        CXTranslationUnit_DetailedPreprocessingRecord |
-        CXTranslationUnit_KeepGoing;
+    unsigned tu_flags = CXTranslationUnit_DetailedPreprocessingRecord | CXTranslationUnit_KeepGoing;
 
-    CXTranslationUnit tu = clang_parseTranslationUnit(
-        index,
-        real_path.string().c_str(),
-        cargs.data(), static_cast<int>(cargs.size()),
-        nullptr, 0,
-        tu_flags
-    );
+    CXTranslationUnit tu =
+        clang_parseTranslationUnit(index, real_path.string().c_str(), cargs.data(),
+                                   static_cast<int>(cargs.size()), nullptr, 0, tu_flags);
 
     if (!tu) {
         clang_disposeIndex(index);
@@ -2709,12 +2784,14 @@ bool ASTAnalyzer::try_libclang(const std::filesystem::path& path,
     for (unsigned i = 0; i < n_diags; ++i) {
         CXDiagnostic diag = clang_getDiagnostic(tu, i);
         CXDiagnosticSeverity sev = clang_getDiagnosticSeverity(diag);
-        if (sev >= CXDiagnostic_Error) ++n_errors;
-        else if (sev == CXDiagnostic_Warning) ++n_warnings;
+        if (sev >= CXDiagnostic_Error)
+            ++n_errors;
+        else if (sev == CXDiagnostic_Warning)
+            ++n_warnings;
         clang_disposeDiagnostic(diag);
     }
-    std::cerr << "[AST][debug] TU diagnostics: " << n_errors << " errors, "
-              << n_warnings << " warnings\n";
+    std::cerr << "[AST][debug] TU diagnostics: " << n_errors << " errors, " << n_warnings
+              << " warnings\n";
 #endif
 
     VisitData vd{db_, out, real_path.string(), lines, tu, {}, {}, {}, {}};
@@ -2748,6 +2825,6 @@ bool ASTAnalyzer::try_libclang(const std::filesystem::path& path,
     return true;
 }
 
-#endif // PQC_HAS_LIBCLANG
+#endif  // PQC_HAS_LIBCLANG
 
-} // namespace pqc
+}  // namespace pqc
