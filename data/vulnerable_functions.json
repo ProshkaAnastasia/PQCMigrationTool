@@ -1634,6 +1634,127 @@
               "tc26_note": "ТК 26: гибридный TLS 1.3 с ML-KEM + VKO обязателен для новых систем с 2025 г."
             }
           ]
+        },
+        {
+          "id": "ossl-evp-get-cipherbyname-gost",
+          "name": "EVP_get_cipherbyname",
+          "aliases": [],
+          "category": "symmetric_cipher",
+          "algorithm": "Кузнечик / Магма / ГОСТ 28147 (ГОСТ Р 34.12-2015)",
+          "quantum_vulnerability": "low",
+          "risk_score": 3.0,
+          "description": "Retrieves a GOST block cipher by name. Кузнечик (kuznyechik) and Магма (magma/gost28147) are symmetric ciphers; Grover's algorithm reduces effective key security to ~128 bits, which remains acceptable. Flagged for inventory and migration planning.",
+          "nist_reference": "NIST SP 800-57 Part 1 Rev.5 (Grover halves symmetric key security)",
+          "tc26_reference": "ТК 26: Кузнечик (ГОСТ Р 34.12-2015) постквантово-стоек при 256-битном ключе; Магма допустима, но рекомендуется переход на Кузнечик из-за 64-битного блока.",
+          "patterns": [
+            "EVP_get_cipherbyname\\s*\\(\\s*\"kuznyechik",
+            "EVP_get_cipherbyname\\s*\\(\\s*\"magma",
+            "EVP_get_cipherbyname\\s*\\(\\s*\"gost28147",
+            "EVP_get_cipherbyname\\s*\\(\\s*\"grasshopper"
+          ],
+          "dangerous_argument_substrings": [
+            "kuznyechik",
+            "magma",
+            "gost28147",
+            "grasshopper"
+          ],
+          "safe_argument_substrings": [],
+          "match_arguments_case_insensitive": true,
+          "context_keywords": [
+            "cipher",
+            "gost",
+            "kuznyechik",
+            "magma",
+            "encrypt",
+            "decrypt"
+          ],
+          "replacements": [
+            {
+              "library": "openssl + gost-engine",
+              "function_name": "EVP_get_cipherbyname(\"kuznyechik-ctr\")",
+              "notes": "Кузнечик в режиме CTR является постквантово-стойким. Убедитесь в использовании режима с аутентификацией (ГОСТ Р 34.13-2015) и правильного управления нонсами.",
+              "tc26_note": "ТК 26: Кузнечик (ГОСТ Р 34.12-2015) — рекомендуемый блочный шифр"
+            }
+          ]
+        },
+        {
+          "id": "ossl-evp-get-digestbyname-gost",
+          "name": "EVP_get_digestbyname",
+          "aliases": [],
+          "category": "hash_function",
+          "algorithm": "Стрибог-256 / Стрибог-512 / ГОСТ Р 34.11-2012",
+          "quantum_vulnerability": "low",
+          "risk_score": 3.5,
+          "description": "Retrieves a GOST hash function by name. Стрибог-256 provides ~128-bit quantum security (boundary); Стрибог-512 provides ~256-bit. Flagged for inventory.",
+          "nist_reference": "NIST SP 800-57 Part 1 Rev.5",
+          "tc26_reference": "ТК 26: Стрибог (ГОСТ Р 34.11-2012) является постквантово-стойкой хэш-функцией.",
+          "patterns": [
+            "EVP_get_digestbyname\\s*\\(\\s*\"md_gost12",
+            "EVP_get_digestbyname\\s*\\(\\s*\"streebog",
+            "EVP_get_digestbyname\\s*\\(\\s*\"stribog",
+            "EVP_get_digestbyname\\s*\\(\\s*\"gostr3411"
+          ],
+          "dangerous_argument_substrings": [
+            "md_gost12",
+            "streebog",
+            "stribog",
+            "gostr3411",
+            "gost_hash"
+          ],
+          "safe_argument_substrings": [],
+          "match_arguments_case_insensitive": true,
+          "context_keywords": [
+            "digest",
+            "hash",
+            "gost",
+            "streebog",
+            "stribog"
+          ],
+          "replacements": [
+            {
+              "library": "openssl + gost-engine",
+              "function_name": "EVP_get_digestbyname(\"md_gost12_512\")",
+              "notes": "Стрибог-512 обеспечивает 256-битную постквантовую стойкость. Для долгосрочной защиты предпочтительнее md_gost12_512.",
+              "tc26_note": "ТК 26: Стрибог-512 (ГОСТ Р 34.11-2012) — рекомендуемая хэш-функция"
+            }
+          ]
+        },
+        {
+          "id": "ossl-engine-by-id-gost",
+          "name": "ENGINE_by_id",
+          "aliases": [
+            "ENGINE_init",
+            "ENGINE_set_default"
+          ],
+          "category": "engine_loading",
+          "algorithm": "gost-engine / OpenSSL ENGINE API",
+          "quantum_vulnerability": "info",
+          "risk_score": 5.0,
+          "description": "Loads the gost-engine OpenSSL ENGINE plugin. Presence indicates GOST cryptographic algorithms are in use. The ENGINE API is deprecated in OpenSSL 3.x; migration to provider-based API is recommended.",
+          "nist_reference": "",
+          "tc26_reference": "ТК 26: использование gost-engine указывает на применение ГОСТ-алгоритмов.",
+          "patterns": [
+            "ENGINE_by_id\\s*\\(\\s*\"gost\"",
+            "ENGINE_by_id\\s*\\(\\s*\"gost_old\""
+          ],
+          "dangerous_argument_substrings": [
+            "gost"
+          ],
+          "safe_argument_substrings": [],
+          "match_arguments_case_insensitive": true,
+          "context_keywords": [
+            "engine",
+            "gost",
+            "openssl"
+          ],
+          "replacements": [
+            {
+              "library": "openssl 3.x",
+              "function_name": "OSSL_PROVIDER_load(NULL, \"gostprov\")",
+              "notes": "Заменить ENGINE API на провайдер gost-provider для OpenSSL 3.x: OSSL_PROVIDER_load(NULL, \"gostprov\") или использовать gost-engine в режиме Legacy ENGINE.",
+              "tc26_note": "ТК 26: переход на ГОСТ-провайдер OpenSSL 3.x рекомендуется"
+            }
+          ]
         }
       ]
     },

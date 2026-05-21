@@ -1704,6 +1704,9 @@ static void emit_finding(const PendingCall& pc, VisitData* vd)
 
     // If the DB entry defines dangerous argument substrings, the finding is
     // emitted only when at least one argument matches one of them.
+    // Exception: if an argument could not be resolved to a simple constant
+    // (contains a type placeholder or is a call expression), emit conservatively
+    // rather than silently dropping the finding — the runtime value is unknown.
     if (!opt->dangerous_argument_substrings.empty()) {
         const bool matched = arguments_match_any_substring(
             pc.arguments,
@@ -1711,11 +1714,25 @@ static void emit_finding(const PendingCall& pc, VisitData* vd)
             opt->match_arguments_case_insensitive);
 
         if (!matched) {
+            bool any_unresolved = false;
+            for (const auto& arg : pc.arguments) {
+                if (arg.find("<type:") != std::string::npos ||
+                    arg.find('(') != std::string::npos) {
+                    any_unresolved = true;
+                    break;
+                }
+            }
+            if (!any_unresolved) {
 #if PQC_AST_DEBUG
-            std::cerr << "[AST][debug] emit skip (no dangerous arg match): callee='"
+                std::cerr << "[AST][debug] emit skip (no dangerous arg match): callee='"
+                          << fname << "'\n";
+#endif
+                return;
+            }
+#if PQC_AST_DEBUG
+            std::cerr << "[AST][debug] emit conservative (unresolved arg): callee='"
                       << fname << "'\n";
 #endif
-            return;
         }
     }
 
