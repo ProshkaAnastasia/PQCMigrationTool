@@ -1366,7 +1366,44 @@ static std::string resolve_expr(CXCursor cursor, CXTranslationUnit tu, Resolutio
             return get_cursor_text(cursor, tu);
         }
 
-        case CXCursor_UnaryOperator:
+        case CXCursor_UnaryOperator: {
+            std::string eval = evaluate_cursor_value(cursor, tu);
+            if (!eval.empty())
+                return eval;
+            // Detect operator from first token and resolve the operand.
+            // For address-of (&x) and dereference (*x) we recurse into the
+            // operand so that, e.g., &algo where algo="gost" → &"gost", making
+            // dangerous_argument_substrings matching work through pointers.
+            auto children = get_children(cursor);
+            if (children.size() == 1) {
+                std::string op;
+                {
+                    CXToken* toks = nullptr;
+                    unsigned ntoks = 0;
+                    clang_tokenize(tu, clang_getCursorExtent(cursor), &toks, &ntoks);
+                    if (ntoks > 0 &&
+                        clang_getTokenKind(toks[0]) == CXToken_Punctuation) {
+                        op = to_string_and_dispose(clang_getTokenSpelling(tu, toks[0]));
+                    }
+                    if (toks)
+                        clang_disposeTokens(tu, toks, ntoks);
+                }
+                if (op == "&") {
+                    // Keep the variable's identity, not its current value.
+                    // &key_len (output param = 0) must stay "&key_len", not "&0".
+                    std::string inner = get_cursor_text(children[0], tu);
+                    if (!inner.empty())
+                        return clip_text("&" + inner);
+                } else if (op == "*" || op == "-" || op == "!" || op == "~") {
+                    std::string inner =
+                        resolve_expr(children[0], tu, rc, line_limit, depth - 1);
+                    if (!inner.empty())
+                        return clip_text(op + inner);
+                }
+            }
+            return get_cursor_text(cursor, tu);
+        }
+
         case CXCursor_BinaryOperator:
         case CXCursor_ConditionalOperator:
         case CXCursor_CStyleCastExpr:
@@ -2883,6 +2920,34 @@ bool ASTAnalyzer::try_libclang(const std::filesystem::path& path, std::vector<Fi
 
     // Phase 4: walk call-graph and emit findings.
     drive_emission(&vd);
+
+    // Phase 5: suppress conservative placeholder findings at locations that
+    // also have call-site-specialised findings with concrete primitive args.
+    // This removes the standalone-walk artefact for functions like
+    //   cipherOperation(const char* name) { EVP_get_cipherbyname(name); }
+    // where the callee is walked once with empty bindings (producing a
+    // placeholder finding) and again per call site with concrete values.
+    {
+        auto is_conservative = [](const Finding& f) {
+            for (const auto& a : f.arguments)
+                if (a.find("<type:") != std::string::npos)
+                    return true;
+            return false;
+        };
+
+        std::set<std::tuple<std::string, int, std::string>> has_specific;
+        for (const auto& f : out)
+            if (!is_conservative(f))
+                has_specific.emplace(f.file_path, f.line_number, f.function_name);
+
+        out.erase(
+            std::remove_if(out.begin(), out.end(),
+                [&](const Finding& f) {
+                    return is_conservative(f) &&
+                           has_specific.count({f.file_path, f.line_number, f.function_name}) > 0;
+                }),
+            out.end());
+    }
 
     clang_disposeTranslationUnit(tu);
     clang_disposeIndex(index);

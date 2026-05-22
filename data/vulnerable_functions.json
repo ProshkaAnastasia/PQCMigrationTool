@@ -1658,7 +1658,12 @@
             "gost28147",
             "grasshopper"
           ],
-          "safe_argument_substrings": [],
+          "safe_argument_substrings": [
+            "aes-256",
+            "aes_256",
+            "chacha20",
+            "aria-256"
+          ],
           "match_arguments_case_insensitive": true,
           "context_keywords": [
             "cipher",
@@ -1701,7 +1706,14 @@
             "gostr3411",
             "gost_hash"
           ],
-          "safe_argument_substrings": [],
+          "safe_argument_substrings": [
+            "md_gost12_512",
+            "streebog512",
+            "stribog512",
+            "sha512",
+            "sha3_512",
+            "sha3-512"
+          ],
           "match_arguments_case_insensitive": true,
           "context_keywords": [
             "digest",
