@@ -6,201 +6,140 @@
 \usetikzlibrary{positioning,arrows.meta,calc,fit,backgrounds}
 
 \begin{document}
-\begin{tikzpicture}[
-    font=\sffamily\small,
-    >={Latex[length=2.4mm,width=1.8mm]},
-    line width=0.5pt,
-    block/.style={
-        rectangle, draw=black, fill=white,
-        minimum width=37mm, minimum height=12mm,
-        align=center, inner sep=3pt
-    },
-    ext/.style={
-        rectangle, draw=black, fill=white,
-        double, double distance=0.8pt,
-        minimum width=31mm, minimum height=10mm,
-        align=center, inner sep=3pt
-    },
-    store/.style={
-        rectangle, draw=black, fill=white,
-        minimum width=37mm, minimum height=12mm,
-        align=center, inner sep=3pt
-    },
-    subblock/.style={
-        rectangle, draw=black, dashed, fill=white,
-        minimum width=35mm, minimum height=10mm,
-        align=center, inner sep=3pt,
-        font=\sffamily\footnotesize
-    },
-    subsys/.style={
-        rectangle, draw=black, dashed,
-        inner sep=5mm
-    },
-    arr/.style={->, line width=0.5pt},
-    darr/.style={->, line width=0.5pt, dashed},
-    lbl/.style={font=\sffamily\footnotesize, inner sep=1.5pt, fill=white}
-]
-
-% ── Уровень 1: конфигурация и база уязвимостей ────────────────────────────────
-\node[store] (cfg)    at (-3.5, 0) {Менеджер\\конфигурации};
-\node[store] (vulndb) at ( 3.5, 0) {База уязвимостей\\(JSON)};
-
-% ── Уровень 2: сканер проекта ─────────────────────────────────────────────────
-\node[block] (scan) at (0, -3) {Сканер проекта};
-
-% ── Уровень 3: анализаторы ───────────────────────────────────────────────────
-\node[block] (regex) at (-6.5, -7)  {Анализатор\\регулярных\\выражений};
-\node[block] (ast)   at ( 0,   -7)  {AST-анализатор\\(libclang)};
-\node[block] (cert)  at ( 6.5, -7)  {Анализатор\\сертификатов};
-
-% Токенный анализатор — внутренний резерв AST при отсутствии libclang
-\node[subblock] (token) at (0, -9.8) {Токенный анализатор\\(резерв: без libclang)};
-
-% ── Уровень 4: оценщик рисков + вычислитель метрик ───────────────────────────
-\node[block]    (risk)    at (0,   -13.5) {Оценщик рисков};
-\node[subblock] (metrics) at (6.5, -13.5) {Вычислитель метрик\\(опционально)};
-
-% ── Уровень 5: генератор отчётов ─────────────────────────────────────────────
-\node[block] (report) at (0, -17) {Генератор отчётов\\и CBOM};
-
-% ── Внешние сущности: входные (слева) ────────────────────────────────────────
-\node[ext] (user)  at (-12,  0)  {Пользователь\\(CLI)};
-\node[ext] (code)  at (-12, -3)  {Исходный код\\C/C++};
-\node[ext] (certs) at (-12, -7)  {X.509\\сертификаты};
-
-% ── Внешние сущности: выходные артефакты (справа) ────────────────────────────
-\node[ext] (jsonout) at (11.5, -16)   {JSON-отчёт};
-\node[ext] (cbomout) at (11.5, -18)   {CBOM\\CycloneDX 1.5};
-
-% ── Подсистема анализа (рамка вокруг трёх анализаторов + токенного) ───────────
-\begin{pgfonlayer}{background}
-\node[subsys, fit=(regex)(ast)(cert)(token), inner sep=4mm] (anlayer) {};
-\end{pgfonlayer}
-
-% ── Рамка ядра системы ───────────────────────────────────────────────────────
-\begin{pgfonlayer}{background}
-\node[subsys,
-      fit=(cfg)(vulndb)(scan)(anlayer)(risk)(metrics)(report),
-      inner sep=7mm] (core) {};
-\end{pgfonlayer}
-\node[font=\sffamily\bfseries\small, anchor=south east,
-      fill=white, inner sep=2pt] at (core.south east) {Ядро системы};
-
-% ══════════════════════════════════════════════════════════════════════════════
-% Связи — вход
-% ══════════════════════════════════════════════════════════════════════════════
-
-% Пользователь → конфигурация
-\draw[arr] (user.east) -- node[lbl,above]{параметры} (cfg.west);
-
-% Исходный код → сканер
-\draw[arr] (code.east) -- node[lbl,above]{пути к файлам} (scan.west);
-
-% X.509 → анализатор сертификатов
-% Маршрут снизу (y = -11), огибает все блоки анализаторов
-\draw[arr] (certs.east) -- ++(0.5,0)
-           |- node[lbl,pos=0.75,above]{сертификаты}
-           ([yshift=-11mm]cert.south);
-\draw[arr] ([yshift=-11mm]cert.south) -- (cert.south);
-
-% Конфигурация и БД → сканер
-\draw[arr] (cfg.south)    -- (scan.north west);
-\draw[arr] (vulndb.south) -- (scan.north east);
-
-% ══════════════════════════════════════════════════════════════════════════════
-% Связи — шина базы уязвимостей (вертикальная, правая сторона x=9)
-% ══════════════════════════════════════════════════════════════════════════════
-
-% Опорные точки шины
-\coordinate (busT) at (9,     0);
-\coordinate (busM) at (9,   -9);
-\coordinate (busB) at (9, -13.5);
-
-\draw[arr] (vulndb.east) -- (busT)
-           -- (busM)
-           -- node[lbl,right,pos=0.5]{сигнатуры}
-              (anlayer.east |- busM);
-
-\draw (busM) -- (busB)
-      -- node[lbl,right]{сигнатуры} (risk.east);
-% Стрелка на оценщик рисков
-\draw[arr] (busB) -- (risk.east);
-
-% ══════════════════════════════════════════════════════════════════════════════
-% Связи — сканер → анализаторы (веер)
-% ══════════════════════════════════════════════════════════════════════════════
-
-% Промежуточная точка на уровне y = -5.2 (между сканером и анализаторами)
-\coordinate (fanR) at (-6.5, -5.2);
-\coordinate (fanC) at ( 0,   -5.2);
-\coordinate (fanL) at ( 6.5, -5.2);
-
-\draw[arr] (scan.south) -- (fanC) -- node[lbl,right]{ProjectInventory} (ast.north);
-\draw[arr] (fanC) -- (fanR) -- (regex.north);
-\draw[arr] (fanC) -- (fanL) -- (cert.north);
-
-% ══════════════════════════════════════════════════════════════════════════════
-% Связи — внутри уровня анализа
-% ══════════════════════════════════════════════════════════════════════════════
-
-% AST → токенный анализатор (резервный путь, пунктир)
-\draw[darr] (ast.south) -- node[lbl,right]{fallback} (token.north);
-
-% ══════════════════════════════════════════════════════════════════════════════
-% Связи — анализаторы → оценщик рисков
-% ══════════════════════════════════════════════════════════════════════════════
-
-% Regex → risk (L-образный: сначала вниз до y оценщика, затем вправо)
-\draw[arr] (regex.south) -- ++(0,-1)
-           -| node[lbl,pos=0.25,above]{Finding[]} (risk.west);
-
-% AST/Token → risk (прямо вниз)
-\draw[arr] (token.south) -- node[lbl,right]{Finding[]} (risk.north);
-
-% Cert → risk (L-образный: сначала вниз, затем влево)
-\draw[arr] (cert.south) -- ++(0,-1)
-           -| node[lbl,pos=0.25,above]{CertInfo[]} (risk.east);
-
-% ══════════════════════════════════════════════════════════════════════════════
-% Связи — оценщик рисков → далее
-% ══════════════════════════════════════════════════════════════════════════════
-
-% Risk → генератор отчётов
-\draw[arr] (risk.south) -- node[lbl,right]{RiskReport} (report.north);
-
-% Risk → метрики (пунктир, опционально)
-\draw[darr] (risk.east) -- node[lbl,above]{RiskReport} (metrics.west);
-
-% ══════════════════════════════════════════════════════════════════════════════
-% Связи — генератор → артефакты
-% ══════════════════════════════════════════════════════════════════════════════
-
-\draw[arr] (report.east) -- ++(1.5,0) |- (jsonout.west);
-\draw[arr] (report.east) -- ++(1.5,0) |- (cbomout.west);
-
-% ══════════════════════════════════════════════════════════════════════════════
-% Легенда
-% ══════════════════════════════════════════════════════════════════════════════
-\node[font=\sffamily\footnotesize, anchor=north west,
-      draw=black, inner sep=5pt, align=left, fill=white]
-    at (-2, 1.8) {%
-        \begin{tabular}{@{}c@{\hspace{5pt}}l@{}}
-        \tikz\draw (0,0) rectangle (0.6,0.28);
-            & компонент системы \\[3pt]
-        \tikz{\draw[double,double distance=0.5pt] (0,0) rectangle (0.6,0.28);}
-            & внешняя сущность \\[3pt]
-        \tikz\draw[dashed] (0,0) rectangle (0.6,0.28);
-            & подсистема / необязательный блок \\[3pt]
-        $\longrightarrow$ & поток данных \\[3pt]
-        $\dashrightarrow$ & резервный / опциональный поток \\
-        \end{tabular}
-    };
-
-% ══════════════════════════════════════════════════════════════════════════════
-% Заголовок (по ГОСТ 2.105: номер и наименование)
-% ══════════════════════════════════════════════════════════════════════════════
-\node[font=\sffamily\bfseries\small] at (0,-19.5)
-    {Рисунок 1 -- Компонентная архитектура инструмента миграции на ПКК};
-
-\end{tikzpicture}
+	\begin{tikzpicture}[
+		font=\sffamily\small,
+		>={Latex[length=2.4mm,width=1.8mm]},
+		line width=0.5pt,
+		node distance=10mm and 14mm,
+		block/.style={
+			rectangle, draw=black, fill=white,
+			minimum width=42mm, minimum height=14mm,
+			align=center, inner sep=4pt
+		},
+		ext/.style={
+			rectangle, draw=black, fill=white,
+			double, double distance=0.8pt,
+			minimum width=38mm, minimum height=14mm,
+			align=center, inner sep=4pt
+		},
+		store/.style={
+			rectangle, draw=black, fill=white,
+			minimum width=40mm, minimum height=14mm,
+			align=center, inner sep=4pt
+		},
+		subsys/.style={
+			rectangle, draw=black, dashed,
+			inner sep=6mm
+		},
+		arr/.style={->, line width=0.5pt},
+		lbl/.style={font=\sffamily\footnotesize, inner sep=1.5pt, fill=white}
+		]
+		
+		% ===== Заголовок =====
+		\node[font=\sffamily\bfseries] at (0,2.4)
+		{Рисунок 1 -- Компонентная архитектура инструмента миграции на ПКК};
+		
+		% ===== Уровень 1: вход (конфигурация и БД) =====
+		\node[store] (cfg)   at (-4, 0)  {Configuration\\Manager};
+		\node[store] (sigdb) at ( 4, 0)  {Signature DB\\(JSON)};
+		
+		% ===== Уровень 2: сканер =====
+		\node[block] (scan) at (0,-3.5) {Project Scanner};
+		
+		% ===== Уровень 3: анализаторы =====
+		\node[block] (regex) at (-7,-7.5) {Regex\\Analyzer};
+		\node[block] (ast)   at ( 0,-7.5) {AST Analyzer};
+		\node[block] (cert)  at ( 7,-7.5) {Cert\\Analyzer};
+		
+		% ===== Уровень 4: оценщик =====
+		\node[block] (risk) at (0,-11.5) {Risk Assessor};
+		
+		% ===== Уровень 5: генератор =====
+		\node[block] (report) at (0,-14.5) {Report Generator};
+		
+		% ===== Внешние сущности =====
+		\node[ext] (user)  at (-13, 0)   {Пользователь\\(CLI)};
+		\node[ext] (code)  at (-13,-3.5) {Исходный код\\C/C++};
+		\node[ext] (certs) at ( 13,-7.5) {X.509\\сертификаты};
+		\node[ext] (json)  at ( 13,-13)  {JSON-отчёт};
+		\node[ext] (cbom)  at ( 13,-16)  {CBOM\\CycloneDX 1.5};
+		
+		% ===== Рамка ядра =====
+		\begin{pgfonlayer}{background}
+			\node[subsys, fit=(cfg)(sigdb)(scan)(regex)(ast)(cert)(risk)(report)] (core) {};
+		\end{pgfonlayer}
+		\node[font=\sffamily\bfseries\small, anchor=north west, fill=white, inner sep=2pt]
+		at ($(core.south west)+(0.2,-0.05)$) {Ядро системы};
+		
+		% ===== Связи: внешние входы =====
+		\draw[arr] (user.east)  -- node[lbl,above]{параметры} (cfg.west);
+		\draw[arr] (code.east)  -- node[lbl,above]{пути} (scan.west);
+		% X.509 -> Cert: надпись поднята выше (above=4pt), чтобы не перекрывала стрелку
+		\draw[arr] (certs.west) -- node[lbl, above=4pt]{сертификаты} (cert.east);
+		
+		% Конфигурация и сигнатуры -> сканер
+		\draw[arr] (cfg.south)   -- (scan.north west);
+		\draw[arr] (sigdb.south) -- (scan.north east);
+		
+		% ===== Сканер -> анализаторы =====
+		% Cert Analyzer: обычная стрелка (всегда)
+		\draw[arr] ($(scan.south east)+(-0.5,0)$) -- ($(cert.north)+(0,1.5)$) -- (cert.north);
+		
+		% Regex/AST: одна стрелка выходит из scan, разветвляется в точке split, сливается в merge
+		% Точка разветвления — под серединой scan, между scan и анализаторами
+		\coordinate (split) at ($(scan.south)+(0,-1.5)$);
+		% Точка слияния — над серединой risk, между анализаторами и risk
+		\coordinate (merge) at ($(risk.north)+(0,1.5)$);
+		
+		% Одна стрелка от scan до split (без наконечника)
+		\draw[line width=0.5pt] (scan.south) -- (split);
+		
+		% От split расходятся две ветки (без наконечников на разветвлении)
+		\draw[line width=0.5pt] (split) -| (regex.north);
+		\draw[line width=0.5pt] (split) -- (ast.north);
+		
+		% Метка «или» между ветками
+		\node[lbl, draw=black, rounded corners=2pt, inner sep=2pt]
+		at (-3.5, -5.8) {или};
+		
+		% От анализаторов сходятся в merge (без наконечников)
+		\draw[line width=0.5pt] (regex.south) |- (merge);
+		\draw[line width=0.5pt] (ast.south)   -- (merge);
+		
+		% Одна стрелка от merge до risk
+		\draw[arr] (merge) -- node[lbl,right]{Finding[]} (risk.north);
+		
+		% Cert -> risk: отдельная стрелка как прежде
+		\draw[arr] (cert.south) |- node[lbl,pos=0.9,above]{CertInfo[]} (risk.east);
+		
+		% Оценщик -> генератор
+		\draw[arr] (risk.south) -- node[lbl,right]{RiskReport} (report.north);
+		
+		% Генератор -> артефакты
+		\draw[arr] (report.east) -- ++(2.0,0) |- (json.west);
+		\draw[arr] (report.east) -- ++(2.0,0) |- (cbom.west);
+		
+		% ===== Легенда (сдвинута правее: x=11.0) =====
+		\node[
+		font=\sffamily\footnotesize,
+		anchor=north west,
+		draw=black,
+		inner sep=6pt,
+		align=left,
+		fill=white
+		]
+		at (11.0, 2.8) {%
+			\begin{tabular}{@{}c@{\hspace{6pt}}l@{}}
+				\tikz\draw[line width=0.5pt] (0,0) rectangle (0.7,0.35);
+				& компонент системы \\[4pt]
+				\tikz\draw[line width=0.5pt, double, double distance=0.5pt] (0,0) rectangle (0.7,0.35);
+				& внешняя сущность \\[4pt]
+				\tikz\draw[line width=0.5pt, dashed] (0,0) rectangle (0.7,0.35);
+				& подсистема \\[4pt]
+				\tikz\draw[->, >=Latex, line width=0.5pt] (0,0.175) -- (0.7,0.175);
+				& поток данных \\
+			\end{tabular}
+		};
+		
+	\end{tikzpicture}
 \end{document}

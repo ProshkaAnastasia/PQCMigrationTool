@@ -126,7 +126,7 @@ static void fill_info(X509* x509, CertInfo& info)
     info.not_after = asn1_time_to_str(X509_get0_notAfter(x509));
     // Expiry check
     int day, sec;
-    ASN1_TIME_diff(&day, &sec, X509_get0_notAfter(x509), nullptr);
+    ASN1_TIME_diff(&day, &sec, nullptr, X509_get0_notAfter(x509));
     info.is_expired = (day < 0 || sec < 0);
     // Signature algorithm
     const X509_ALGOR* salg = nullptr;

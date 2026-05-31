@@ -251,6 +251,7 @@ nlohmann::json ReportGenerator::build_full_report(const AppConfig& cfg,
                       {"context_namespace", f.context_namespace},
                       {"raw_line", f.raw_line},
                       {"arguments", f.arguments},
+                      {"nested_vulnerable_calls", f.nested_vulnerable_calls},
                       {"nist_reference", f.nist_reference},
                       {"tc26_reference", f.tc26_reference}});
     }

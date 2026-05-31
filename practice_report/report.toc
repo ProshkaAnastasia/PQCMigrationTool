@@ -1,0 +1,18 @@
+\xpg@aux {}{russian}
+\contentsline {section}{\uppercase {ВВЕДЕНИЕ}}{2}{section*.1}%
+\contentsline {section}{\numberline {1}Написание текста ВКР}{6}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Формирование структуры ВКР}{6}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}Работа с источниками}{7}{subsection.1.2}%
+\contentsline {subsection}{\numberline {1.3}Написание основных разделов}{7}{subsection.1.3}%
+\contentsline {subsection}{\numberline {1.4}Введение, заключение и оформление}{8}{subsection.1.4}%
+\contentsline {subsection}{\numberline {1.5}Итерации с руководителем}{9}{subsection.1.5}%
+\contentsline {section}{\numberline {2}Проверка текста ВКР в системе «Антиплагиат»}{11}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Процедура проверки}{11}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Результаты проверки}{12}{subsection.2.2}%
+\contentsline {section}{\numberline {3}Предзащита ВКР}{13}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Подготовка презентации}{13}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Прохождение предзащиты}{15}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Обсуждение результатов с руководителем}{17}{subsection.3.3}%
+\contentsline {section}{\uppercase {ЗАКЛЮЧЕНИЕ}}{18}{section*.4}%
+\contentsline {section}{ПРИЛОЖЕНИЕ А}{19}{section*.5}%
+\contentsline {section}{ПРИЛОЖЕНИЕ Б}{20}{section*.7}%

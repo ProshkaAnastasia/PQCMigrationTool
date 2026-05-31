@@ -400,6 +400,10 @@ namespace GostVKO {
  * XA/XB — параметры, предназначенные именно для Key Exchange (не для подписи).
  */
 GostSign::KeyPair generateVKOKeyPair() {
+
+    int nid = OBJ_txt2nid("id-GostR3410-2012-256");
+    EvpPkeyCtxPtr ctx(EVP_PKEY_CTX_new_id(nid, GostEngine::get()));
+
     int nid = OBJ_txt2nid("gost2012_256");
     if (nid == NID_undef)
         nid = OBJ_txt2nid("id-GostR3410-2012-256");

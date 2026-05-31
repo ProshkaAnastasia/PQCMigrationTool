@@ -1,6 +1,6 @@
 # Fdb version 4
-["pdflatex"] 1779406647.96329 "/Users/anastasiapronina/Downloads/pqc-migration-tool-v2/docs/diagram1/diagram_architecture.tex" "diagram_architecture.pdf" "diagram_architecture" 1779406648.68574 0
-  "/Users/anastasiapronina/Downloads/pqc-migration-tool-v2/docs/diagram1/diagram_architecture.tex" 1779406646.81473 4590 36d14c50720d65e78a1b99ce8393140d ""
+["pdflatex"] 1779430804.10395 "/Users/anastasiapronina/Downloads/pqc-migration-tool-v2/docs/diagram1/diagram_architecture.tex" "diagram_architecture.pdf" "diagram_architecture" 1779430804.82037 0
+  "/Users/anastasiapronina/Downloads/pqc-migration-tool-v2/docs/diagram1/diagram_architecture.tex" 1779430803.69455 5929 8f159f45224f5ba023133b944d30136a ""
   "/Users/anastasiapronina/Library/texlive/2024/texmf-var/fonts/tfm/lh/lh-t2a/larm1000.tfm" 1770549921.98657 3220 0e417eaf233b160335902e97259a6c77 ""
   "/Users/anastasiapronina/Library/texlive/2024/texmf-var/fonts/tfm/lh/lh-t2a/lass0800.tfm" 1763318048.48068 3264 26b079dff50e667b3da4d5604970d303 ""
   "/Users/anastasiapronina/Library/texlive/2024/texmf-var/fonts/tfm/lh/lh-t2a/lass0900.tfm" 1763318470.72307 3304 53affe277323fe13ca2eec5c25d027b0 ""
@@ -15,7 +15,6 @@
   "/usr/local/texlive/2024/texmf-dist/fonts/tfm/public/cm/cmr8.tfm" 1136768653 1292 21c1c5bfeaebccffdb478fd231a0997d ""
   "/usr/local/texlive/2024/texmf-dist/fonts/tfm/public/cm/cmsy6.tfm" 1136768653 1116 933a60c408fc0a863a92debe84b2d294 ""
   "/usr/local/texlive/2024/texmf-dist/fonts/tfm/public/cm/cmsy8.tfm" 1136768653 1120 8b7d695260f3cff42e636090a8002094 ""
-  "/usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb" 1248133631 32626 4f5c1b83753b1dd3a97d1b399a005b4b ""
   "/usr/local/texlive/2024/texmf-dist/fonts/type1/public/cm-super/sfss0800.pfb" 1215737283 95441 e322369dec2b43bb317c506a4a44deaa ""
   "/usr/local/texlive/2024/texmf-dist/fonts/type1/public/cm-super/sfss0900.pfb" 1215737283 94648 b03e7f03878c9582819008e1f17e2327 ""
   "/usr/local/texlive/2024/texmf-dist/fonts/type1/public/cm-super/sfsx0900.pfb" 1215737283 154664 ab0d0aa25a7cc3b241bf03b9240cdd63 ""
@@ -134,8 +133,8 @@
   "/usr/local/texlive/2024/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1761335302 5528139 83355a4dc6a240789cfe8f33d66cdc41 ""
   "/usr/local/texlive/2024/texmf-var/web2c/pdftex/pdflatex.fmt" 1761335700 3628969 54ec7c98ad45cb1899aa64e416fb2d8a ""
   "/usr/local/texlive/2024/texmf.cnf" 1710266656 577 e590dabc9e28c5b61546e15f63eebcdf ""
-  "diagram_architecture.aux" 1779406648.61757 170 05bb43932b5d4106755b871c2dd43de2 "pdflatex"
-  "diagram_architecture.tex" 1779406646.81473 4590 36d14c50720d65e78a1b99ce8393140d ""
+  "diagram_architecture.aux" 1779430804.74652 170 05bb43932b5d4106755b871c2dd43de2 "pdflatex"
+  "diagram_architecture.tex" 1779430803.69455 5929 8f159f45224f5ba023133b944d30136a ""
   (generated)
   "diagram_architecture.aux"
   "diagram_architecture.log"

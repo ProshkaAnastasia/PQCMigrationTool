@@ -1818,6 +1818,26 @@ static void emit_finding(const PendingCall& pc, VisitData* vd)
     f.raw_line = pc.raw_line;
     f.arguments = pc.arguments;
 
+    // Detect vulnerable function calls passed as arguments (e.g. EVP_DigestInit_ex(ctx, EVP_md5(), NULL)).
+    // For each argument that looks like a call expression, check if the callee is in the DB.
+    for (const auto& arg : pc.arguments) {
+        auto paren = arg.find('(');
+        if (paren == std::string::npos)
+            continue;
+        std::string candidate = arg.substr(0, paren);
+        while (!candidate.empty() && candidate.back() == ' ')
+            candidate.pop_back();
+        if (candidate.empty() || candidate == fname)
+            continue;
+        if (vd->db.find_by_name(candidate)) {
+            f.nested_vulnerable_calls.push_back(candidate);
+#if PQC_AST_DEBUG
+            std::cerr << "[AST][debug] nested vulnerable call in arg: outer='" << fname
+                      << "' inner='" << candidate << "'\n";
+#endif
+        }
+    }
+
 #if PQC_AST_DEBUG
     for (size_t i = 0; i < f.arguments.size(); ++i) {
         std::cerr << "[AST][debug]   arg[" << i << "]='" << f.arguments[i] << "'\n";

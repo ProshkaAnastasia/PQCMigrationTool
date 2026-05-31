@@ -12,6 +12,10 @@ struct Finding {
     int line_number = 0, column = 0;
     double base_risk_score = 0.0;
     std::vector<std::string> arguments;
+    // Names of DB-tracked vulnerable functions detected as arguments to this call.
+    // Populated when e.g. EVP_DigestInit_ex(ctx, EVP_md5(), NULL) is found:
+    // outer finding gets nested_vulnerable_calls = {"EVP_md5"}.
+    std::vector<std::string> nested_vulnerable_calls;
 };
 class ICodeAnalyzer {
 public:
