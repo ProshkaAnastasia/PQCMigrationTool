@@ -14,12 +14,10 @@ int main(int argc, char* argv[])
 {
     auto t0 = std::chrono::steady_clock::now();
     try {
-        // ── Step 1: Parse CLI ─────────────────────────────────────────────
         pqc::AppConfig cfg = pqc::AppConfig::parse(argc, argv);
         if (cfg.verbose)
             std::cout << "[1/6] Source: " << cfg.source_path << "\n";
 
-        // ── Step 2: Load vulnerability database ──────────────────────────
         pqc::VulnDatabase db;
         db.load(cfg.db_path);
         for (auto& extra : cfg.extra_db_paths) db.load(extra);
@@ -27,7 +25,6 @@ int main(int argc, char* argv[])
             std::cout << "[2/6] DB loaded: " << db.size() << " functions (v" << db.db_version()
                       << ", updated " << db.last_updated() << ")\n";
 
-        // ── Step 3: Project inventory ─────────────────────────────────────
         pqc::ProjectScanner scanner;
         pqc::ProjectInventory inv = scanner.scan(cfg.source_path);
         if (cfg.verbose)
@@ -37,7 +34,6 @@ int main(int argc, char* argv[])
             std::cout << "[3/6] Inventory: " << inv.files.size() << " total files, "
                       << source_files.size() << " source/header\n";
 
-        // ── Step 4: Source code analysis ──────────────────────────────────
         std::vector<pqc::Finding> findings;
         if (cfg.analysis_mode == pqc::AnalysisMode::STATIC_AST) {
             pqc::ASTAnalyzer ast_analyzer(db);
@@ -59,7 +55,6 @@ int main(int argc, char* argv[])
         if (cfg.verbose)
             std::cout << "      Found " << findings.size() << " quantum-vulnerable calls\n";
 
-        // ── Step 5: Certificate analysis ─────────────────────────────────
         std::vector<pqc::CertInfo> cert_infos;
         if (!cfg.skip_cert && !cfg.cert_path.empty()) {
             if (cfg.verbose)
@@ -73,13 +68,11 @@ int main(int argc, char* argv[])
                 std::cout << "[5/6] Certificate analysis: skipped\n";
         }
 
-        // ── Step 6: Risk assessment + migration plan ──────────────────────
         if (cfg.verbose)
             std::cout << "[6/6] Risk assessment & migration plan\n";
         pqc::RiskAssessor risk_assessor(db);
         pqc::RiskReport risk_report = risk_assessor.assess(findings, inv, cert_infos);
 
-        // ── Optional: Compute metrics ─────────────────────────────────────
         std::unique_ptr<pqc::AnalysisMetrics> metrics;
         if (cfg.run_metrics) {
             auto gt = pqc::MetricsCalculator::load_from_json(cfg.ground_truth_path);
@@ -88,7 +81,6 @@ int main(int argc, char* argv[])
             metrics->print();
         }
 
-        // ── Generate reports ──────────────────────────────────────────────
         pqc::ReportGenerator gen;
         gen.generate(cfg, inv, findings, cert_infos, risk_report, metrics.get());
 

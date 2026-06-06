@@ -17,17 +17,13 @@ static std::string primitive_for(const std::string& alg)
 {
     std::string a = alg;
     std::transform(a.begin(), a.end(), a.begin(), ::tolower);
-    // EVP abstraction-layer compound names ("RSA/EC/DH (EVP)", "RSA/EC (EVP)", …).
-    // Parsed before individual checks to avoid the "rsa" substring firing first.
     if (a.find("(evp)") != std::string::npos) {
         if (a.find("ecdh") != std::string::npos)
-            return "ecdh";  // ECDH/DH (EVP)
-        return "evp";       // RSA/EC/DH (EVP), RSA/EC (EVP)
+            return "ecdh";
+        return "evp";
     }
-    // BIGNUM manual-arithmetic indicators
     if (a.find("bignum") != std::string::npos)
         return "asymmetric_primitive";
-    // Standard single-algorithm names
     if (a.find("rsa") != std::string::npos)
         return "rsa";
     if (a.find("ecdh") != std::string::npos)
@@ -102,8 +98,6 @@ Cbom ReportGenerator::build_cbom(const std::vector<Finding>& findings,
         ap.primitive = primitive_for(f.algorithm);
         ap.cryptoFunctions = fn_for_cat(f.category);
         ap.classicalSecurityLevel = classical_sec(f.algorithm, 0);
-        // "conditional" findings are emitted only when a classical (vulnerable)
-        // argument was detected, so treat them as fully broken (level 0).
         ap.quantumSecurityLevel =
             (f.quantum_vulnerability == "high" || f.quantum_vulnerability == "conditional" ? 0
              : f.quantum_vulnerability == "medium"                                         ? 50
@@ -225,6 +219,7 @@ nlohmann::json ReportGenerator::build_full_report(const AppConfig& cfg,
                                                   const RiskReport& rr, const Cbom& cbom,
                                                   const AnalysisMetrics* metrics) const
 {
+    (void)cbom;
     nlohmann::json j;
     j["generated_at"] = now_iso();
     j["tool"] = {{"name", "pqc-migration-tool"},

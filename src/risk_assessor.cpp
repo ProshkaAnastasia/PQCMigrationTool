@@ -64,17 +64,14 @@ ContextFactors RiskAssessor::analyze_context(const Finding& f, const ProjectInve
     ctx.is_test_code = is_test_file(f.file_path);
     ctx.is_network_facing = !ctx.is_test_code && is_network_file(f.file_path);
     ctx.is_persistent_data = !ctx.is_test_code && is_persistence_file(f.file_path);
-    // Key material: keygen functions or "key" in calling function name
     std::string fn_lower = f.context_function;
     std::transform(fn_lower.begin(), fn_lower.end(), fn_lower.begin(), ::tolower);
     ctx.is_key_material =
         (f.category == "asymmetric_key_generation" || f.category == "key_exchange" ||
          f.category == "digital_signature" || fn_lower.find("key") != std::string::npos);
-    // In-loop: raw line contains for/while, or repeat patterns
     ctx.is_in_loop = (f.raw_line.find("for") != std::string::npos ||
                       f.raw_line.find("while") != std::string::npos);
     ctx.call_frequency = estimate_frequency(f, inv);
-    // Data classification
     if (ctx.is_key_material)
         ctx.data_classification = "key_material";
     else if (ctx.is_persistent_data)
@@ -117,7 +114,6 @@ RiskScore RiskAssessor::compute_risk(const Finding& f, const ContextFactors& ctx
         oss << " HighFreq(+10%).";
     }
     oss << " DataClass: " << ctx.data_classification << ".";
-    // HNDL note for encryption/key exchange
     if (f.category == "asymmetric_encryption" || f.category == "key_exchange") {
         if (ctx.is_network_facing || ctx.is_persistent_data)
             oss << " [HNDL-risk].";
@@ -150,8 +146,6 @@ MigrationAction RiskAssessor::build_action(const Finding& f, const RiskScore& rs
     a.priority = rs.priority;
     a.migration_order = order;
     auto opt = db_.find_by_name(f.function_name);
-    // Fall back to DB fields if the finding itself didn't carry them
-    // (e.g. when created directly in tests without going through an analyzer).
     if (opt) {
         if (a.nist_reference.empty())
             a.nist_reference = opt->nist_reference;
@@ -184,14 +178,11 @@ RiskReport RiskAssessor::assess(const std::vector<Finding>& findings, const Proj
         auto a = build_action(f, rs, order);
         actions_with_score.push_back({a, rs.final_score});
     }
-    // Sort by risk descending
     std::sort(actions_with_score.begin(), actions_with_score.end(),
               [](auto& a, auto& b) { return a.second > b.second; });
-    // Renumber
     for (int i = 0; i < (int)actions_with_score.size(); ++i)
         actions_with_score[i].first.migration_order = i + 1;
     for (auto& [a, _] : actions_with_score) report.migration_plan.push_back(a);
-    // Count by priority
     for (auto& a : report.migration_plan) {
         switch (a.priority) {
             case MigrationPriority::CRITICAL:
@@ -208,7 +199,6 @@ RiskReport RiskAssessor::assess(const std::vector<Finding>& findings, const Proj
                 break;
         }
     }
-    // Per-file aggregation (ТЗ: агрегатор оценок по файлам)
     for (auto& a : report.migration_plan) {
         auto& fs = report.file_summaries[a.file_path];
         fs.file_path = a.file_path;
@@ -222,7 +212,6 @@ RiskReport RiskAssessor::assess(const std::vector<Finding>& findings, const Proj
         else if (a.risk.final_score >= 7.0 && fs.overall_priority < MigrationPriority::HIGH)
             fs.overall_priority = MigrationPriority::HIGH;
     }
-    // Overall risk (top-10 average + cert influence)
     double sum = 0;
     int cnt = 0;
     for (auto& a : report.migration_plan) {
@@ -231,13 +220,11 @@ RiskReport RiskAssessor::assess(const std::vector<Finding>& findings, const Proj
             break;
     }
     report.overall_risk_score = cnt > 0 ? sum / cnt : 0.0;
-    // Cert risk influence (30% weight)
     if (!certs.empty()) {
         double maxCert = 0;
         for (auto& c : certs) maxCert = std::max(maxCert, c.risk_score);
         report.overall_risk_score = std::min(10.0, report.overall_risk_score * 0.7 + maxCert * 0.3);
     }
-    // NIST readiness
     if (findings.empty() && certs.empty())
         report.nist_readiness = "compliant";
     else if (report.critical_count > 0 || report.high_count > 3)

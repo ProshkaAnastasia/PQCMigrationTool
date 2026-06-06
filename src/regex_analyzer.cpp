@@ -22,11 +22,16 @@ void RegexAnalyzer::compile_patterns()
                 std::cerr << "[WARN] Bad regex '" << pat << "': " << e.what() << "\n";
             }
         }
-        try {
-            std::string p = "\\b" + fn.name + "\\s*\\(";
-            patterns_.push_back({std::regex(p, std::regex_constants::ECMAScript), &fn});
-        } catch (...) {
-        }
+        auto add_name_pattern = [&](const std::string& name) {
+            try {
+                std::string p = "\\b" + name + "\\s*\\(";
+                patterns_.push_back({std::regex(p, std::regex_constants::ECMAScript), &fn});
+            } catch (...) {
+            }
+        };
+        add_name_pattern(fn.name);
+        for (const auto& alias : fn.aliases)
+            add_name_pattern(alias);
     }
 }
 
@@ -91,7 +96,6 @@ std::vector<Finding> RegexAnalyzer::analyze_file(const std::filesystem::path& p)
     for (int li = 0; li < (int)lines.size(); ++li) {
         const auto& line = lines[li];
 
-        // Strip block comments and produce a comment-free version for matching.
         std::string stripped;
         stripped.reserve(line.size());
         for (std::size_t i = 0; i < line.size(); ++i) {
@@ -100,7 +104,6 @@ std::vector<Finding> RegexAnalyzer::analyze_file(const std::filesystem::path& p)
                     in_block_comment = false;
                     ++i;  // skip '/'
                 }
-                // Replace comment chars with spaces to preserve column alignment.
                 stripped += ' ';
             } else {
                 if (i + 1 < line.size() && line[i] == '/' && line[i + 1] == '*') {
@@ -108,7 +111,6 @@ std::vector<Finding> RegexAnalyzer::analyze_file(const std::filesystem::path& p)
                     stripped += ' ';
                     ++i;  // skip '*'
                 } else if (i + 1 < line.size() && line[i] == '/' && line[i + 1] == '/') {
-                    // Rest of line is a line comment — stop.
                     break;
                 } else {
                     stripped += line[i];
@@ -116,7 +118,6 @@ std::vector<Finding> RegexAnalyzer::analyze_file(const std::filesystem::path& p)
             }
         }
 
-        // Skip lines that are entirely whitespace after stripping.
         bool all_space = true;
         for (char c : stripped)
             if (!std::isspace((unsigned char)c)) {
@@ -138,8 +139,6 @@ std::vector<Finding> RegexAnalyzer::analyze_file(const std::filesystem::path& p)
                 if (!seen.count(key)) {
                     seen.insert(key);
 
-                    // Extract the actual called name from the match text
-                    // (e.g. "EC_KEY_generate_key(" → "EC_KEY_generate_key").
                     std::string actual_name;
                     std::string ms = match.str();
                     for (char c : ms) {

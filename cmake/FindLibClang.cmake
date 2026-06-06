@@ -14,11 +14,14 @@ if(NOT LIBCLANG_LIBRARY)
         /usr/lib /usr/lib64 /usr/local/lib
         /usr/lib/llvm-20/lib /usr/lib/llvm-19/lib /usr/lib/llvm-18/lib
         /usr/lib/llvm-17/lib /usr/lib/llvm-16/lib /usr/lib/llvm-15/lib
+        /usr/lib/llvm-14/lib /usr/lib/llvm-13/lib
+        /usr/lib/x86_64-linux-gnu /usr/lib/aarch64-linux-gnu
         /opt/homebrew/opt/llvm/lib /usr/local/opt/llvm/lib)
     find_path(LIBCLANG_INCLUDE_DIR NAMES clang-c/Index.h PATHS
         /usr/include /usr/local/include
         /usr/lib/llvm-20/include /usr/lib/llvm-19/include /usr/lib/llvm-18/include
         /usr/lib/llvm-17/include /usr/lib/llvm-16/include /usr/lib/llvm-15/include
+        /usr/lib/llvm-14/include /usr/lib/llvm-13/include
         /opt/homebrew/opt/llvm/include /usr/local/opt/llvm/include)
 endif()
 include(FindPackageHandleStandardArgs)

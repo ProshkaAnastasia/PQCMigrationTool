@@ -74,7 +74,6 @@ void VulnDatabase::merge_json(const nlohmann::json& j)
             if (fn.contains("replacements")) {
                 for (auto& rep : fn["replacements"]) {
                     ReplacementInfo ri;
-                    // Accept both new canonical field names and legacy aliases.
                     ri.function_name = rep.contains("function_name")
                                            ? rep.value("function_name", "")
                                            : rep.value("function", "");
@@ -90,7 +89,6 @@ void VulnDatabase::merge_json(const nlohmann::json& j)
                     vf.replacements.push_back(ri);
                 }
             }
-            // Update if exists (by name), else add
             auto it2 = name_index_.find(to_lower(vf.name));
             if (it2 != name_index_.end())
                 functions_[it2->second] = vf;

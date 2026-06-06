@@ -98,7 +98,6 @@ double CertAnalyzer::compute_cert_risk(CertQuantumRisk qr, int key_bits, bool ex
 }
 static void fill_info(X509* x509, CertInfo& info)
 {
-    // Subject & Issuer
     BIO* sbio = BIO_new(BIO_s_mem());
     X509_NAME_print_ex(sbio, X509_get_subject_name(x509), 0, XN_FLAG_ONELINE);
     info.subject = bio_to_string(sbio);
@@ -108,7 +107,6 @@ static void fill_info(X509* x509, CertInfo& info)
     info.issuer = bio_to_string(ibio);
     BIO_free(ibio);
     info.is_self_signed = (info.subject == info.issuer);
-    // Serial
     ASN1_INTEGER* sn = X509_get_serialNumber(x509);
     if (sn) {
         BIGNUM* bn = ASN1_INTEGER_to_BN(sn, nullptr);
@@ -121,14 +119,11 @@ static void fill_info(X509* x509, CertInfo& info)
             BN_free(bn);
         }
     }
-    // Validity
     info.not_before = asn1_time_to_str(X509_get0_notBefore(x509));
     info.not_after = asn1_time_to_str(X509_get0_notAfter(x509));
-    // Expiry check
     int day, sec;
     ASN1_TIME_diff(&day, &sec, nullptr, X509_get0_notAfter(x509));
     info.is_expired = (day < 0 || sec < 0);
-    // Signature algorithm
     const X509_ALGOR* salg = nullptr;
     X509_get0_signature(nullptr, &salg, x509);
     if (salg) {
@@ -136,13 +131,11 @@ static void fill_info(X509* x509, CertInfo& info)
         X509_signature_print(ab, salg, nullptr);
         info.sig_algorithm = bio_to_string(ab);
         BIO_free(ab);
-        // also get OID string
         BIO* oid_bio = BIO_new(BIO_s_mem());
         i2a_ASN1_OBJECT(oid_bio, salg->algorithm);
         info.sig_algorithm = bio_to_string(oid_bio);
         BIO_free(oid_bio);
     }
-    // Public key
     EVP_PKEY* pkey = X509_get0_pubkey(x509);
     if (pkey) {
         info.key_size_bits = EVP_PKEY_bits(pkey);
@@ -171,12 +164,10 @@ static void fill_info(X509* x509, CertInfo& info)
                 break;
         }
     }
-    // Risk assessment
     std::string combined = info.public_key_algorithm + " " + info.sig_algorithm;
     info.quantum_risk = CertAnalyzer::assess_algorithm(combined, info.key_size_bits);
     info.risk_score = CertAnalyzer::compute_cert_risk(info.quantum_risk, info.key_size_bits,
                                                       info.is_expired, combined);
-    // Risk explanation
     switch (info.quantum_risk) {
         case CertQuantumRisk::HIGH:
             info.risk_explanation = info.public_key_algorithm +
@@ -201,7 +192,6 @@ static void fill_info(X509* x509, CertInfo& info)
 std::vector<CertInfo> CertAnalyzer::analyze_file(const std::string& fp) const
 {
     std::vector<CertInfo> infos;
-    // Try PEM (may contain chain)
     FILE* f = std::fopen(fp.c_str(), "r");
     if (!f)
         return infos;

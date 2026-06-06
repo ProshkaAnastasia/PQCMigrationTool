@@ -1,6 +1,8 @@
 #include "pqc/metrics.hpp"
 #include <fstream>
 #include <algorithm>
+#include <climits>
+#include <cstdlib>
 #include <iostream>
 #include <iomanip>
 #include <stdexcept>

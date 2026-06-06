@@ -10,17 +10,23 @@
 ### Linux (Debian/Ubuntu)
 
 ```bash
-# Зависимости
+# Зависимости (libclang-dev — рекомендуется для полного AST-режима)
 sudo apt install cmake g++ libssl-dev libclang-dev git
 
-# Если нужна конкретная версия libclang:
-# sudo apt install libclang-18-dev llvm-18-dev
+# Ubuntu 22.04 ставит libclang-14, Ubuntu 24.04 — libclang-18.
+# Для явного выбора версии:
+# sudo apt install libclang-18-dev   # Ubuntu 24.04 / LLVM 18
+# sudo apt install libclang-14-dev   # Ubuntu 22.04 / LLVM 14
 
 # Сборка
 cmake -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build --parallel $(nproc)
 # → build/pqc-migration-tool
 ```
+
+> **Без `libclang-dev`** инструмент собирается и работает, но AST-режим (`-m ast`)
+> деградирует до упрощённого token-анализатора: точность снижается с ~95% до ~70%,
+> а контекст вызовов (класс, пространство имён) не извлекается.
 
 ### macOS
 

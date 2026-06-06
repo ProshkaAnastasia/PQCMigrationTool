@@ -576,3 +576,66 @@ Bytes randomBytes(size_t n) {
 }
 
 } // namespace GostCipher
+
+
+
+KeyPair generateKeyPair() {
+    EvpPkeyCtxPtr ctx(EVP_PKEY_CTX_new_id(NID_undef, GostEngine::get()));
+    int nid = OBJ_txt2nid("gost2012_256");
+    if (nid == NID_undef)
+        nid = OBJ_txt2nid("id-GostR3410-2012-256");
+    if (nid == NID_undef)
+        throw std::runtime_error("NID для gost2012_256 не найден. "
+                                 "Проверьте загрузку gost-engine.\n"
+                                 + Utils::printOpenSSLErrors());
+    ctx.reset(EVP_PKEY_CTX_new_id(nid, GostEngine::get()));
+    if (!ctx)
+        throw std::runtime_error("EVP_PKEY_CTX_new_id(gost2012_256): "
+                                 + Utils::printOpenSSLErrors());
+    if (EVP_PKEY_keygen_init(ctx.get()) != 1)
+        throw std::runtime_error("EVP_PKEY_keygen_init: " + Utils::printOpenSSLErrors());
+    if (EVP_PKEY_CTX_ctrl_str(ctx.get(), "paramset", "A") != 1)
+        throw std::runtime_error("EVP_PKEY_CTX_ctrl_str(paramset=A): "
+                                 + Utils::printOpenSSLErrors());
+    EVP_PKEY* pkey_raw = nullptr;
+    if (EVP_PKEY_keygen(ctx.get(), &pkey_raw) != 1)
+        throw std::runtime_error("EVP_PKEY_keygen: " + Utils::printOpenSSLErrors());
+    KeyPair kp;
+    kp.pkey.reset(pkey_raw);
+    return kp;
+}
+
+
+
+KeyPair generateKeyPair() {
+    int nid = OBJ_txt2nid("gost2012_256"); 
+    ctx.reset(EVP_PKEY_CTX_new_id(
+        nid, GostEngine::get()));
+    EVP_PKEY_keygen_init(ctx.get());
+    EVP_PKEY_CTX_ctrl_str(
+        ctx.get(), "paramset", "A");  
+    EVP_PKEY* pkey_raw = nullptr;
+    EVP_PKEY_keygen(
+        ctx.get(), &pkey_raw); 
+    kp.pkey.reset(pkey_raw);
+    return kp;
+}
+
+
+
+
+
+KeyPair generateKeyPair() {
+    int nid = OBJ_txt2nid("gost2012_256");      
+    if (nid == NID_undef)
+        nid = OBJ_txt2nid("id-GostR3410-2012-256"); 
+    ctx.reset(EVP_PKEY_CTX_new_id(              
+        nid, GostEngine::get()));              
+    EVP_PKEY_keygen_init(ctx.get());
+    EVP_PKEY_CTX_ctrl_str(
+        ctx.get(), "paramset", "A");
+    EVP_PKEY* pkey_raw = nullptr;
+    EVP_PKEY_keygen(ctx.get(), &pkey_raw);
+    kp.pkey.reset(pkey_raw);
+    return kp;
+}

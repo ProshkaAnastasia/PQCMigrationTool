@@ -170,7 +170,6 @@ std::vector<Finding> TokenAnalyzer::extract_findings(const std::vector<Token>& t
         std::string kind, name;
     };
     std::vector<Scope> scopes;
-    int brace_depth = 0;
     for (size_t i = 0; i < toks.size(); ++i) {
         auto& t = toks[i];
         if (t.type == TokType::PUNCT) {
@@ -216,9 +215,7 @@ std::vector<Finding> TokenAnalyzer::extract_findings(const std::vector<Token>& t
                     }
                     scopes.push_back({"function", fn_name.empty() ? "<anonymous>" : fn_name});
                 }
-                ++brace_depth;
             } else if (t.val == "}") {
-                --brace_depth;
                 if (!scopes.empty())
                     scopes.pop_back();
             }
